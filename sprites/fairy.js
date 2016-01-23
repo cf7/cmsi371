@@ -2,7 +2,7 @@
     var canvas = $("#canvas").get(0);
     var ctx = canvas.getContext("2d");
     console.log("here");
-    ctx.fillStyle = "rgb(100, 100, 200)";
+    ctx.fillStyle = "rgb(100, 175, 200)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // color for wings: "rgba(200, 200, 200, 0.5)";
