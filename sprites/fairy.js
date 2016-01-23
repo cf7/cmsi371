@@ -1,8 +1,12 @@
 (function () {
     var canvas = $("#canvas").get(0);
+    var ctx = canvas.getContext("2d");
+    console.log("here");
+    ctx.fillStyle = "rgb(100, 100, 200)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // color for wings: "rgba(200, 200, 200, 0.5)";
-    
+
     var randomColor = function () {
         return "rgb(" + Math.round(Math.random() * 256).toString() 
                 + "," + Math.round(Math.random() * 256).toString()
@@ -11,7 +15,6 @@
 
     var draw = function () {
         if (canvas.getContext) {
-            var ctx = canvas.getContext("2d");
             ctx.fillStyle = "rgb(200,0,0)";
             ctx.fillRect (10, 10, 55, 50);
 
@@ -21,7 +24,6 @@
     }
 
     var circleAt = function (x, y) {
-        var ctx = canvas.getContext("2d");
         ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
         ctx.beginPath();
         ctx.arc(x, y, 30, 0, Math.PI*2, true);
@@ -30,7 +32,6 @@
 
     var rightTriangleAt = function (x, y) {
         if (canvas.getContext) {
-            var ctx = canvas.getContext("2d");
             ctx.fillStyle = randomColor();
             ctx.beginPath();
             ctx.moveTo(x, y);
