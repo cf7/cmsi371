@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+ </head>
+ <body>
+    <canvas id="canvas" width="1024" height="1024">
+        Browser does not support the <code>canvas</code> element.
+    </canvas>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script src="tree.js"></script>
+
+    <script>
+        (function () {
+            var ctx = $("#canvas")[0].getContext("2d");
+            var backgroundColor = "rgb(100, 175, 210)";
+            var drawScene = function () {
+                ctx.fillStyle = backgroundColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                SpriteLibrary.tree({
+                    context: ctx
+                });
+                //window.requestAnimationFrame(drawScene);
+            };
+            //drawScene();
+            window.requestAnimationFrame(drawScene);
+        })();
+    </script>
+ </body>
+</html>

@@ -2,10 +2,14 @@ $(function () {
 
     window.SpriteLibrary = window.SpriteLibrary || {};
 
+    var ctx = { };
+    var fairyData = { };
+
     SpriteLibrary.fairy = function (specifications) {
         ctx = specifications.context;
     
-        var fairyData = specifications.fairyData;
+        fairyData = specifications.fairyData;
+    
 
         // var fairyData = {
         //     center: {x: 400, y: 300},
