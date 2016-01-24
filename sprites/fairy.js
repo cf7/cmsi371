@@ -5,26 +5,37 @@
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+
+    var fairy1Data = {
+        center: {x: 400, y: 300},
+        innerRadius: 15,
+        outerRadius: 100,
+        color: "white"
+    };
+
     // color for wings: "rgba(200, 200, 200, 0.5)";
     var wings = function (x, y) {
 
     }
 
-    var bodyAt = function (x, y, glowScale) {
-        var centerX = x;
-        var centerY = y;
-        var outerRadius = 100;
-        var innerRadius = 15;
+    var bodyAt = function (fairyData, glowScale) {
+        var centerX = fairyData.center.x;
+        var centerY = fairyData.center.y;
+        var innerRadius = fairyData.innerRadius;
+        var outerRadius = fairyData.outerRadius;
+        var color = fairyData.color;
 
         wings(centerX, centerY);
 
         var radialGradient = ctx.createRadialGradient(
             centerX, centerY, innerRadius, centerX, centerY, outerRadius - glowScale);
-        radialGradient.addColorStop(0, "white");
+
+        radialGradient.addColorStop(0, color);
         radialGradient.addColorStop(1, backgroundColor);
+
         ctx.fillStyle = radialGradient;
         ctx.beginPath();
-        ctx.arc(x, y, outerRadius, 0, Math.PI * 2, true);
+        ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2, true);
         ctx.fill();
     };
 
@@ -56,19 +67,20 @@
 
     rightTriangleAt(150, 50);
     circleAt(200, 200);
-    var index = 0;
-    var increasing = true;
-    function glow () {
-        if (index < 0 || index >= 20) {
-            increasing = !increasing;
-        }
-        if (increasing) {
-            index += 3;
-        } else {
-            index -= 3;
-        }
-        bodyAt(400, 300, index);
-        setTimeout(glow, 100);
-    }
-    glow();
+    bodyAt(fairy1Data, 1);
+    // var index = 1;
+    // var increasing = true;
+    // function glow () {
+    //     if (index < 1 || index >= 20) {
+    //         increasing = !increasing;
+    //     }
+    //     if (increasing) {
+    //         index += 3;
+    //     } else {
+    //         index -= 3;
+    //     }
+    //     bodyAt(fairy1Data, index);
+    //     setTimeout(glow, 100);
+    // }
+    // glow();
 }());
