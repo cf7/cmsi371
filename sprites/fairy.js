@@ -35,7 +35,24 @@
             }
         },
         rightWing: {
-
+             top: {
+                startPoint: { x: fairy1Data.center.x, y: fairy1Data.center.y },
+                controlPoint1: { x: fairy1Data.center.x - fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y - fairy1Data.outerRadius - 40 },
+                controlPoint2: { x: fairy1Data.center.x - fairy1Data.outerRadius - 30, 
+                    y: fairy1Data.center.y - fairy1Data.outerRadius},
+                endPoint: { x: fairy1Data.center.x - fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y}
+            },
+            bottom: {
+                startPoint: { x: fairy1Data.center.x, y: fairy1Data.center.y },
+                controlPoint1: { x: fairy1Data.center.x - fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y + fairy1Data.outerRadius + 40 },
+                controlPoint2: { x: fairy1Data.center.x - fairy1Data.outerRadius - 30, 
+                    y: fairy1Data.center.y + fairy1Data.outerRadius},
+                endPoint: { x: fairy1Data.center.x - fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y}
+            }
         }
     };
 
@@ -62,6 +79,8 @@
     var wings = function (leftWing, rightWing) {
         drawWing(leftWing.top);
         drawWing(leftWing.bottom);
+        drawWing(rightWing.top);
+        drawWing(rightWing.bottom);
     }
 
     var bodyAt = function (fairyData, fairyWings, glowIncrement) {
@@ -92,28 +111,6 @@
     //             + "," + Math.round(Math.random() * 256).toString() + ")";
     // }
 
-    // var circleAt = function (x, y) {
-    //     ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
-    //     ctx.beginPath();
-    //     ctx.arc(x, y, 30, 0, Math.PI*2, true);
-    //     ctx.fill();
-    // }
-
-    // var rightTriangleAt = function (x, y) {
-    //     if (canvas.getContext) {
-    //         ctx.fillStyle = randomColor();
-    //         ctx.beginPath();
-    //         ctx.moveTo(x, y);
-    //         ctx.lineTo(x + 30, y);
-    //         ctx.lineTo(x + 30, y - 30);
-    //         ctx.closePath();
-    //         ctx.fill();
-    //         ctx.stroke();
-    //     }
-    // }
-
-    // rightTriangleAt(150, 50);
-    // circleAt(200, 200);
     bodyAt(fairy1Data, fairy1Wings, 1);
     // var index = 1;
     // var increasing = true;
