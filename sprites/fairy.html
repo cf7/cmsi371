@@ -11,5 +11,27 @@
 
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <script src="fairy.js"></script>
+
+    <script>
+        (function () {
+            var ctx = $("#canvas")[0].getContext("2d");
+            var backgroundColor = "rgb(100, 175, 200)";
+            var drawScene = function () {
+                ctx.fillStyle = backgroundColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                SpriteLibrary.fairy({
+                    context: ctx,
+                    fairyData: {
+                        center: {x: 400, y: 300},
+                        innerRadius: 10,
+                        outerRadius: 50,
+                        color: "white"
+                    }
+                });
+                window.requestAnimationFrame(drawScene);
+            };
+            window.requestAnimationFrame(drawScene);
+        })();
+    </script>
  </body>
 </html>
