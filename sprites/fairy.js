@@ -1,5 +1,5 @@
 (function () {
-    var canvas = $("#canvas").get(0);
+    var canvas = $("#canvas")[0];
     var ctx = canvas.getContext("2d");
     var backgroundColor = "rgb(100, 175, 200)";
     ctx.fillStyle = backgroundColor;
@@ -14,48 +14,70 @@
     };
 
     var fairy1Wings = {
-        startPoint: { x: fairy1Data.center.x, y: fairy1Data.center.y },
-        controlPoint1: { x: fairy1Data.center.x + fairy1Data.outerRadius - 20, 
-            y: fairy1Data.center.y - fairy1Data.outerRadius - 30 },
-        controlPoint2: { x: fairy1Data.center.x + fairy1Data.outerRadius + 30, 
-            y: fairy1Data.center.y - fairy1Data.outerRadius},
-        endPoint: { x: fairy1Data.center.x + fairy1Data.outerRadius, 
-            y: fairy1Data.center.y }
+        leftWing: {
+            top: {
+                startPoint: { x: fairy1Data.center.x, y: fairy1Data.center.y },
+                controlPoint1: { x: fairy1Data.center.x + fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y - fairy1Data.outerRadius - 40 },
+                controlPoint2: { x: fairy1Data.center.x + fairy1Data.outerRadius + 30, 
+                    y: fairy1Data.center.y - fairy1Data.outerRadius},
+                endPoint: { x: fairy1Data.center.x + fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y}
+            },
+            bottom: {
+                startPoint: { x: fairy1Data.center.x, y: fairy1Data.center.y },
+                controlPoint1: { x: fairy1Data.center.x + fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y + fairy1Data.outerRadius + 40 },
+                controlPoint2: { x: fairy1Data.center.x + fairy1Data.outerRadius + 30, 
+                    y: fairy1Data.center.y + fairy1Data.outerRadius},
+                endPoint: { x: fairy1Data.center.x + fairy1Data.outerRadius, 
+                    y: fairy1Data.center.y}
+            }
+        },
+        rightWing: {
+
+        }
     };
 
-    var wings = function (fairyWings) {
+    var drawWing = function (wing) {
         ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
         ctx.beginPath();
-        ctx.moveTo(fairyWings.startPoint.x, fairyWings.startPoint.y);
-        ctx.lineTo(fairyWings.controlPoint1.x, fairyWings.controlPoint1.y);
-        ctx.lineTo(fairyWings.controlPoint2.x, fairyWings.controlPoint2.y);
-        ctx.lineTo(fairyWings.endPoint.x, fairyWings.endPoint.y);
+        ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
+        ctx.lineTo(wing.controlPoint1.x, wing.controlPoint1.y);
+        ctx.lineTo(wing.controlPoint2.x, wing.controlPoint2.y);
+        ctx.lineTo(wing.endPoint.x, wing.endPoint.y);
         ctx.stroke();
 
-        ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
+        ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.moveTo(fairyWings.startPoint.x, fairyWings.startPoint.y);
+        ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
         ctx.bezierCurveTo(
-            fairyWings.controlPoint1.x, fairyWings.controlPoint1.y, 
-            fairyWings.controlPoint2.x, fairyWings.controlPoint2.y,
-            fairyWings.endPoint.x, fairyWings.endPoint.y);
-        ctx.stroke();
+            wing.controlPoint1.x, wing.controlPoint1.y, 
+            wing.controlPoint2.x, wing.controlPoint2.y,
+            wing.endPoint.x, wing.endPoint.y);
+        ctx.fill();
+    };
+
+    var wings = function (leftWing, rightWing) {
+        drawWing(leftWing.top);
+        drawWing(leftWing.bottom);
     }
 
-    var bodyAt = function (fairyData, fairyWings, glowScale) {
+    var bodyAt = function (fairyData, fairyWings, glowIncrement) {
         var centerX = fairyData.center.x;
         var centerY = fairyData.center.y;
         var innerRadius = fairyData.innerRadius;
         var outerRadius = fairyData.outerRadius;
         var color = fairyData.color;
 
-        wings(fairy1Wings);
+        wings(fairyWings.leftWing, fairyWings.rightWing);
 
         var radialGradient = ctx.createRadialGradient(
-            centerX, centerY, innerRadius, centerX, centerY, outerRadius - glowScale);
+            centerX, centerY, innerRadius, centerX, centerY, outerRadius - glowIncrement);
 
         radialGradient.addColorStop(0, color);
+        radialGradient.addColorStop(0.8, "rgb(137, 255, 249)");
         radialGradient.addColorStop(1, backgroundColor);
 
         ctx.fillStyle = radialGradient;
@@ -96,7 +118,7 @@
     // var index = 1;
     // var increasing = true;
     // function glow () {
-    //     if (index < 1 || index >= 20) {
+    //     if (index < 1 || ((fairy1Data.outerRadius - index) - 20 <= fairy1Data.innerRadius)) {
     //         increasing = !increasing;
     //     }
     //     if (increasing) {
@@ -104,7 +126,7 @@
     //     } else {
     //         index -= 3;
     //     }
-    //     bodyAt(fairy1Data, index);
+    //     bodyAt(fairy1Data, fairy1Wings, index);
     //     setTimeout(glow, 100);
     // }
     // glow();
