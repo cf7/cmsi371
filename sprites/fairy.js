@@ -18,50 +18,18 @@ $(function () {
         // };
 
         var fairyWings = {
-            leftWing: {
-                top: {
-                    startPoint: { x: fairyData.center.x, y: fairyData.center.y - 20},
-                    controlPoint1: { x: fairyData.center.x + fairyData.outerRadius, 
-                        y: fairyData.center.y - fairyData.outerRadius - 40 },
-                    controlPoint2: { x: fairyData.center.x + fairyData.outerRadius + 30, 
-                        y: fairyData.center.y - fairyData.outerRadius},
-                    endPoint: { x: fairyData.center.x + fairyData.outerRadius, 
-                        y: fairyData.center.y}
-                },
-                bottom: {
-                    startPoint: { x: fairyData.center.x, y: fairyData.center.y},
-                    controlPoint1: { x: fairyData.center.x + fairyData.outerRadius, 
-                        y: fairyData.center.y + fairyData.outerRadius + 40 },
-                    controlPoint2: { x: fairyData.center.x + fairyData.outerRadius + 30, 
-                        y: fairyData.center.y + fairyData.outerRadius},
-                    endPoint: { x: fairyData.center.x + fairyData.outerRadius, 
-                        y: fairyData.center.y}
-                }
-            },
-            rightWing: {
-                 top: {
-                    startPoint: { x: fairyData.center.x, y: fairyData.center.y - 20},
-                    controlPoint1: { x: fairyData.center.x - fairyData.outerRadius, 
-                        y: fairyData.center.y - fairyData.outerRadius - 40 },
-                    controlPoint2: { x: fairyData.center.x - fairyData.outerRadius - 30, 
-                        y: fairyData.center.y - fairyData.outerRadius},
-                    endPoint: { x: fairyData.center.x - fairyData.outerRadius, 
-                        y: fairyData.center.y}
-                },
-                bottom: {
-                    startPoint: { x: fairyData.center.x, y: fairyData.center.y },
-                    controlPoint1: { x: fairyData.center.x - fairyData.outerRadius, 
-                        y: fairyData.center.y + fairyData.outerRadius + 40 },
-                    controlPoint2: { x: fairyData.center.x - fairyData.outerRadius - 30, 
-                        y: fairyData.center.y + fairyData.outerRadius},
-                    endPoint: { x: fairyData.center.x - fairyData.outerRadius, 
-                        y: fairyData.center.y}
-                }
-            }
+            startPoint: { x: 0, y: 0 },
+            controlPoint1: { x: fairyData.outerRadius, 
+                y: -fairyData.outerRadius - 40 },
+            controlPoint2: { x: fairyData.outerRadius + 30, 
+                y: -fairyData.outerRadius},
+            endPoint: { x: fairyData.outerRadius, 
+                y: 0 },
+            color: "rgba(200, 200, 200, 0.5)"
         };
 
         var drawWing = function (wing) {
-            ctx.strokeStyle = "rgba(200, 200, 200, 0.5)";
+            ctx.strokeStyle = wing.color;
             ctx.beginPath();
             ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
             ctx.lineTo(wing.controlPoint1.x, wing.controlPoint1.y);
@@ -69,8 +37,7 @@ $(function () {
             ctx.lineTo(wing.endPoint.x, wing.endPoint.y);
             ctx.stroke();
 
-            ctx.fillStyle = "rgba(200, 200, 200, 0.5)";
-            ctx.lineWidth = 3;
+            ctx.fillStyle = wing.color;
             ctx.beginPath();
             ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
             ctx.bezierCurveTo(
@@ -80,28 +47,36 @@ $(function () {
             ctx.fill();
         };
 
-        var wings = function (leftWing, rightWing) {
-            // use translate and scale to reflect top left wing
-            // over different axis
-            drawWing(leftWing.top);
-            drawWing(leftWing.bottom);
-            drawWing(rightWing.top);
-            drawWing(rightWing.bottom);
+        var wings = function (wing) {
+            drawWing(wing);
+            ctx.save();
+            ctx.scale(-1, 1);
+            drawWing(wing);
+            ctx.restore();
+            ctx.save();
+            ctx.scale(1, -1);
+            drawWing(wing);
+            ctx.restore();
+            ctx.save();
+            ctx.scale(-1, -1);
+            drawWing(wing);
+            ctx.restore();
         }
 
         var bodyAt = function (fairyData, fairyWings, glowIncrement) {
-            var centerX = fairyData.center.x;
-            var centerY = fairyData.center.y;
+            ctx.save();
+            ctx.translate(fairyData.center.x, fairyData.center.y);
+
             var innerRadius = fairyData.innerRadius;
             var outerRadius = fairyData.outerRadius;
             var color = fairyData.color;
 
             // have fairyWings object get outerRadius data that is not hard coded
             // to be able to add increments for the animation
-            wings(fairyWings.leftWing, fairyWings.rightWing);
+            wings(fairyWings);
 
             var radialGradient = ctx.createRadialGradient(
-                centerX, centerY, innerRadius, centerX, centerY, outerRadius - glowIncrement);
+                0, 0, innerRadius, 0, 0, outerRadius - glowIncrement);
 
             radialGradient.addColorStop(0, color);
             radialGradient.addColorStop(1, "rgb(137, 255, 249)");
@@ -109,8 +84,9 @@ $(function () {
 
             ctx.fillStyle = radialGradient;
             ctx.beginPath();
-            ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2, true);
+            ctx.arc(0, 0, outerRadius, 0, Math.PI * 2, true);
             ctx.fill();
+            ctx.restore();
         };
 
         // var randomColor = function () {
