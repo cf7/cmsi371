@@ -5,12 +5,16 @@ $(function () {
         ctx = specifications.context;
 
         var tree = {
-            position: { x: 500, y: 500},
-            dimensions: { width: 50, height: 100},
-            layers: 5,
-            branchThickness: 0.5,
+            trunk: {
+                position: { x: 500, y: 500},
+                dimensions: { width: 50, height: 100}
+            },
+            branches: {
+                thickness: 0.5,
+                angles: (Math.PI/9),
+                layers: 5
+            },
             barkColor: "rgb(90, 55, 45)",
-            branchAngles: (Math.PI/6),
             leafColor: "green"
         }
 
@@ -53,23 +57,30 @@ $(function () {
 
         }
 
-        var startX = tree.position.x;
-        var startY = tree.position.y;
-        var startWidth = tree.dimensions.width;
-        var startHeight = tree.dimensions.height;
-        var branchThickness = tree.branchThickness;
-        var angle = tree.branchAngles;
-        var iterations = tree.layers;
+        var branches = function (startWidth, startHeight, thickness, angle, iterations, leafColor) {
+            rightBranch(0, 10, startWidth, startHeight, thickness, angle, iterations);
+            leftBranch(0, 0, startWidth, startHeight, thickness, angle, iterations);
+        }
 
-        ctx.save();
-        ctx.translate(startX, startY);
+        var trunk = function (startWidth, startHeight) {
+            ctx.fillRect(0, 0, startWidth, startHeight);
+            ctx.fillRect(0, startHeight, startWidth, startHeight * 2);
+        }
 
-        ctx.fillStyle = tree.barkColor;
-        ctx.fillRect(0, 0, startWidth, startHeight);
-        ctx.fillRect(0, startHeight, startWidth, startHeight + 100);
-        rightBranch(0, 10, startWidth, startHeight, branchThickness, angle, iterations);
-        leftBranch(0, 0, startWidth, startHeight, branchThickness, angle, iterations);
+        var growTree = function (startX, startY, startWidth, startHeight, branchThickness, angle, iterations, barkColor, leafColor) {
+            ctx.save();
+            ctx.translate(startX, startY);
+            ctx.fillStyle = barkColor;
+            trunk(startWidth, startHeight);
+            branches(startWidth, startHeight, branchThickness, angle, iterations);
+            ctx.restore();
+        }
 
-        ctx.restore();
+        growTree(tree.trunk.position.x, tree.trunk.position.y, 
+            tree.trunk.dimensions.width, tree.trunk.dimensions.height, 
+            tree.branches.thickness, tree.branches.angles, tree.branches.layers, 
+            tree.barkColor, tree.leafColor);
+
+       
     }
 });
