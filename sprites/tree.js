@@ -21,7 +21,8 @@ $(function () {
                     endAngle: 4 * Math.PI/3,
                     counterClockwise: true,
                     leafColor: "green",
-                    hasLeaves: false
+                    hasLeaves: false,
+                    count: 2
                 },
             },
             barkColor: "rgb(90, 55, 45)",
@@ -37,9 +38,27 @@ $(function () {
                 leaves.endAngle, leaves.counterClockwise);
             ctx.fill();
             ctx.restore();
+            if (leaves.count > 1) {
+                leaves.count = 1;
+                ctx.save();
+                ctx.scale(-1, 1);
+                leaves.position.y = leaves.position.y + 7;
+                leaf(leaves);
+                ctx.restore();
+            } else if (leaves.count == 1) {
+                leaves.count = 2;
+                return;
+            }
         }
 
         var rightBranch = function (x, y, width, height, branchThickness, angle, layers, leaves) {
+            if (leaves.hasLeaves) {
+                if (layers < 3) {
+                    leaves.position.x = x;
+                    leaves.position.y = y;
+                    leaf(leaves);
+                }
+            }
             if (layers > 0) {
                 var newX = 0;
                 var newY = -height + 10;
