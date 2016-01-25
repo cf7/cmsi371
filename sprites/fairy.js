@@ -9,7 +9,6 @@ $(function () {
         ctx = specifications.context;
     
         fairyData = specifications.fairyData;
-    
 
         // var fairyData = {
         //     center: {x: 400, y: 300},
@@ -82,6 +81,8 @@ $(function () {
         };
 
         var wings = function (leftWing, rightWing) {
+            // use translate and scale to reflect top left wing
+            // over different axis
             drawWing(leftWing.top);
             drawWing(leftWing.bottom);
             drawWing(rightWing.top);
