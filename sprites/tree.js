@@ -7,12 +7,13 @@ $(function () {
         var tree = {
             trunk: {
                 position: { x: 500, y: 500},
-                dimensions: { width: 50, height: 100}
+                dimensions: { width: 50, height: 200}
             },
             branches: {
+                dimensions: { width: 50, height: 100 },
                 thickness: 0.5,
                 angles: (Math.PI/9),
-                layers: 5
+                layers: 10
             },
             barkColor: "rgb(90, 55, 45)",
             leafColor: "green"
@@ -64,22 +65,20 @@ $(function () {
 
         var trunk = function (startWidth, startHeight) {
             ctx.fillRect(0, 0, startWidth, startHeight);
-            ctx.fillRect(0, startHeight, startWidth, startHeight * 2);
         }
 
-        var growTree = function (startX, startY, startWidth, startHeight, branchThickness, angle, iterations, barkColor, leafColor) {
+        var growTree = function (tree) {
             ctx.save();
-            ctx.translate(startX, startY);
-            ctx.fillStyle = barkColor;
-            trunk(startWidth, startHeight);
-            branches(startWidth, startHeight, branchThickness, angle, iterations);
+            ctx.translate(tree.trunk.position.x, tree.trunk.position.y);
+            ctx.fillStyle = tree.barkColor;
+            trunk(tree.trunk.dimensions.width, tree.trunk.dimensions.height);
+            branches(tree.branches.dimensions.width, tree.branches.dimensions.height, 
+                tree.branches.thickness, tree.branches.angles, 
+                tree.branches.layers, tree.leafColor);
             ctx.restore();
         }
 
-        growTree(tree.trunk.position.x, tree.trunk.position.y, 
-            tree.trunk.dimensions.width, tree.trunk.dimensions.height, 
-            tree.branches.thickness, tree.branches.angles, tree.branches.layers, 
-            tree.barkColor, tree.leafColor);
+        growTree(tree);
 
        
     }
