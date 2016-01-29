@@ -69,7 +69,8 @@ $(function () {
 
             var innerRadius = fairyData.innerRadius;
             var outerRadius = fairyData.outerRadius;
-            var color = fairyData.color;
+            var color1 = fairyData.color1;
+            var color2 = fairyData.color2;
 
             // have fairyWings object get outerRadius data that is not hard coded
             // to be able to add increments for the animation
@@ -78,8 +79,8 @@ $(function () {
             var radialGradient = ctx.createRadialGradient(
                 0, 0, innerRadius, 0, 0, outerRadius - glowIncrement);
 
-            radialGradient.addColorStop(0, color);
-            radialGradient.addColorStop(1, "rgb(137, 255, 249)");
+            radialGradient.addColorStop(0, color1);
+            radialGradient.addColorStop(1, color2);
             // radialGradient.addColorStop(1, backgroundColor);
 
             ctx.fillStyle = radialGradient;
