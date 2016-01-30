@@ -3,11 +3,14 @@ $(function () {
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
+    var backgroundColor  = { };
+    var canvas = { };
     var fairyData = { };
 
     SpriteLibrary.fairy = function (specifications) {
         ctx = specifications.context;
-    
+        backgroundColor = ctx.fillStyle;
+        canvas = ctx.canvas;
         fairyData = specifications.fairyData;
 
         // var fairyData = {
@@ -29,6 +32,11 @@ $(function () {
                 left: false, right: false },
             color: "rgba(200, 200, 200, 0.5)"
         };
+
+        var clear = function () {
+            ctx.fillStyle = backgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         var drawWing = function (wing) {
             ctx.strokeStyle = wing.color;
@@ -58,6 +66,7 @@ $(function () {
         }
 
         var wings = function (wing) {
+            clear();
             if (wing.direction.forward) {
                 drawingSetup(wing, 1.5, 1.5, 0, 0);
                 drawingSetup(wing, -1.5, 1.5, 0, 0);
@@ -107,13 +116,45 @@ $(function () {
             ctx.restore();
         };
 
+
         // var randomColor = function () {
         //     return "rgb(" + Math.round(Math.random() * 256).toString() 
         //             + "," + Math.round(Math.random() * 256).toString()
         //             + "," + Math.round(Math.random() * 256).toString() + ")";
         // }
-
+        
         bodyAt(fairyData, fairyWings, 1);
+        var inward = true;
+        var beforeX = fairyWings.endPoint.x;
+
+        function flutter () {
+            clear();
+            console.log(Math.abs(fairyWings.endPoint.x - fairyData.center.x));
+            console.log("center " + fairyData.center.x);
+            console.log("endPoint " + fairyWings.endPoint.x);
+            ctx.save();
+            ctx.translate(fairyData.center.x, fairyData.center.y);
+            if (Math.abs(fairyWings.endPoint.x) < 10) {
+                inward = false;
+            }
+            if (Math.abs(fairyWings.endPoint.x) >= beforeX) {
+                inward = true;
+            }
+            ctx.restore();
+            if (inward) {
+                fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 5;
+                fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 5;
+                fairyWings.endPoint.x = fairyWings.endPoint.x - 5;
+            } else {
+                fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 5;
+                fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 5;
+                fairyWings.endPoint.x = fairyWings.endPoint.x + 5;
+            }
+            bodyAt(fairyData, fairyWings, 1);
+            setTimeout(flutter, 50);
+        }
+        flutter();
+
         // var index = 1;
         // var increasing = true;
         // function glow () {
