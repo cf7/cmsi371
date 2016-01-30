@@ -23,8 +23,10 @@ $(function () {
                 y: -fairyData.outerRadius - 40 },
             controlPoint2: { x: fairyData.outerRadius + 30, 
                 y: -fairyData.outerRadius},
-            endPoint: { x: fairyData.outerRadius, 
+            endPoint: { x: fairyData.outerRadius - 10, 
                 y: 0 },
+            direction: { forward: true, backward: false,
+                left: false, right: false },
             color: "rgba(200, 200, 200, 0.5)"
         };
 
@@ -47,20 +49,35 @@ $(function () {
             ctx.fill();
         };
 
+        var drawingSetup = function (wing, scaleX, scaleY, translateX, translateY) {
+            ctx.save();
+            ctx.translate(translateX, translateY);
+            ctx.scale(scaleX, scaleY);
+            drawWing(wing);
+            ctx.restore();
+        }
+
         var wings = function (wing) {
-            drawWing(wing);
-            ctx.save();
-            ctx.scale(-1, 1);
-            drawWing(wing);
-            ctx.restore();
-            ctx.save();
-            ctx.scale(1, -1);
-            drawWing(wing);
-            ctx.restore();
-            ctx.save();
-            ctx.scale(-1, -1);
-            drawWing(wing);
-            ctx.restore();
+            if (wing.direction.forward) {
+                drawingSetup(wing, 1.5, 1.5, 0, 0);
+                drawingSetup(wing, -1.5, 1.5, 0, 0);
+                drawingSetup(wing, 1.25, -1.25, 0, 0);
+                drawingSetup(wing, -1.25, -1.25, 0, 0);
+            }
+
+            if (wing.direction.right) {
+                drawingSetup(wing, 1.5, 1.5, 0, 0);
+                drawingSetup(wing, 1.25, -1, 0, 0);
+                drawingSetup(wing, 1.5, 1.5, -5, 0);
+                drawingSetup(wing, 1.25, -1, -5, 5);
+            }
+
+            if (wing.direction.left) {
+                drawingSetup(wing, -1.5, 1.5, 0, 0);
+                drawingSetup(wing, -1.25, -1, 0, 0);
+                drawingSetup(wing, -1.5, 1.5, 5, 0);
+                drawingSetup(wing, -1.25, -1, 5, 5);
+            }
         }
 
         var bodyAt = function (fairyData, fairyWings, glowIncrement) {
