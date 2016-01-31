@@ -3,12 +3,15 @@ $(function () {
     /**
     * Fairy data from the html file should be passed in
     * as an object with the following attributes . . . 
-    *   {   center: {x: 400, y: 300},
-    *       innerRadius: 10,
-    *       outerRadius: 50,
-    *       color1: "white",
-    *       color2: "rgb(137, 255, 249)"
-    *   }
+    *   {   context: ctx,
+            setting: backGround,
+            fairyData: {
+                center: {x: 200, y: 400},
+                innerRadius: 10,
+                outerRadius: 50,
+                color1: "white",
+                color2: "rgb(137, 255, 249)"
+        }
     */
 
     window.SpriteLibrary = window.SpriteLibrary || {};
@@ -120,59 +123,6 @@ $(function () {
             ctx.restore();
         };
 
-
-        // var randomColor = function () {
-        //     return "rgb(" + Math.round(Math.random() * 256).toString() 
-        //             + "," + Math.round(Math.random() * 256).toString()
-        //             + "," + Math.round(Math.random() * 256).toString() + ")";
-        // }
-        
         bodyAt(fairyData, fairyWings, 1);
-        // var inward = true;
-        // var beforeX = fairyWings.endPoint.x;
-
-        // function flutter () {
-        //     clear();
-        //     console.log(Math.abs(fairyWings.endPoint.x - fairyData.center.x));
-        //     console.log("center " + fairyData.center.x);
-        //     console.log("endPoint " + fairyWings.endPoint.x);
-        //     ctx.save();
-        //     ctx.translate(fairyData.center.x, fairyData.center.y);
-        //     if (Math.abs(fairyWings.endPoint.x) < 10) {
-        //         inward = false;
-        //     }
-        //     if (Math.abs(fairyWings.endPoint.x) >= beforeX) {
-        //         inward = true;
-        //     }
-        //     ctx.restore();
-        //     if (inward) {
-        //         fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 5;
-        //         fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 5;
-        //         fairyWings.endPoint.x = fairyWings.endPoint.x - 5;
-        //     } else {
-        //         fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 5;
-        //         fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 5;
-        //         fairyWings.endPoint.x = fairyWings.endPoint.x + 5;
-        //     }
-        //     bodyAt(fairyData, fairyWings, 1);
-        //     setTimeout(flutter, 50);
-        // }
-        // flutter();
-
-        // var index = 1;
-        // var increasing = true;
-        // function glow () {
-        //     if (index < 1 || ((fairyData.outerRadius - index) - 20 <= fairyData.innerRadius)) {
-        //         increasing = !increasing;
-        //     }
-        //     if (increasing) {
-        //         index += 3;
-        //     } else {
-        //         index -= 3;
-        //     }
-        //     bodyAt(fairyData, fairyWings, index);
-        //     setTimeout(glow, 100);
-        // }
-        // glow();
     }
 });

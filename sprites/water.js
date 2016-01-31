@@ -1,9 +1,31 @@
 $(function () {
+
+    /**
+    * Water data from the html file should be passed in
+    * as an object with the following attributes . . . 
+    *   {   context: ctx,
+            setting: backGround,
+            water: {
+                startPoint: { x: 350, y: 700 },
+                radius: 300,
+                startAngle: 0,
+                endAngle: Math.PI*2,
+                counterClockwise: true,
+                color: "rgba(0, 130, 255, 0.9)",
+                waves: {
+                    position: { x: 0, y: 0 },
+                    color: "rgb(60, 200, 255)",
+                    numberWaves: 30
+                }
+            }
+        }
+    */
+
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
     var water = { };
-    
+
     SpriteLibrary.water = function (specifications) {
         ctx = specifications.context;
         water = specifications.water;
@@ -47,6 +69,5 @@ $(function () {
         }
 
         pour(water);
-
     }
 });
