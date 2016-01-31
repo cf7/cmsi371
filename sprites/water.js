@@ -1,6 +1,9 @@
 $(function () {
     window.SpriteLibrary = window.SpriteLibrary || {};
 
+    var ctx = { };
+    var water = { };
+    
     SpriteLibrary.water = function (specifications) {
         ctx = specifications.context;
         water = specifications.water;

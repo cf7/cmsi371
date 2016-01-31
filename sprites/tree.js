@@ -1,32 +1,12 @@
 $(function () {
     window.SpriteLibrary = window.SpriteLibrary || {};
 
+    var ctx = { };
+    var treeData = { };
+
     SpriteLibrary.tree = function (specifications) {
         ctx = specifications.context;
-
-        var tree = {
-            trunk: {
-                position: { x: 500, y: 500},
-                dimensions: { width: 50, height: 300}
-            },
-            branches: {
-                dimensions: { width: 50, height: 75 },
-                thickness: 0.5,
-                angles: (Math.PI/9),
-                layers: 7,
-                leaves: {
-                    position: { x: 500, y: 250 },
-                    radius: 20,
-                    startAngle: 0,
-                    endAngle: 4 * Math.PI/3,
-                    counterClockwise: true,
-                    leafColor: "green",
-                    hasLeaves: false,
-                    count: 2
-                },
-            },
-            barkColor: "rgb(90, 55, 45)",
-        }
+        treeData = specifications.treeData;
 
         var leaf = function (leaves) {
             ctx.save();
@@ -51,7 +31,7 @@ $(function () {
             }
         }
 
-        var rightBranch = function (x, y, width, height, branchThickness, angle, layers, leaves) {
+        var rightBranch = function (x, y, width, height, nextThickness, angle, layers, leaves) {
             if (leaves.hasLeaves) {
                 if (layers < 3) {
                     leaves.position.x = x;
@@ -62,14 +42,14 @@ $(function () {
             if (layers > 0) {
                 var newX = 0;
                 var newY = -height + 10;
-                var newWidth = width * branchThickness;
+                var newWidth = width * nextThickness;
                 var newHeight = height;
                 ctx.save();
                 ctx.translate(x, y); 
                 ctx.rotate(-angle);
                 layers--;
-                leftBranch(newX, newY, newWidth, newHeight, branchThickness, angle, layers, leaves);
-                rightBranch(newX, newY, newWidth, newHeight, branchThickness, angle, layers, leaves);
+                leftBranch(newX, newY, newWidth, newHeight, nextThickness, angle, layers, leaves);
+                rightBranch(newX, newY, newWidth, newHeight, nextThickness, angle, layers, leaves);
                 ctx.fillRect(newX, newY, newWidth, newHeight);
                 ctx.restore();
             } else {
@@ -77,25 +57,25 @@ $(function () {
             }
         }
 
-        var leftBranch = function (x, y, width, height, branchThickness, angle, layers, leaves) {
+        var leftBranch = function (x, y, width, height, nextThickness, angle, layers, leaves) {
             if (leaves.hasLeaves) {
-                if (layers < 3) {
+                if (layers < 4) {
                     leaves.position.x = x;
                     leaves.position.y = y;
                     leaf(leaves);
                 }
             }
             if (layers > 0) {
-                var newX = width * branchThickness;
+                var newX = width * nextThickness;
                 var newY = -height;
-                var newWidth = width * branchThickness;
+                var newWidth = width * nextThickness;
                 var newHeight = height;
                 ctx.save();
                 ctx.translate(x, y); 
                 ctx.rotate(angle);
                 layers--;
-                leftBranch(newX, newY, newWidth, newHeight, branchThickness, angle, layers, leaves);
-                rightBranch(newX, newY, newWidth, newHeight, branchThickness, angle, layers, leaves);
+                leftBranch(newX, newY, newWidth, newHeight, nextThickness, angle, layers, leaves);
+                rightBranch(newX, newY, newWidth, newHeight, nextThickness, angle, layers, leaves);
                 ctx.fillRect(newX, newY, newWidth, newHeight);
                 ctx.restore();
             } else {
@@ -108,9 +88,9 @@ $(function () {
                 branches.leaves.hasLeaves = true;
             }
             rightBranch(0, 10, branches.dimensions.width, branches.dimensions.height, 
-                branches.thickness, branches.angles, branches.layers, branches.leaves);
+                branches.nextThickness, branches.angles, branches.layers, branches.leaves);
             leftBranch(0, 0, branches.dimensions.width, branches.dimensions.height, 
-                branches.thickness, branches.angles, branches.layers, branches.leaves);
+                branches.nextThickness, branches.angles, branches.layers, branches.leaves);
         }
 
         var trunk = function (trunk) {
@@ -126,7 +106,7 @@ $(function () {
             ctx.restore();
         }
 
-        growTree(tree);
+        growTree(treeData);
 
 
         

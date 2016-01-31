@@ -19,11 +19,33 @@
                 ctx.fillStyle = backgroundColor;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 SpriteLibrary.tree({
-                    context: ctx
+                    context: ctx,
+                    treeData: {
+                        trunk: {
+                            position: { x: 500, y: 500},
+                            dimensions: { width: 50, height: 300}
+                        },
+                        branches: {
+                            dimensions: { width: 50, height: 75 },
+                            nextThickness: 0.5,
+                            angles: (Math.PI/9),
+                            layers: 7,
+                            leaves: {
+                                position: { x: 500, y: 250 },
+                                radius: 20,
+                                startAngle: 0,
+                                endAngle: 4 * Math.PI/3,
+                                counterClockwise: true,
+                                leafColor: "green",
+                                hasLeaves: false,
+                                count: 2
+                            },
+                        },
+                        barkColor: "rgb(90, 55, 45)"
+                    }
                 });
                 //window.requestAnimationFrame(drawScene);
             };
-            //drawScene();
             window.requestAnimationFrame(drawScene);
         })();
     </script>

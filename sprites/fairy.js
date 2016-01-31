@@ -14,13 +14,13 @@ $(function () {
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
-    var backgroundColor  = { };
+    var backGround = { };
     var canvas = { };
     var fairyData = { };
 
     SpriteLibrary.fairy = function (specifications) {
         ctx = specifications.context;
-        backgroundColor = ctx.fillStyle;
+        backGround = specifications.setting;
         canvas = ctx.canvas;
         fairyData = specifications.fairyData;
 
@@ -38,8 +38,9 @@ $(function () {
         };
 
         var clear = function () {
-            ctx.fillStyle = backgroundColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            backGround();
+            // ctx.fillStyle = backgroundColor;
+            // ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
         var drawWing = function (wing) {
@@ -74,7 +75,6 @@ $(function () {
         }
 
         var wings = function (wing) {
-            clear();
             if (wing.direction.forward) {
                 drawingSetup(wing, 1.5, 1.5, 0, 0);
                 drawingSetup(wing, -1.5, 1.5, 0, 0);
@@ -98,6 +98,7 @@ $(function () {
         }
 
         var bodyAt = function (fairyData, fairyWings, glowIncrement) {
+            clear();
             ctx.save();
             ctx.translate(fairyData.center.x, fairyData.center.y);
 

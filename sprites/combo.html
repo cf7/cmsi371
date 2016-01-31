@@ -10,15 +10,81 @@
     </canvas>
 
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
-    <script src="water.js"></script>
     <script src="fairy.js"></script>
+    <script src="water.js"></script>
+    <script src="tree.js"></script>
+
 
     <script>
         (function () {
             var ctx = $("#canvas")[0].getContext("2d");
-            // SpriteLibrary.mainSpriteFunctionToPassContext( {
-            //         ctx: ctx
-            // }); 
+            var skyColor = "rgb(100, 175, 255)";
+            var groundColor = "green";
+            var backGround = function () {
+                ctx.fillStyle = skyColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = groundColor;
+                ctx.fillRect(0, canvas.height*0.5, canvas.width, canvas.height/2);
+            }
+
+            var drawScene = function () {
+                backGround();
+                SpriteLibrary.fairy({
+                    context: ctx,
+                    setting: backGround,
+                    fairyData: {
+                        center: {x: 200, y: 400},
+                        innerRadius: 10,
+                        outerRadius: 50,
+                        color1: "white",
+                        color2: "rgb(137, 255, 249)"
+                    }
+                });
+                SpriteLibrary.water({
+                    context: ctx,
+                    water: {
+                        startPoint: { x: 350, y: 700 },
+                        radius: 300,
+                        startAngle: 0,
+                        endAngle: Math.PI*2,
+                        counterClockwise: true,
+                        color: "rgba(0, 130, 255, 0.9)",
+                        waves: {
+                            position: { x: 0, y: 0 },
+                            color: "rgb(60, 200, 255)",
+                            numberWaves: 30
+                        }
+                    }
+                });
+                SpriteLibrary.tree({
+                    context: ctx,
+                    treeData: {
+                        trunk: {
+                            position: { x: 700, y: 400},
+                            dimensions: { width: 50, height: 300}
+                        },
+                        branches: {
+                            dimensions: { width: 50, height: 75 },
+                            nextThickness: 0.5,
+                            angles: (Math.PI/9),
+                            layers: 7,
+                            leaves: {
+                                position: { x: 500, y: 250 },
+                                radius: 20,
+                                startAngle: 0,
+                                endAngle: 4 * Math.PI/3,
+                                counterClockwise: true,
+                                leafColor: "green",
+                                hasLeaves: false,
+                                count: 2
+                            },
+                        },
+                        barkColor: "rgb(90, 55, 45)"
+                    }
+                });
+                //window.requestAnimationFrame(drawScene);
+            };
+            window.requestAnimationFrame(drawScene);
         })();
     </script>
  </body>
