@@ -21,7 +21,6 @@ $(function () {
     SpriteLibrary.fairy = function (specifications) {
         ctx = specifications.context;
         backGround = specifications.setting;
-        canvas = ctx.canvas;
         fairyData = specifications.fairyData;
 
         var fairyWings = {
@@ -38,9 +37,7 @@ $(function () {
         };
 
         var clear = function () {
-            backGround();
-            // ctx.fillStyle = backgroundColor;
-            // ctx.fillRect(0, 0, canvas.width, canvas.height);
+            //backGround();
         }
 
         var drawWing = function (wing) {

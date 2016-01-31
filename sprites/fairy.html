@@ -15,14 +15,22 @@
     <script>
         (function () {
             var ctx = $("#canvas")[0].getContext("2d");
-            var backgroundColor = "rgb(100, 175, 200)";
-            var drawScene = function () {
-                ctx.fillStyle = backgroundColor;
+            var skyColor = "rgb(100, 175, 255)";
+            var groundColor = "green";
+            var backGround = function () {
+                ctx.fillStyle = skyColor;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = groundColor;
+                ctx.fillRect(0, canvas.height*0.5, canvas.width, canvas.height/2);
+            }
+
+            var drawScene = function () {
+                backGround();
                 SpriteLibrary.fairy({
                     context: ctx,
+                    setting: backGround,
                     fairyData: {
-                        center: {x: 400, y: 300},
+                        center: {x: 200, y: 400},
                         innerRadius: 10,
                         outerRadius: 50,
                         color1: "white",
