@@ -1,5 +1,16 @@
 $(function () {
 
+    /**
+    * Fairy data from the html file should be passed in
+    * as an object with the following attributes . . . 
+    *   {   center: {x: 400, y: 300},
+    *       innerRadius: 10,
+    *       outerRadius: 50,
+    *       color1: "white",
+    *       color2: "rgb(137, 255, 249)"
+    *   }
+    */
+
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
@@ -12,13 +23,6 @@ $(function () {
         backgroundColor = ctx.fillStyle;
         canvas = ctx.canvas;
         fairyData = specifications.fairyData;
-
-        // var fairyData = {
-        //     center: {x: 400, y: 300},
-        //     innerRadius: 10,
-        //     outerRadius: 50,
-        //     color: "white"
-        // };
 
         var fairyWings = {
             startPoint: { x: 0, y: 0 },
@@ -39,13 +43,17 @@ $(function () {
         }
 
         var drawWing = function (wing) {
-            ctx.strokeStyle = wing.color;
-            ctx.beginPath();
-            ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
-            ctx.lineTo(wing.controlPoint1.x, wing.controlPoint1.y);
-            ctx.lineTo(wing.controlPoint2.x, wing.controlPoint2.y);
-            ctx.lineTo(wing.endPoint.x, wing.endPoint.y);
-            ctx.stroke();
+            /**
+            * Uncomment the code below to make the bezier curve
+            * control points visible.
+            */
+            // ctx.strokeStyle = wing.color;
+            // ctx.beginPath();
+            // ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
+            // ctx.lineTo(wing.controlPoint1.x, wing.controlPoint1.y);
+            // ctx.lineTo(wing.controlPoint2.x, wing.controlPoint2.y);
+            // ctx.lineTo(wing.endPoint.x, wing.endPoint.y);
+            // ctx.stroke();
 
             ctx.fillStyle = wing.color;
             ctx.beginPath();
@@ -97,9 +105,7 @@ $(function () {
             var outerRadius = fairyData.outerRadius;
             var color1 = fairyData.color1;
             var color2 = fairyData.color2;
-
-            // have fairyWings object get outerRadius data that is not hard coded
-            // to be able to add increments for the animation
+            
             wings(fairyWings);
 
             var radialGradient = ctx.createRadialGradient(
@@ -124,36 +130,36 @@ $(function () {
         // }
         
         bodyAt(fairyData, fairyWings, 1);
-        var inward = true;
-        var beforeX = fairyWings.endPoint.x;
+        // var inward = true;
+        // var beforeX = fairyWings.endPoint.x;
 
-        function flutter () {
-            clear();
-            console.log(Math.abs(fairyWings.endPoint.x - fairyData.center.x));
-            console.log("center " + fairyData.center.x);
-            console.log("endPoint " + fairyWings.endPoint.x);
-            ctx.save();
-            ctx.translate(fairyData.center.x, fairyData.center.y);
-            if (Math.abs(fairyWings.endPoint.x) < 10) {
-                inward = false;
-            }
-            if (Math.abs(fairyWings.endPoint.x) >= beforeX) {
-                inward = true;
-            }
-            ctx.restore();
-            if (inward) {
-                fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 5;
-                fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 5;
-                fairyWings.endPoint.x = fairyWings.endPoint.x - 5;
-            } else {
-                fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 5;
-                fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 5;
-                fairyWings.endPoint.x = fairyWings.endPoint.x + 5;
-            }
-            bodyAt(fairyData, fairyWings, 1);
-            setTimeout(flutter, 50);
-        }
-        flutter();
+        // function flutter () {
+        //     clear();
+        //     console.log(Math.abs(fairyWings.endPoint.x - fairyData.center.x));
+        //     console.log("center " + fairyData.center.x);
+        //     console.log("endPoint " + fairyWings.endPoint.x);
+        //     ctx.save();
+        //     ctx.translate(fairyData.center.x, fairyData.center.y);
+        //     if (Math.abs(fairyWings.endPoint.x) < 10) {
+        //         inward = false;
+        //     }
+        //     if (Math.abs(fairyWings.endPoint.x) >= beforeX) {
+        //         inward = true;
+        //     }
+        //     ctx.restore();
+        //     if (inward) {
+        //         fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 5;
+        //         fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 5;
+        //         fairyWings.endPoint.x = fairyWings.endPoint.x - 5;
+        //     } else {
+        //         fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 5;
+        //         fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 5;
+        //         fairyWings.endPoint.x = fairyWings.endPoint.x + 5;
+        //     }
+        //     bodyAt(fairyData, fairyWings, 1);
+        //     setTimeout(flutter, 50);
+        // }
+        // flutter();
 
         // var index = 1;
         // var increasing = true;

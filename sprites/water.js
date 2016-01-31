@@ -3,31 +3,26 @@ $(function () {
 
     SpriteLibrary.water = function (specifications) {
         ctx = specifications.context;
+        water = specifications.water;
+        
 
-        var water = {
-            startPoint: { x: 350, y: 350 },
-            radius: 300,
-            startAngle: 0,
-            endAngle: Math.PI*2,
-            counterClockwise: true,
-            color: "rgba(0, 130, 255, 0.7)",
-            waves: {
-                position: { x: 0, y: 0 },
-                color: "rgb(60, 200, 255)",
-                numberWaves: 20
-            },
-        };
-
-        var wave = function (waves) {
-            waves.position.x = (Math.random()*(water.radius*0.6)*Math.pow(-1, Math.round(Math.random()*2)));
-            waves.position.y = (Math.random()*(water.radius*0.25)*Math.pow(-1, Math.round(Math.random()*2)));
-            ctx.strokeStyle = waves.color;
+        var wave = function (x, y, scaleX, scaleY) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scaleX, scaleY);
             ctx.beginPath();
-            ctx.moveTo(waves.position.x, waves.position.y);
-            ctx.bezierCurveTo(waves.position.x + 10, waves.position.y + 10,
-                waves.position.x + 40, waves.position.y - 30,
-                waves.position.x + 60, waves.position.y);
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(0, 0, 0, 10, 15, 10);
             ctx.stroke();
+            ctx.restore();
+        }
+
+        var drawingSetup = function (waves) {
+            waves.position.x = (Math.random()*(water.radius*0.6)*Math.pow(-1, Math.round(Math.random()*2)));
+            waves.position.y = (Math.random()*(water.radius*0.25 + 10)*Math.pow(-1, Math.round(Math.random()*2)));
+            ctx.strokeStyle = waves.color;
+            wave(waves.position.x, waves.position.y, 1, 1);
+            wave(waves.position.x, waves.position.y, -1, 1);
         }
 
         var pour = function (water) {
@@ -43,7 +38,7 @@ $(function () {
             ctx.save();
             ctx.translate(water.startPoint.x, water.startPoint.y);
             for (var index = 0; index < water.waves.numberWaves; index++) {
-                wave(water.waves);
+                drawingSetup(water.waves);
             }
             ctx.restore();
         }
