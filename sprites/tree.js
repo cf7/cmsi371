@@ -1,36 +1,5 @@
 $(function () {
 
-    /**
-    * Tree data from the html file should be passed in
-    * as an object with the following attributes . . . 
-    *   {   context: ctx,
-            setting: backGround,
-            treeData: {
-                trunk: {
-                    position: { x: 700, y: 400},
-                    dimensions: { width: 50, height: 300}
-                },
-                branches: {
-                    dimensions: { width: 50, height: 75 },
-                    nextThickness: 0.5,
-                    angles: (Math.PI/9),
-                    layers: 7,
-                    leaves: {
-                        position: { x: 500, y: 250 },
-                        radius: 20,
-                        startAngle: 0,
-                        endAngle: 4 * Math.PI/3,
-                        counterClockwise: true,
-                        leafColor: "green",
-                        hasLeaves: false,
-                        count: 2
-                    },
-                },
-                barkColor: "rgb(90, 55, 45)"
-            }
-        }
-    */
-
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
@@ -144,7 +113,7 @@ $(function () {
         }
 
         var growTree = function (tree) {
-            clear();
+            // clear();
             ctx.save();
             ctx.translate(tree.trunk.position.x, tree.trunk.position.y);
             ctx.fillStyle = tree.barkColor;

@@ -1,18 +1,5 @@
 $(function () {
-    /**
-    * Fairy data from the html file should be passed in
-    * as an object with the following attributes . . . 
-    *   {   context: ctx,
-            setting: backGround,
-            fairyData: {
-                center: {x: 200, y: 400},
-                innerRadius: 10,
-                outerRadius: 50,
-                color1: "white",
-                color2: "rgb(137, 255, 249)"
-        }
-    */
-
+    
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
@@ -99,7 +86,7 @@ $(function () {
         }
 
         var bodyAt = function (fairyData, fairyWings) {
-            clear();
+            // clear();
             ctx.save();
             ctx.translate(fairyData.center.x, fairyData.center.y);
 

@@ -39,13 +39,16 @@
                         counterClockwise: true,
                         color: "rgba(0, 130, 255, 0.9)",
                         waves: {
-                            position: { x: 0, y: 0 },
+                            startPoint: { x: 0, y: 0 },
+                            controlPoint1: { x: 0, y: 0 },
+                            controlPoint2: { x: 0, y: 10 },
+                            endPoint: { x: 15, y: 10 },
                             color: "rgb(60, 200, 255)",
                             numberWaves: 30
                         }
                     }
                 });
-                //window.requestAnimationFrame(drawScene);
+                // window.requestAnimationFrame(drawScene);
             };
             window.requestAnimationFrame(drawScene);
         })();

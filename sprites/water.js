@@ -1,26 +1,5 @@
 $(function () {
 
-    /**
-    * Water data from the html file should be passed in
-    * as an object with the following attributes . . . 
-    *   {   context: ctx,
-            setting: backGround,
-            water: {
-                startPoint: { x: 350, y: 700 },
-                radius: 300,
-                startAngle: 0,
-                endAngle: Math.PI*2,
-                counterClockwise: true,
-                color: "rgba(0, 130, 255, 0.9)",
-                waves: {
-                    position: { x: 0, y: 0 },
-                    color: "rgb(60, 200, 255)",
-                    numberWaves: 30
-                }
-            }
-        }
-    */
-
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
@@ -36,13 +15,16 @@ $(function () {
             backGround();
         }
 
-        var wave = function (x, y, scaleX, scaleY) {
+        var wave = function (waves, scaleX, scaleY) {
             ctx.save();
-            ctx.translate(x, y);
+            ctx.translate(waves.startPoint.x, waves.startPoint.y);
             ctx.scale(scaleX, scaleY);
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.bezierCurveTo(0, 0, 0, 10, 15, 10);
+            ctx.bezierCurveTo(
+                waves.controlPoint1.x, waves.controlPoint1.y, 
+                waves.controlPoint2.x, waves.controlPoint2.y, 
+                waves.endPoint.x, waves.endPoint.y);
             ctx.stroke();
             ctx.restore();
         }
@@ -50,16 +32,16 @@ $(function () {
         var drawingSetup = function (water) {
             var waves = water.waves;
             ctx.save();
-            waves.position.x = (Math.random()*(water.radius*0.6)*Math.pow(-1, Math.round(Math.random()*2)));
-            waves.position.y = (Math.random()*(water.radius*0.25 + 10)*Math.pow(-1, Math.round(Math.random()*2)));
+            waves.startPoint.x = (Math.random()*(water.radius*0.6)*Math.pow(-1, Math.round(Math.random()*2)));
+            waves.startPoint.y = (Math.random()*(water.radius*0.25 + 10)*Math.pow(-1, Math.round(Math.random()*2)));
             ctx.strokeStyle = waves.color;
-            wave(waves.position.x, waves.position.y, 1, 1);
-            wave(waves.position.x, waves.position.y, -1, 1);
+            wave(waves, 1, 1);
+            wave(waves, -1, 1);
             ctx.restore();
         }
 
         var pour = function (water) {
-            clear();
+            // clear();
             ctx.save();
             ctx.fillStyle = water.color;
             ctx.translate(water.startPoint.x, water.startPoint.y);
