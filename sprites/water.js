@@ -24,12 +24,17 @@ $(function () {
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
-    var water = { };
+    var backGround = { };
+    var waterData = { };
 
     SpriteLibrary.water = function (specifications) {
         ctx = specifications.context;
-        water = specifications.water;
+        backGround = specifications.setting;
+        waterData = specifications.waterData;
         
+        var clear = function () {
+            backGround();
+        }
 
         var wave = function (x, y, scaleX, scaleY) {
             ctx.save();
@@ -42,15 +47,19 @@ $(function () {
             ctx.restore();
         }
 
-        var drawingSetup = function (waves) {
+        var drawingSetup = function (water) {
+            var waves = water.waves;
+            ctx.save();
             waves.position.x = (Math.random()*(water.radius*0.6)*Math.pow(-1, Math.round(Math.random()*2)));
             waves.position.y = (Math.random()*(water.radius*0.25 + 10)*Math.pow(-1, Math.round(Math.random()*2)));
             ctx.strokeStyle = waves.color;
             wave(waves.position.x, waves.position.y, 1, 1);
             wave(waves.position.x, waves.position.y, -1, 1);
+            ctx.restore();
         }
 
         var pour = function (water) {
+            clear();
             ctx.save();
             ctx.fillStyle = water.color;
             ctx.translate(water.startPoint.x, water.startPoint.y);
@@ -63,11 +72,11 @@ $(function () {
             ctx.save();
             ctx.translate(water.startPoint.x, water.startPoint.y);
             for (var index = 0; index < water.waves.numberWaves; index++) {
-                drawingSetup(water.waves);
+                drawingSetup(water);
             }
             ctx.restore();
         }
 
-        pour(water);
+        pour(waterData);
     }
 });

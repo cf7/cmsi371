@@ -1,5 +1,4 @@
 $(function () {
-
     /**
     * Fairy data from the html file should be passed in
     * as an object with the following attributes . . . 
@@ -18,7 +17,6 @@ $(function () {
 
     var ctx = { };
     var backGround = { };
-    var canvas = { };
     var fairyData = { };
 
     SpriteLibrary.fairy = function (specifications) {
@@ -34,28 +32,30 @@ $(function () {
                 y: -fairyData.outerRadius},
             endPoint: { x: fairyData.outerRadius - 10, 
                 y: 0 },
-            direction: { forward: true, backward: false,
+            direction: { forward: true,
                 left: false, right: false },
             color: "rgba(200, 200, 200, 0.5)"
         };
 
         var clear = function () {
-            //backGround();
+            backGround();
+        }
+
+        var showControlPoints = function (curve) {
+            ctx.save();
+            ctx.strokeStyle = curve.color;
+            ctx.beginPath();
+            ctx.moveTo(curve.startPoint.x, curve.startPoint.y);
+            ctx.lineTo(curve.controlPoint1.x, curve.controlPoint1.y);
+            ctx.lineTo(curve.controlPoint2.x, curve.controlPoint2.y);
+            ctx.lineTo(curve.endPoint.x, curve.endPoint.y);
+            ctx.stroke();
+            ctx.restore();
         }
 
         var drawWing = function (wing) {
-            /**
-            * Uncomment the code below to make the bezier curve
-            * control points visible.
-            */
-            // ctx.strokeStyle = wing.color;
-            // ctx.beginPath();
-            // ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
-            // ctx.lineTo(wing.controlPoint1.x, wing.controlPoint1.y);
-            // ctx.lineTo(wing.controlPoint2.x, wing.controlPoint2.y);
-            // ctx.lineTo(wing.endPoint.x, wing.endPoint.y);
-            // ctx.stroke();
-
+            // showControlPoints(wing);
+            ctx.save();
             ctx.fillStyle = wing.color;
             ctx.beginPath();
             ctx.moveTo(wing.startPoint.x, wing.startPoint.y);
@@ -64,6 +64,7 @@ $(function () {
                 wing.controlPoint2.x, wing.controlPoint2.y,
                 wing.endPoint.x, wing.endPoint.y);
             ctx.fill();
+            ctx.restore();
         };
 
         var drawingSetup = function (wing, scaleX, scaleY, translateX, translateY) {
@@ -97,24 +98,24 @@ $(function () {
             }
         }
 
-        var bodyAt = function (fairyData, fairyWings, glowIncrement) {
+        var bodyAt = function (fairyData, fairyWings) {
             clear();
             ctx.save();
             ctx.translate(fairyData.center.x, fairyData.center.y);
 
             var innerRadius = fairyData.innerRadius;
             var outerRadius = fairyData.outerRadius;
-            var color1 = fairyData.color1;
-            var color2 = fairyData.color2;
-            
+            var innerColor = fairyData.innerColor;
+            var outerColor = fairyData.outerColor;
+            var glowIncrement = fairyData.glowIncrement;
+
             wings(fairyWings);
 
             var radialGradient = ctx.createRadialGradient(
                 0, 0, innerRadius, 0, 0, outerRadius - glowIncrement);
 
-            radialGradient.addColorStop(0, color1);
-            radialGradient.addColorStop(1, color2);
-            // radialGradient.addColorStop(1, backgroundColor);
+            radialGradient.addColorStop(0, innerColor);
+            radialGradient.addColorStop(1, outerColor);
 
             ctx.fillStyle = radialGradient;
             ctx.beginPath();
@@ -123,6 +124,6 @@ $(function () {
             ctx.restore();
         };
 
-        bodyAt(fairyData, fairyWings, 1);
+        bodyAt(fairyData, fairyWings);
     }
 });

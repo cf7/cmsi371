@@ -34,11 +34,17 @@ $(function () {
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var ctx = { };
+    var backGround = { };
     var treeData = { };
 
     SpriteLibrary.tree = function (specifications) {
         ctx = specifications.context;
+        backGround = specifications.setting;
         treeData = specifications.treeData;
+
+        var clear = function () {
+            backGround();
+        }
 
         var leaf = function (leaves) {
             ctx.save();
@@ -64,6 +70,7 @@ $(function () {
         }
 
         var rightBranch = function (x, y, width, height, nextThickness, angle, layers, leaves) {
+            ctx.save();
             if (leaves.hasLeaves) {
                 if (layers < 3) {
                     leaves.position.x = x;
@@ -71,6 +78,7 @@ $(function () {
                     leaf(leaves);
                 }
             }
+            ctx.restore();
             if (layers > 0) {
                 var newX = 0;
                 var newY = -height + 10;
@@ -90,6 +98,7 @@ $(function () {
         }
 
         var leftBranch = function (x, y, width, height, nextThickness, angle, layers, leaves) {
+            ctx.save();
             if (leaves.hasLeaves) {
                 if (layers < 4) {
                     leaves.position.x = x;
@@ -97,6 +106,7 @@ $(function () {
                     leaf(leaves);
                 }
             }
+            ctx.restore();
             if (layers > 0) {
                 var newX = width * nextThickness;
                 var newY = -height;
@@ -116,6 +126,7 @@ $(function () {
         }
 
         var branches = function (branches) {
+            ctx.save();
             if (branches.layers > 3) {
                 branches.leaves.hasLeaves = true;
             }
@@ -123,13 +134,17 @@ $(function () {
                 branches.nextThickness, branches.angles, branches.layers, branches.leaves);
             leftBranch(0, 0, branches.dimensions.width, branches.dimensions.height, 
                 branches.nextThickness, branches.angles, branches.layers, branches.leaves);
+            ctx.restore();
         }
 
         var trunk = function (trunk) {
+            ctx.save();
             ctx.fillRect(0, 0, trunk.dimensions.width, trunk.dimensions.height);
+            ctx.restore();
         }
 
         var growTree = function (tree) {
+            clear();
             ctx.save();
             ctx.translate(tree.trunk.position.x, tree.trunk.position.y);
             ctx.fillStyle = tree.barkColor;

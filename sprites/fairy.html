@@ -18,10 +18,12 @@
             var skyColor = "rgb(100, 175, 255)";
             var groundColor = "green";
             var backGround = function () {
+                ctx.save();
                 ctx.fillStyle = skyColor;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = groundColor;
                 ctx.fillRect(0, canvas.height*0.5, canvas.width, canvas.height/2);
+                ctx.restore();
             }
 
             var drawScene = function () {
@@ -33,8 +35,9 @@
                         center: {x: 200, y: 400},
                         innerRadius: 10,
                         outerRadius: 50,
-                        color1: "white",
-                        color2: "rgb(137, 255, 249)"
+                        innerColor: "white",
+                        outerColor: "rgb(137, 255, 249)",
+                        glowIncrement: 1
                     }
                 });
                 //window.requestAnimationFrame(drawScene);

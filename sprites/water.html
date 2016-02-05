@@ -18,10 +18,12 @@
             var skyColor = "rgb(100, 175, 255)";
             var groundColor = "green";
             var backGround = function () {
+                ctx.save();
                 ctx.fillStyle = skyColor;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = groundColor;
                 ctx.fillRect(0, canvas.height*0.5, canvas.width, canvas.height/2);
+                ctx.restore();
             }
 
             var drawScene = function () {
@@ -29,7 +31,7 @@
                 SpriteLibrary.water({
                     context: ctx,
                     setting: backGround,
-                    water: {
+                    waterData: {
                         startPoint: { x: 350, y: 700 },
                         radius: 300,
                         startAngle: 0,
