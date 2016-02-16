@@ -8,12 +8,12 @@
     // First, a selection of "drawing functions" from which we
     // can choose.  Their common trait: they all accept a single
     // renderingContext argument.
-    var square = function (renderingContext, data) {
+    var square = function (data) {
         renderingContext.fillStyle = "blue";
         renderingContext.fillRect(-20, -20, 40, 40);
     };
 
-    var circle = function (renderingContext, data) {
+    var circle = function (data) {
         renderingContext.strokeStyle = "red";
         renderingContext.beginPath();
         renderingContext.arc(0, 0, 50, 0, Math.PI * 2);
@@ -22,18 +22,26 @@
 
     // ** engine should pass an entire obejct into drawing function
     // ** supply defaults!
-    // ** add tweening functions for each proportie or range of properties
+    // ** add tweening functions for each property or range of properties
     // ** add background
-    var drawFairy = function (renderingContext, data) {
+    var drawFairy = function (data) {
         window.SpriteLibrary.fairy({
-                    context: renderingContext,
+                    context: data.context,
                     //setting: backGround,
                     fairyData: data
                 });
     }
 
     var fairyTweener = function (data) {
-
+        if (data.up) {
+            data.center.y = data.center.y + 3;
+        }
+        if (data.frame % 20 === 0) {
+            data.up = !data.up;
+        }
+        if (!data.up) {
+            data.center.y = data.center.y - 3;
+        }
         if (data.innerRadius < data.outerRadius/2 && data.glowIncrement) {
             data.innerRadius++;
         }
@@ -50,9 +58,9 @@
         return data;
     }
 
-    var drawTree = function (renderingContext, data) {
+    var drawTree = function (data) {
         window.SpriteLibrary.tree({
-            context: renderingContext,
+            context: data.context,
             //setting: backGround,
             treeData: data
         });
@@ -60,17 +68,22 @@
 
     var treeTweener = function (data) {
         console.log("inside");
-        if (data.branches.leaves.endAngle < 4*Math.PI/3 - Math.PI/15) {
-            data.shakeIncrement = true;
-        }
-        if (data.shakeIncrement) {
-            data.branches.leaves.endAngle = data.branches.leaves.endAngle += Math.PI/20;
-        }
-        if (data.branches.leaves.endAngle > 4*Math.PI/3 + Math.PI/15) {
-            data.shakeIncrement = false;
-        }
-        if (!data.shakeIncrement) {
-            data.branches.leaves.endAngle = data.branches.leaves.endAngle -= Math.PI/20;
+        // if (data.branches.leaves.endAngle < 4*Math.PI/3 - Math.PI/15) {
+        //     data.shakeIncrement = true;
+        // }
+        // if (data.shakeIncrement) {
+        //     data.branches.leaves.endAngle = data.branches.leaves.endAngle += Math.PI/20;
+        // }
+        // if (data.branches.leaves.endAngle > 4*Math.PI/3 + Math.PI/15) {
+        //     data.shakeIncrement = false;
+        // }
+        // if (!data.shakeIncrement) {
+        //     data.branches.leaves.endAngle = data.branches.leaves.endAngle -= Math.PI/20;
+        // }
+
+        if (data.frame % 100 === 0) {
+            console.log("inside");
+            data.branches.layers = data.branches.layers + 1;
         }
         return data;
     }
@@ -81,75 +94,9 @@
     // Now, to actually define the animated sprites.  Each sprite
     // has a drawing function and an array of keyframes.
     var sprites = [
-
-    // ** can also use automation to build the keyframes
+        // ** can also use automation to build the keyframes
         {
             //** engine should be able to tween n number of properties in each keyframe
-            draw: square,
-            data: { },
-            tweener: function () { },
-            keyframes: [
-                {
-                    frame: 0,
-                    tx: 20,
-                    ty: 20,
-                    ease: KeyframeTweener.linear
-                    // ** add properties that call functions on themselves
-                    // ** this is probably where non-monotonic tweening
-                    // ** functions would go
-                },
-
-                {
-                    frame: 30,
-                    tx: 100,
-                    ty: 50,
-                    ease: KeyframeTweener.quadEaseInOut
-                },
-
-                // The last keyframe does not need an easing function.
-                {
-                    frame: 80,
-                    tx: 80,
-                    ty: 500,
-                    rotate: 60 // Keyframe.rotate uses degrees.
-                }
-            ]
-        },
-
-        {
-            draw: circle,
-            data: { },
-            tweener: function () { },
-            keyframes: [
-                {
-                    frame: 50,
-                    tx: 300,
-                    ty: 600,
-                    sx: 0.5,
-                    sy: 0.5,
-                    ease: KeyframeTweener.quadEaseOut
-                },
-
-                {
-                    frame: 100,
-                    tx: 300,
-                    ty: 0,
-                    sx: 3,
-                    sy: 0.25,
-                    ease: KeyframeTweener.quadEaseOut
-                },
-
-                {
-                    frame: 150,
-                    tx: 300,
-                    ty: 600,
-                    sx: 0.5,
-                    sy: 0.5
-                }
-            ]
-        },
-
-        {
             draw: drawFairy,
             data: {
                     center: { x: 200, y: 400 },
@@ -157,7 +104,9 @@
                     outerRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true
+                    glowIncrement: true,
+                    up: true,
+                    frame: 0
             },
             tweener: fairyTweener,
             keyframes: [
@@ -166,6 +115,9 @@
                     tx: -100,
                     ty: -100,
                     ease: KeyframeTweener.linear
+                    // ** add properties that call functions on themselves
+                    // ** this is probably where non-monotonic tweening
+                    // ** functions would go
                 },
 
                 {
@@ -194,7 +146,7 @@
                         dimensions: { width: 50, height: 75 },
                         nextThickness: 0.5,
                         angles: (Math.PI/9),
-                        layers: 7,
+                        layers: 3,
                         leaves: {
                             position: { x: 500, y: 250 },
                             radius: 20,
@@ -207,19 +159,13 @@
                             shakeIncrement: true
                         },
                     },
-                    barkColor: "rgb(90, 55, 45)"
+                    barkColor: "rgb(90, 55, 45)",
+                    frame: 0
             },
             tweener: treeTweener,
             keyframes: [
                 {
                     frame: 0,
-                    tx: -100,
-                    ty: 0,
-                    ease: KeyframeTweener.linear
-                },
-
-                {
-                    frame: 50,
                     tx: 100,
                     ty: 0,
                     ease: KeyframeTweener.linear
@@ -227,11 +173,80 @@
 
                 {
                     frame: 200,
-                    tx: 0,
+                    tx: 100,
+                    ty: 0,
+                    ease: KeyframeTweener.linear
+                },
+
+                {
+                    frame: 500,
+                    tx: -100,
                     ty: 0,
                 }
             ]
-        }
+        },
+
+        // {
+        //     draw: square,
+        //     data: { contextframe: 0 },
+        //     tweener: function (data) { return data; },
+        //     keyframes: [
+        //         {
+        //             frame: 0,
+        //             tx: 20,
+        //             ty: 20,
+        //             ease: KeyframeTweener.linear
+        //         },
+
+        //         {
+        //             frame: 30,
+        //             tx: 100,
+        //             ty: 50,
+        //             ease: KeyframeTweener.quadEaseInOut
+        //         },
+
+        //         // The last keyframe does not need an easing function.
+        //         {
+        //             frame: 80,
+        //             tx: 80,
+        //             ty: 500,
+        //             rotate: 60 // Keyframe.rotate uses degrees.
+        //         }
+        //     ]
+        // },
+
+        // {
+        //     draw: circle,
+        //     data: { frame: 0 },
+        //     tweener: function (data) { return data; },
+        //     keyframes: [
+        //         {
+        //             frame: 50,
+        //             tx: 300,
+        //             ty: 600,
+        //             sx: 0.5,
+        //             sy: 0.5,
+        //             ease: KeyframeTweener.quadEaseOut
+        //         },
+
+        //         {
+        //             frame: 100,
+        //             tx: 300,
+        //             ty: 0,
+        //             sx: 3,
+        //             sy: 0.25,
+        //             ease: KeyframeTweener.quadEaseOut
+        //         },
+
+        //         {
+        //             frame: 150,
+        //             tx: 300,
+        //             ty: 600,
+        //             sx: 0.5,
+        //             sy: 0.5
+        //         }
+        //     ]
+        // }
     ];
 
     // Finally, we initialize the engine.  Mainly, it needs

@@ -110,9 +110,10 @@
 
                         var data = sprites[i].data;
                         sprites[i].data = sprites[i].tweener(data);
-
+                        sprites[i].data.frame = currentFrame;
+                        sprites[i].data.context = renderingContext;
                         // Draw the sprite.
-                        sprites[i].draw(renderingContext, data);
+                        sprites[i].draw(data);
 
                         // Clean up.
                         renderingContext.restore();
