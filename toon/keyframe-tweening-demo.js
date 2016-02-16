@@ -33,7 +33,7 @@
     }
 
     var fairyTweener = function (data) {
-        console.log("inside");
+
         if (data.innerRadius < data.outerRadius/2 && data.glowIncrement) {
             data.innerRadius++;
         }
@@ -45,6 +45,32 @@
         }
         if (data.innerRadius < data.outerRadius/4 && !data.glowIncrement) {
             data.glowIncrement = !data.glowIncrement;
+        }
+
+        return data;
+    }
+
+    var drawTree = function (renderingContext, data) {
+        window.SpriteLibrary.tree({
+            context: renderingContext,
+            //setting: backGround,
+            treeData: data
+        });
+    }
+
+    var treeTweener = function (data) {
+        console.log("inside");
+        if (data.branches.leaves.endAngle < 4*Math.PI/3 - Math.PI/15) {
+            data.shakeIncrement = true;
+        }
+        if (data.shakeIncrement) {
+            data.branches.leaves.endAngle = data.branches.leaves.endAngle += Math.PI/20;
+        }
+        if (data.branches.leaves.endAngle > 4*Math.PI/3 + Math.PI/15) {
+            data.shakeIncrement = false;
+        }
+        if (!data.shakeIncrement) {
+            data.branches.leaves.endAngle = data.branches.leaves.endAngle -= Math.PI/20;
         }
         return data;
     }
@@ -153,6 +179,56 @@
                     frame: 150,
                     tx: 400,
                     ty: 50,
+                }
+            ]
+        },
+
+        {
+            draw: drawTree,
+            data: {
+                    trunk: {
+                        position: { x: 700, y: 400},
+                        dimensions: { width: 50, height: 300 }
+                    },
+                    branches: {
+                        dimensions: { width: 50, height: 75 },
+                        nextThickness: 0.5,
+                        angles: (Math.PI/9),
+                        layers: 7,
+                        leaves: {
+                            position: { x: 500, y: 250 },
+                            radius: 20,
+                            startAngle: 0,
+                            endAngle: 4 * Math.PI/3,
+                            counterClockwise: true,
+                            leafColor: "green",
+                            hasLeaves: false,
+                            count: 2,
+                            shakeIncrement: true
+                        },
+                    },
+                    barkColor: "rgb(90, 55, 45)"
+            },
+            tweener: treeTweener,
+            keyframes: [
+                {
+                    frame: 0,
+                    tx: -100,
+                    ty: 0,
+                    ease: KeyframeTweener.linear
+                },
+
+                {
+                    frame: 50,
+                    tx: 100,
+                    ty: 0,
+                    ease: KeyframeTweener.linear
+                },
+
+                {
+                    frame: 200,
+                    tx: 0,
+                    ty: 0,
                 }
             ]
         }
