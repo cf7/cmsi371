@@ -33,7 +33,20 @@
     }
 
     var fairyTweener = function (data) {
-
+        console.log("inside");
+        if (data.innerRadius < data.outerRadius/2 && data.glowIncrement) {
+            data.innerRadius++;
+        }
+        if (data.innerRadius >= data.outerRadius/2 && data.glowIncrement) {
+            data.glowIncrement = !data.glowIncrement;
+        }
+        if (data.innerRadius > data.outerRadius/4 && !data.glowIncrement) {
+            data.innerRadius--;
+        }
+        if (data.innerRadius < data.outerRadius/4 && !data.glowIncrement) {
+            data.glowIncrement = !data.glowIncrement;
+        }
+        return data;
     }
 
     // Then, we have "easing functions" that determine how
@@ -47,6 +60,7 @@
         {
             //** engine should be able to tween n number of properties in each keyframe
             draw: square,
+            data: { },
             tweener: function () { },
             keyframes: [
                 {
@@ -78,6 +92,7 @@
 
         {
             draw: circle,
+            data: { },
             tweener: function () { },
             keyframes: [
                 {
@@ -111,13 +126,13 @@
         {
             draw: drawFairy,
             data: {
-                        center: { x: 200, y: 400 },
-                        innerRadius: 10,
-                        outerRadius: 50,
-                        innerColor: "white",
-                        outerColor: "rgb(137, 255, 249)",
-                        glowIncrement: 1
-                    },
+                    center: { x: 200, y: 400 },
+                    innerRadius: 10,
+                    outerRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true
+            },
             tweener: fairyTweener,
             keyframes: [
                 {

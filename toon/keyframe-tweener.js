@@ -109,7 +109,7 @@
                         );
 
                         var data = sprites[i].data;
-                        //sprites[i].data = sprites[i].tweener(data);
+                        sprites[i].data = sprites[i].tweener(data);
 
                         // Draw the sprite.
                         sprites[i].draw(renderingContext, data);
