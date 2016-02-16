@@ -20,6 +20,21 @@
         renderingContext.stroke();
     };
 
+    var drawFairy = function (renderingContext) {
+        window.SpriteLibrary.fairy({
+                    context: renderingContext,
+                    //setting: backGround,
+                    fairyData: {
+                        center: { x: 200, y: 400 },
+                        innerRadius: 10,
+                        outerRadius: 50,
+                        innerColor: "white",
+                        outerColor: "rgb(137, 255, 249)",
+                        glowIncrement: 1
+                    }
+                });
+    }
+
     // Then, we have "easing functions" that determine how
     // intermediate frames are computed.
 
@@ -80,6 +95,31 @@
                     ty: 600,
                     sx: 0.5,
                     sy: 0.5
+                }
+            ]
+        },
+
+        {
+            draw: drawFairy,
+            keyframes: [
+                {
+                    frame: 0,
+                    tx: -100,
+                    ty: -100,
+                    ease: KeyframeTweener.linear
+                },
+
+                {
+                    frame: 50,
+                    tx: 0,
+                    ty: 0,
+                    ease: KeyframeTweener.linear
+                },
+
+                {
+                    frame: 150,
+                    tx: 400,
+                    ty: 50,
                 }
             ]
         }

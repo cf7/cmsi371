@@ -150,6 +150,10 @@
                     (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
         },
 
+        // add tweening function
+
+        // add tweening function
+
         initialize: initializeAnimation
     };
 }());
