@@ -108,8 +108,11 @@
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
+                        var data = sprites[i].data;
+                        //sprites[i].data = sprites[i].tweener(data);
+
                         // Draw the sprite.
-                        sprites[i].draw(renderingContext);
+                        sprites[i].draw(renderingContext, data);
 
                         // Clean up.
                         renderingContext.restore();
@@ -150,9 +153,16 @@
                     (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
         },
 
-        // add tweening function
+        // ** baseline sine tweening function from class
+        sine: function (currentTime, start, distance, duration) {
+            var percentComplete = currentTime / duration;
+            var theta = Math.PI * 2 * percentComplete;
+            return start + (distance * percentComplete) + Math.sin(theta);
+        },
 
-        // add tweening function
+        // ** add tweening function
+
+        // ** add tweening function
 
         initialize: initializeAnimation
     };
