@@ -35,6 +35,10 @@
                 });
     }
 
+    var fairyTweener = function (data) {
+
+    }
+    
     // Then, we have "easing functions" that determine how
     // intermediate frames are computed.
 
@@ -42,6 +46,7 @@
     // has a drawing function and an array of keyframes.
     var sprites = [
         {
+            //engine should be able to tween n number of properties in each keyframe
             draw: square,
             keyframes: [
                 {

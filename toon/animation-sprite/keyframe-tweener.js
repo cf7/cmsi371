@@ -125,7 +125,7 @@
 
         window.requestAnimationFrame(nextFrame);
     };
-
+    
     window.KeyframeTweener = {
         // The module comes with a library of common easing functions.
         linear: function (currentTime, start, distance, duration) {
