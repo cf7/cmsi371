@@ -108,12 +108,8 @@
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
-                        var data = sprites[i].data;
-                        sprites[i].data = sprites[i].tweener(data);
-                        sprites[i].data.frame = currentFrame;
-                        sprites[i].data.context = renderingContext;
                         // Draw the sprite.
-                        sprites[i].draw(data);
+                        sprites[i].draw(renderingContext);
 
                         // Clean up.
                         renderingContext.restore();

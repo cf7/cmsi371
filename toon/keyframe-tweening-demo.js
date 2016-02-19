@@ -24,11 +24,20 @@
     // ** supply defaults!
     // ** add tweening functions for each property or range of properties
     // ** add background
-    var drawFairy = function (data) {
+    var drawFairy = function (renderingContext) {
         window.SpriteLibrary.fairy({
-                    context: data.context,
+                    context: renderingContext,
                     //setting: backGround,
-                    fairyData: data
+                    fairyData: {
+                        center: { x: 200, y: 400 },
+                        innerRadius: 10,
+                        outerRadius: 50,
+                        innerColor: "white",
+                        outerColor: "rgb(137, 255, 249)",
+                        glowIncrement: true,
+                        up: true,
+                        frame: 0
+                    },
                 });
     }
 
@@ -58,11 +67,35 @@
         return data;
     }
 
-    var drawTree = function (data) {
+    var drawTree = function (renderingContext) {
         window.SpriteLibrary.tree({
-            context: data.context,
+            context: renderingContext,
             //setting: backGround,
-            treeData: data
+            treeData: {
+                    trunk: {
+                        position: { x: 700, y: 400},
+                        dimensions: { width: 50, height: 300 }
+                    },
+                    branches: {
+                        dimensions: { width: 50, height: 75 },
+                        nextThickness: 0.5,
+                        angles: (Math.PI/9),
+                        layers: 3,
+                        leaves: {
+                            position: { x: 500, y: 250 },
+                            radius: 20,
+                            startAngle: 0,
+                            endAngle: 4 * Math.PI/3,
+                            counterClockwise: true,
+                            leafColor: "green",
+                            hasLeaves: false,
+                            count: 2,
+                            shakeIncrement: true
+                        },
+                    },
+                    barkColor: "rgb(90, 55, 45)",
+                    frame: 0
+            },
         });
     }
 
@@ -98,17 +131,6 @@
         {
             //** engine should be able to tween n number of properties in each keyframe
             draw: drawFairy,
-            data: {
-                    center: { x: 200, y: 400 },
-                    innerRadius: 10,
-                    outerRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    frame: 0
-            },
-            tweener: fairyTweener,
             keyframes: [
                 {
                     frame: 0,
@@ -137,32 +159,6 @@
 
         {
             draw: drawTree,
-            data: {
-                    trunk: {
-                        position: { x: 700, y: 400},
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/9),
-                        layers: 3,
-                        leaves: {
-                            position: { x: 500, y: 250 },
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            hasLeaves: false,
-                            count: 2,
-                            shakeIncrement: true
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)",
-                    frame: 0
-            },
-            tweener: treeTweener,
             keyframes: [
                 {
                     frame: 0,
