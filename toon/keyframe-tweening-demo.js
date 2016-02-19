@@ -128,8 +128,18 @@
     // has a drawing function and an array of keyframes.
     var sprites = [
         // ** can also use automation to build the keyframes
+        // ** tweening: the calculation of intermediate steps and execution
+        // ** of those intermediate frames (interpolation basically)
+        // ** tweening properties should be able to be interpolated from their
+        // ** present value to a future value, and have a function that determines
+        // ** how those values are interpolated (quadratically, linearly, . . . etc.)
         {
             //** engine should be able to tween n number of properties in each keyframe
+            // ** tweenable properties should be in the keyframe objects in the keyframes array
+            // ** can have functions that the tweener consults to receive data about
+            // ** the current state of the sprite
+            // ** idea is that animator can look at keyframes and see the state of the sprite
+            // ** at any given keyframe, the computer takes care of what happens in between
             draw: drawFairy,
             keyframes: [
                 {
