@@ -26,11 +26,12 @@
     // ** add tweening functions for each property or range of properties
     // ** add background
     var drawFairy = function (properties) {
+        console.log(properties.fairyWings);
         window.SpriteLibrary.fairy({
                     context: properties.context,
                     //setting: backGround,
                     fairyData: properties.data,
-                    fairyWings: properties.fairyWings
+                    fairyWings: properties.data.fairyWings
                 });
     }
 

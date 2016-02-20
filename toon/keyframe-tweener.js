@@ -125,8 +125,7 @@
 
                         var properties = {
                             context: renderingContext,
-                            data: startKeyframe,
-                            fairyWings: startKeyframe.fairyWings
+                            data: startKeyframe
                         };
                         sprites[i].draw(properties);
                         // fairyGlowTweener(renderingContext, sprites[i], startKeyframe);
