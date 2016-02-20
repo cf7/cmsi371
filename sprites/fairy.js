@@ -28,15 +28,17 @@ $(function () {
         }
 
         var wingsInward = function (fairyWings) {
-            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 2;
-            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 2;
-            fairyWings.endPoint.x = fairyWings.endPoint.x - 2;
+            var speed = fairyWings.flutterSpeed;
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - speed;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - speed;
+            fairyWings.endPoint.x = fairyWings.endPoint.x - speed;
         }
 
         var wingsOutward = function (fairyWings) {
-            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 2;
-            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 2;
-            fairyWings.endPoint.x = fairyWings.endPoint.x + 2;
+            var speed = fairyWings.flutterSpeed;
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + speed;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + speed;
+            fairyWings.endPoint.x = fairyWings.endPoint.x + speed;
         }
 
         var showControlPoints = function (curve) {
@@ -106,7 +108,8 @@ $(function () {
             var innerColor = fairyData.innerColor;
             var outerColor = fairyData.outerColor;
             var glowIncrement = fairyData.glowIncrement;
-            console.log(fairyWings.wingsInward);
+            var beforeRadius = fairyData.beforeRadius;
+
             if (fairyWings.controlPoint1.x < 10) {
                 fairyWings.wingsInward = false;
             } else if (fairyWings.controlPoint1.x >= fairyWings.beforeX) {
@@ -118,6 +121,20 @@ $(function () {
                 wingsOutward(fairyWings);
             }
             wings(fairyWings);
+
+            if (innerRadius < beforeRadius) {
+                fairyData.glowIncrement = true;
+            } else if (innerRadius >= outerRadius/2 ) {
+                fairyData.glowIncrement = false;
+            }
+            if (glowIncrement) {
+                fairyData.innerRadius = innerRadius + 1;
+            } else if (!glowIncrement) {
+                fairyData.innerRadius = innerRadius - 1;
+            }
+
+            innerRadius = fairyData.innerRadius;
+            glowIncrement = fairyData.glowIncrement;
 
             var radialGradient = ctx.createRadialGradient(
                 0, 0, innerRadius, 0, 0, outerRadius - glowIncrement);
