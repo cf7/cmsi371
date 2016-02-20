@@ -19,8 +19,7 @@ $(function () {
                 y: -fairyData.outerRadius},
             endPoint: { x: fairyData.outerRadius - 10, 
                 y: 0 },
-            direction: { forward: true,
-                left: false, right: false },
+            direction: fairyData.direction,
             color: "rgba(200, 200, 200, 0.5)"
         };
 
