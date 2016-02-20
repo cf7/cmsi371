@@ -108,29 +108,31 @@
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
-                        var keys = Object.keys(startKeyframe);
-                        for (property of keys) {
-                            var start = startKeyframe[property] || 0;
-                            var distance = (endKeyframe[property] || 0) - start;
+                        // var keys = Object.keys(startKeyframe);
+                        // for (property of keys) {
+                        //     var start = startKeyframe[property] || 0;
+                        //     var distance = (endKeyframe[property] || 0) - start;
 
-                            // modify properties
-                            if (typeof startKeyframe[property] === "number") {
-                                startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
-                            }
-                        }
+                        //     // modify properties
+                        //     if (typeof startKeyframe[property] === "number") {
+                        //         startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+                        //     } else if (typeof startKeyframe[property] === "object") {
 
-                        startKeyframe["context"] = renderingContext;
+                        //     }
+                        // }
 
-                        // var properties = {
-                        //     context: renderingContext,
-                        //     data: startKeyframe,
-                        //     fairyWings: startKeyframe.fairyWings
-                        // };
+                        // startKeyframe["context"] = renderingContext;
 
+                        var properties = {
+                            context: renderingContext,
+                            data: startKeyframe,
+                            fairyWings: startKeyframe.fairyWings
+                        };
+                        sprites[i].draw(properties);
                         // fairyGlowTweener(renderingContext, sprites[i], startKeyframe);
 
                         // Draw the sprite.
-                        sprites[i].draw(startKeyframe);
+                        // sprites[i].draw(startKeyframe);
 
                         // Clean up.
                         renderingContext.restore();
