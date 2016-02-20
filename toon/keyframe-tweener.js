@@ -41,6 +41,7 @@
         var sprites = settings.sprites;
 
         var previousTimestamp = null;
+
         var nextFrame = function (timestamp) {
             // Bail-out #1: We just started.
             if (!previousTimestamp) {
@@ -100,26 +101,26 @@
                             ease(currentTweenFrame, txStart, txDistance, duration),
                             ease(currentTweenFrame, tyStart, tyDistance, duration)
                         );
+                        renderingContext.rotate(
+                            ease(currentTweenFrame, rotateStart, rotateDistance, duration)
+                        );
                         renderingContext.scale(
                             ease(currentTweenFrame, sxStart, sxDistance, duration),
                             ease(currentTweenFrame, syStart, syDistance, duration)
                         );
-                        renderingContext.rotate(
-                            ease(currentTweenFrame, rotateStart, rotateDistance, duration)
-                        );
+                        
 
-                        // var keys = Object.keys(startKeyframe);
-                        // for (property of keys) {
-                        //     var start = startKeyframe[property] || 0;
-                        //     var distance = (endKeyframe[property] || 0) - start;
-
-                        //     // modify properties
-                        //     if (typeof startKeyframe[property] === "number") {
-                        //         startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
-                        //     } else if (typeof startKeyframe[property] === "object") {
-
-                        //     }
-                        // }
+                        var keys = Object.keys(startKeyframe);
+                        for (property of keys) {
+                            // modify properties
+                            if (typeof startKeyframe[property] === "number") {
+                                var start = startKeyframe[property] || 0;
+                                var distance = (endKeyframe[property] || 1) - start;
+                                startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+                            } else if (typeof startKeyframe[property] === "object") {
+                                // tweenProcess(startKeyframe[property], currentTweenFrame, duration);
+                            }
+                        }
 
                         // startKeyframe["context"] = renderingContext;
 
@@ -128,7 +129,6 @@
                             data: startKeyframe
                         };
                         sprites[i].draw(properties);
-                        // fairyGlowTweener(renderingContext, sprites[i], startKeyframe);
 
                         // Draw the sprite.
                         // sprites[i].draw(startKeyframe);
@@ -145,31 +145,18 @@
             window.requestAnimationFrame(nextFrame);
         };
 
-        var fairyGlowTweener = function (context, sprite, keyframe) {
-            // if (keyframe.frame % 20 === 0) {
-            //     keyframe.up = !keyframe.up;
-            // }
-            // if (keyframe.up) {
-            //     keyframe.center.y = keyframe.center.y + 3;
-            // }
-            // if (!keyframe.up) {
-            //     keyframe.center.y = keyframe.center.y - 3;
-            // }
-            if (keyframe.innerRadius < keyframe.outerRadius/2 && keyframe.glowIncrement) {
-                keyframe.innerRadius++;
+        var tweenProcess = function (nestedObject, ease, currentTweenFrame, duration) {
+            var keys = Object.keys(nestedObject);
+            for (property of keys) {
+                if (typeof nestedObject[property] === "object") {
+                    tweenProcess(nestedObject[property]);
+                } else if (typeof nestedObject[property] === "number") {
+                    var start = nestedObject[property] || 0;
+                    var distance = (nestedObject[property] || 1) - start;
+                    nestedObject[property] = ease(currentTweenFrame, start, distance, duration);
+                }
             }
-            if (keyframe.innerRadius >= keyframe.outerRadius/2 && keyframe.glowIncrement) {
-                keyframe.glowIncrement = !keyframe.glowIncrement;
-            }
-            if (keyframe.innerRadius > keyframe.outerRadius/4 && !keyframe.glowIncrement) {
-                keyframe.innerRadius--;
-            }
-            if (keyframe.innerRadius < keyframe.outerRadius/4 && !keyframe.glowIncrement) {
-                keyframe.glowIncrement = !keyframe.glowIncrement;
-            }
-
-            sprite.draw({ context: context, data: keyframe, fairyWings: keyframe.fairyWings });
-        }   
+        }
 
         window.requestAnimationFrame(nextFrame);
     };

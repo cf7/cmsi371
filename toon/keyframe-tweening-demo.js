@@ -26,7 +26,6 @@
     // ** add tweening functions for each property or range of properties
     // ** add background
     var drawFairy = function (properties) {
-        console.log(properties.fairyWings);
         window.SpriteLibrary.fairy({
                     context: properties.context,
                     //setting: backGround,
@@ -116,6 +115,9 @@
                     frame: 0,
                     tx: 0,
                     ty: 0,
+                    sx: 1,
+                    sy: 1,
+                    // rotate: 30,
                     ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
                     innerRadius: 10,
@@ -148,6 +150,9 @@
                     frame: 50,
                     tx: 0,
                     ty: 0,
+                    sx: 1,
+                    sy: 1,
+                    // rotate: -30,
                     ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
                     innerRadius: 20,
@@ -177,6 +182,9 @@
                     frame: 150,
                     tx: 400,
                     ty: 50,
+                    sx: 1,
+                    sy: 1,
+                    // rotate: 30,
                     ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
                     innerRadius: 30,
@@ -207,6 +215,9 @@
                     frame: 200,
                     tx: 400,
                     ty: 50,
+                    sx: 1,
+                    sy: 1,
+                    // rotate: -30,
                     center: { x: 200, y: 400 },
                     innerRadius: 30,
                     beforeRadius: 30,
