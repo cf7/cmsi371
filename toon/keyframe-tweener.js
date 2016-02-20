@@ -108,15 +108,29 @@
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
-                        var properties = {
-                            context: renderingContext,
-                            data: sprites[i].keyframes[j],
-                            fairyWings: sprites[i].keyframes[j].fairyWings
-                        };
+                        var keys = Object.keys(startKeyframe);
+                        for (property of keys) {
+                            var start = startKeyframe[property] || 0;
+                            var distance = (endKeyframe[property] || 0) - start;
 
-                        fairyFloatTweener(renderingContext, sprites[i], sprites[i].keyframes[j]);
+                            // modify properties
+                            if (typeof startKeyframe[property] === "number") {
+                                startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+                            }
+                        }
+
+                        startKeyframe["context"] = renderingContext;
+
+                        // var properties = {
+                        //     context: renderingContext,
+                        //     data: startKeyframe,
+                        //     fairyWings: startKeyframe.fairyWings
+                        // };
+
+                        // fairyGlowTweener(renderingContext, sprites[i], startKeyframe);
+
                         // Draw the sprite.
-                        sprites[i].draw(properties);
+                        sprites[i].draw(startKeyframe);
 
                         // Clean up.
                         renderingContext.restore();
@@ -130,7 +144,7 @@
             window.requestAnimationFrame(nextFrame);
         };
 
-        var fairyFloatTweener = function (context, sprite, keyframe) {
+        var fairyGlowTweener = function (context, sprite, keyframe) {
             // if (keyframe.frame % 20 === 0) {
             //     keyframe.up = !keyframe.up;
             // }
