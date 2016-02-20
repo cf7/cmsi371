@@ -28,15 +28,15 @@ $(function () {
         }
 
         var wingsInward = function (fairyWings) {
-            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 20;
-            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 20;
-            fairyWings.endPoint.x = fairyWings.endPoint.x - 20;
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 2;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 2;
+            fairyWings.endPoint.x = fairyWings.endPoint.x - 2;
         }
 
         var wingsOutward = function (fairyWings) {
-            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 10;
-            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 10;
-            fairyWings.endPoint.x = fairyWings.endPoint.x + 10;
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 2;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 2;
+            fairyWings.endPoint.x = fairyWings.endPoint.x + 2;
         }
 
         var showControlPoints = function (curve) {
@@ -106,10 +106,15 @@ $(function () {
             var innerColor = fairyData.innerColor;
             var outerColor = fairyData.outerColor;
             var glowIncrement = fairyData.glowIncrement;
-
-            if (fairyData.wingsInward) {
+            console.log(fairyWings.wingsInward);
+            if (fairyWings.controlPoint1.x < 10) {
+                fairyWings.wingsInward = false;
+            } else if (fairyWings.controlPoint1.x >= fairyWings.beforeX) {
+                fairyWings.wingsInward = true;
+            }
+            if (fairyWings.wingsInward) {
                 wingsInward(fairyWings);
-            } else if (!fairyData.wingsInward) {
+            } else if (!fairyWings.wingsInward) {
                 wingsOutward(fairyWings);
             }
             wings(fairyWings);

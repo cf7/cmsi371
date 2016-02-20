@@ -28,7 +28,8 @@
         window.SpriteLibrary.fairy({
                     context: properties.context,
                     //setting: backGround,
-                    fairyData: properties.data
+                    fairyData: properties.data,
+                    fairyWings: properties.fairyWings
                 });
     }
 
@@ -117,6 +118,9 @@
 
     // Now, to actually define the animated sprites.  Each sprite
     // has a drawing function and an array of keyframes.
+    var innerRadius = 10;
+    var outerRadius = 50;
+    var direction = {forward: true, left: false, right: false };
     var sprites = [
         // ** can also use automation to build the keyframes
         // ** tweening: the calculation of intermediate steps and execution
@@ -143,7 +147,22 @@
                     outerRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true
+                    glowIncrement: true,
+                    direction: {forward: false, left: true, right: false },
+                    up: true,
+                    fairyWings: {
+                        startPoint: { x: 0, y: 0 },
+                        controlPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        controlPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        endPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: direction,
+                        color: "rgba(200, 200, 200, 0.5)",
+                        wingsInward: true,
+                        beforeX: outerRadius + 10
+                    }
                     // ** add properties that call functions on themselves
                     // ** this is probably where non-monotonic tweening
                     // ** functions would go
@@ -159,11 +178,55 @@
                     outerRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true
+                    glowIncrement: true,
+                    direction: {forward: true, left: false, right: false },
+                    up: true,
+                    fairyWings: {
+                        startPoint: { x: 0, y: 0 },
+                        controlPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        controlPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        endPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: direction,
+                        color: "rgba(200, 200, 200, 0.5)",
+                        wingsInward: true,
+                        beforeX: outerRadius + 10
+                    }
                 },
 
                 {
                     frame: 150,
+                    tx: 400,
+                    ty: 50,
+                    ease: KeyframeTweener.linear,
+                    center: { x: 200, y: 400 },
+                    innerRadius: 30,
+                    outerRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true,
+                    direction: {forward: true, left: false, right: false },
+                    up: true,
+                    fairyWings: {
+                        startPoint: { x: 0, y: 0 },
+                        controlPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        controlPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        endPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: direction,
+                        color: "rgba(200, 200, 200, 0.5)",
+                        wingsInward: true,
+                        beforeX: outerRadius + 10
+                    }
+
+                },
+
+                {
+                    frame: 200,
                     tx: 400,
                     ty: 50,
                     center: { x: 200, y: 400 },
@@ -171,7 +234,22 @@
                     outerRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true
+                    glowIncrement: true,
+                    direction: {forward: true, left: false, right: false },
+                    up: true,
+                    fairyWings: {
+                        startPoint: { x: 0, y: 0 },
+                        controlPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        controlPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        endPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: direction,
+                        color: "rgba(200, 200, 200, 0.5)",
+                        wingsInward: true,
+                        beforeX: outerRadius + 10
+                    }
                 }
             ]
         },

@@ -108,11 +108,13 @@
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
-                        var properties = { 
+                        var properties = {
                             context: renderingContext,
-                            data: sprites[i].keyframes[j]
+                            data: sprites[i].keyframes[j],
+                            fairyWings: sprites[i].keyframes[j].fairyWings
                         };
 
+                        fairyFloatTweener(renderingContext, sprites[i], sprites[i].keyframes[j]);
                         // Draw the sprite.
                         sprites[i].draw(properties);
 
@@ -127,6 +129,32 @@
             previousTimestamp = timestamp;
             window.requestAnimationFrame(nextFrame);
         };
+
+        var fairyFloatTweener = function (context, sprite, keyframe) {
+            // if (keyframe.frame % 20 === 0) {
+            //     keyframe.up = !keyframe.up;
+            // }
+            // if (keyframe.up) {
+            //     keyframe.center.y = keyframe.center.y + 3;
+            // }
+            // if (!keyframe.up) {
+            //     keyframe.center.y = keyframe.center.y - 3;
+            // }
+            if (keyframe.innerRadius < keyframe.outerRadius/2 && keyframe.glowIncrement) {
+                keyframe.innerRadius++;
+            }
+            if (keyframe.innerRadius >= keyframe.outerRadius/2 && keyframe.glowIncrement) {
+                keyframe.glowIncrement = !keyframe.glowIncrement;
+            }
+            if (keyframe.innerRadius > keyframe.outerRadius/4 && !keyframe.glowIncrement) {
+                keyframe.innerRadius--;
+            }
+            if (keyframe.innerRadius < keyframe.outerRadius/4 && !keyframe.glowIncrement) {
+                keyframe.glowIncrement = !keyframe.glowIncrement;
+            }
+
+            sprite.draw({ context: context, data: keyframe, fairyWings: keyframe.fairyWings });
+        }   
 
         window.requestAnimationFrame(nextFrame);
     };
