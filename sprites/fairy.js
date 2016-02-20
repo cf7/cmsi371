@@ -10,21 +10,33 @@ $(function () {
         ctx = specifications.context;
         backGround = specifications.setting;
         fairyData = specifications.fairyData;
-
-        var fairyWings = {
-            startPoint: { x: 0, y: 0 },
-            controlPoint1: { x: fairyData.outerRadius, 
-                y: -fairyData.outerRadius - 40 },
-            controlPoint2: { x: fairyData.outerRadius + 30, 
-                y: -fairyData.outerRadius},
-            endPoint: { x: fairyData.outerRadius - 10, 
-                y: 0 },
-            direction: fairyData.direction,
-            color: "rgba(200, 200, 200, 0.5)"
-        };
+        fairyWings = specifications.fairyWings;
+        // var fairyWings = {
+        //     startPoint: { x: 0, y: 0 },
+        //     controlPoint1: { x: fairyData.outerRadius, 
+        //         y: -fairyData.outerRadius - 40 },
+        //     controlPoint2: { x: fairyData.outerRadius + 30, 
+        //         y: -fairyData.outerRadius},
+        //     endPoint: { x: fairyData.outerRadius - 10, 
+        //         y: 0 },
+        //     direction: fairyData.direction,
+        //     color: "rgba(200, 200, 200, 0.5)"
+        // };
 
         var clear = function () {
             backGround();
+        }
+
+        var wingsInward = function (fairyWings) {
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x - 20;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x - 20;
+            fairyWings.endPoint.x = fairyWings.endPoint.x - 20;
+        }
+
+        var wingsOutward = function (fairyWings) {
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + 10;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + 10;
+            fairyWings.endPoint.x = fairyWings.endPoint.x + 10;
         }
 
         var showControlPoints = function (curve) {
@@ -95,6 +107,11 @@ $(function () {
             var outerColor = fairyData.outerColor;
             var glowIncrement = fairyData.glowIncrement;
 
+            if (fairyData.wingsInward) {
+                wingsInward(fairyWings);
+            } else if (!fairyData.wingsInward) {
+                wingsOutward(fairyWings);
+            }
             wings(fairyWings);
 
             var radialGradient = ctx.createRadialGradient(

@@ -28,17 +28,32 @@
 
             var drawScene = function () {
                 backGround();
+                var innerRadius = 10;
+                var outerRadius = 50;
+                var direction = { forward: true, left: false, right: false };
+
                 SpriteLibrary.fairy({
                     context: ctx,
                     setting: backGround,
                     fairyData: {
                         center: { x: 200, y: 400 },
-                        innerRadius: 10,
-                        outerRadius: 50,
+                        innerRadius: innerRadius,
+                        outerRadius: outerRadius,
                         innerColor: "white",
                         outerColor: "rgb(137, 255, 249)",
                         glowIncrement: 1,
-                        direction: { forward: true, left: false, right: false }
+                        direction: direction
+                    },
+                    fairyWings: {
+                        startPoint: { x: 0, y: 0 },
+                        controlPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        controlPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        endPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: direction,
+                        color: "rgba(200, 200, 200, 0.5)"
                     }
                 });
                 // window.requestAnimationFrame(drawScene);
