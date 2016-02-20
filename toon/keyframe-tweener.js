@@ -108,8 +108,13 @@
                             ease(currentTweenFrame, rotateStart, rotateDistance, duration)
                         );
 
+                        var properties = { 
+                            context: renderingContext,
+                            data: sprites[i].keyframes[j]
+                        };
+
                         // Draw the sprite.
-                        sprites[i].draw(renderingContext);
+                        sprites[i].draw(properties);
 
                         // Clean up.
                         renderingContext.restore();

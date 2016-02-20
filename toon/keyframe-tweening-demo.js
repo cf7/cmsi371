@@ -8,12 +8,12 @@
     // First, a selection of "drawing functions" from which we
     // can choose.  Their common trait: they all accept a single
     // renderingContext argument.
-    var square = function (data) {
+    var square = function (renderingContext) {
         renderingContext.fillStyle = "blue";
         renderingContext.fillRect(-20, -20, 40, 40);
     };
 
-    var circle = function (data) {
+    var circle = function (renderingContext) {
         renderingContext.strokeStyle = "red";
         renderingContext.beginPath();
         renderingContext.arc(0, 0, 50, 0, Math.PI * 2);
@@ -24,20 +24,11 @@
     // ** supply defaults!
     // ** add tweening functions for each property or range of properties
     // ** add background
-    var drawFairy = function (renderingContext) {
+    var drawFairy = function (properties) {
         window.SpriteLibrary.fairy({
-                    context: renderingContext,
+                    context: properties.context,
                     //setting: backGround,
-                    fairyData: {
-                        center: { x: 200, y: 400 },
-                        innerRadius: 10,
-                        outerRadius: 50,
-                        innerColor: "white",
-                        outerColor: "rgb(137, 255, 249)",
-                        glowIncrement: true,
-                        up: true,
-                        frame: 0
-                    },
+                    fairyData: properties.data
                 });
     }
 
@@ -146,7 +137,13 @@
                     frame: 0,
                     tx: -100,
                     ty: -100,
-                    ease: KeyframeTweener.linear
+                    ease: KeyframeTweener.linear,
+                    center: { x: 200, y: 400 },
+                    innerRadius: 10,
+                    outerRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true
                     // ** add properties that call functions on themselves
                     // ** this is probably where non-monotonic tweening
                     // ** functions would go
@@ -156,41 +153,53 @@
                     frame: 50,
                     tx: 0,
                     ty: 0,
-                    ease: KeyframeTweener.linear
+                    ease: KeyframeTweener.linear,
+                    center: { x: 200, y: 400 },
+                    innerRadius: 20,
+                    outerRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true
                 },
 
                 {
                     frame: 150,
                     tx: 400,
                     ty: 50,
+                    center: { x: 200, y: 400 },
+                    innerRadius: 30,
+                    outerRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true
                 }
             ]
         },
 
-        {
-            draw: drawTree,
-            keyframes: [
-                {
-                    frame: 0,
-                    tx: 100,
-                    ty: 0,
-                    ease: KeyframeTweener.linear
-                },
+        // {
+        //     draw: drawTree,
+        //     keyframes: [
+        //         {
+        //             frame: 0,
+        //             tx: 100,
+        //             ty: 0,
+        //             ease: KeyframeTweener.linear
+        //         },
 
-                {
-                    frame: 200,
-                    tx: 100,
-                    ty: 0,
-                    ease: KeyframeTweener.linear
-                },
+        //         {
+        //             frame: 200,
+        //             tx: 100,
+        //             ty: 0,
+        //             ease: KeyframeTweener.linear
+        //         },
 
-                {
-                    frame: 500,
-                    tx: -100,
-                    ty: 0,
-                }
-            ]
-        },
+        //         {
+        //             frame: 500,
+        //             tx: -100,
+        //             ty: 0,
+        //         }
+        //     ]
+        // },
 
         // {
         //     draw: square,
