@@ -21,6 +21,20 @@
         renderingContext.stroke();
     };
 
+    // Reasoning
+    // *******
+    // The way the tweenProcess function in keyframe-tweener.js is set up,
+    // it tweens every number property that exists in an object, no matter how nested.
+    // Because of this, it is important to be able to not tween certain properties.
+    // Although simply passing untweenable properties into another object and then
+    // passing that object into the fairy drawing function would work, the changes to
+    // the properties that occurr in fairy.js would not be preserved in iterations
+    // over the same startKeyframe in keyframe-tweener.js (because a "new" object
+    // is pasesed in every time).
+    // Therefore, there is a way to continually pass in the same object while
+    // still being able to designate which properties should not be tweened.
+    // The four functions below accomplish this by handling properties that are
+    // tagged (beging with) the string "nt" which stands for "no tweening"
     var startsWithNT = function (string) {
         return string.match(/^nt/) === null ? false : true;
     };
