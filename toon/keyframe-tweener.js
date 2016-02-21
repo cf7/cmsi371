@@ -109,17 +109,13 @@
                             ease(currentTweenFrame, syStart, syDistance, duration)
                         );
                         
-
                         tweenProcess(startKeyframe, endKeyframe, currentTweenFrame, duration, ease);
-
-                        // startKeyframe["context"] = renderingContext;
 
                         var properties = {
                             context: renderingContext,
                             data: startKeyframe
                         };
-                        console.log(properties);
-                        console.log(properties.data.fairyWings.flutterSpeed);
+
                         sprites[i].draw(properties);
 
                         // Draw the sprite.
@@ -137,27 +133,27 @@
             window.requestAnimationFrame(nextFrame);
         };
 
-        var startsWithNT = function (string) {
+        window.requestAnimationFrame(nextFrame);
+    };
+    
+    var startsWithNT = function (string) {
             return string.match(/^nt/) === null ? false : true;
         };
 
-        var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
-            var keys = Object.keys(startKeyframe);
-            for (property of keys) {
-                if (!startsWithNT(property) && property != "frame" && typeof startKeyframe[property] != "function") {
-                    if (typeof startKeyframe[property] === "object") {
-                        tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
-                    } else if (typeof startKeyframe[property] === "number") {
-                        var start = startKeyframe[property] || 0;
-                        var distance = (endKeyframe[property] || 1) - start;
-                        startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
-                    }
+    var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
+        var keys = Object.keys(startKeyframe);
+        for (property of keys) {
+            if (!startsWithNT(property) && property != "frame" && typeof startKeyframe[property] != "function") {
+                if (typeof startKeyframe[property] === "object") {
+                    tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
+                } else if (typeof startKeyframe[property] === "number") {
+                    var start = startKeyframe[property] || 0;
+                    var distance = (endKeyframe[property] || 1) - start;
+                    startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
                 }
             }
         }
-
-        window.requestAnimationFrame(nextFrame);
-    };
+    }
     
     window.KeyframeTweener = {
         // The module comes with a library of common easing functions.
