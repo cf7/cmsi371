@@ -127,14 +127,11 @@ $(function () {
             } else if (innerRadius >= outerRadius/2 ) {
                 fairyData.glowIncrement = false;
             }
-            if (glowIncrement) {
+            if (fairyData.glowIncrement) {
                 fairyData.innerRadius = innerRadius + 1;
-            } else if (!glowIncrement) {
+            } else if (!fairyData.glowIncrement) {
                 fairyData.innerRadius = innerRadius - 1;
             }
-
-            innerRadius = fairyData.innerRadius;
-            glowIncrement = fairyData.glowIncrement;
 
             var radialGradient = ctx.createRadialGradient(
                 0, 0, innerRadius, 0, 0, outerRadius - glowIncrement);
