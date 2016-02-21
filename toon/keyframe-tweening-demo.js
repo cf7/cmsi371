@@ -118,7 +118,7 @@
                     sx: 1,
                     sy: 1,
                     // rotate: 30,
-                    ease: KeyframeTweener.linear,
+                    ease: KeyframeTweener.quadEaseInOut,
                     center: { x: 200, y: 400 },
                     innerRadius: 10,
                     beforeRadius: 10,
@@ -174,7 +174,7 @@
                         color: "rgba(200, 200, 200, 0.5)",
                         wingsInward: true,
                         beforeX: outerRadius + 10,
-                        flutterSpeed: 7
+                        flutterSpeed: 4
                     }
                 },
 

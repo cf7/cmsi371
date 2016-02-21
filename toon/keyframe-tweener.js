@@ -110,17 +110,7 @@
                         );
                         
 
-                        var keys = Object.keys(startKeyframe);
-                        for (property of keys) {
-                            // modify properties
-                            if (typeof startKeyframe[property] === "number") {
-                                var start = startKeyframe[property] || 0;
-                                var distance = (endKeyframe[property] || 1) - start;
-                                startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
-                            } else if (typeof startKeyframe[property] === "object") {
-                                // tweenProcess(startKeyframe[property], currentTweenFrame, duration);
-                            }
-                        }
+                        tweenProcess(startKeyframe, endKeyframe, currentTweenFrame, duration, ease);
 
                         // startKeyframe["context"] = renderingContext;
 
@@ -145,15 +135,17 @@
             window.requestAnimationFrame(nextFrame);
         };
 
-        var tweenProcess = function (nestedObject, ease, currentTweenFrame, duration) {
-            var keys = Object.keys(nestedObject);
+        var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
+            var keys = Object.keys(startKeyframe);
             for (property of keys) {
-                if (typeof nestedObject[property] === "object") {
-                    tweenProcess(nestedObject[property]);
-                } else if (typeof nestedObject[property] === "number") {
-                    var start = nestedObject[property] || 0;
-                    var distance = (nestedObject[property] || 1) - start;
-                    nestedObject[property] = ease(currentTweenFrame, start, distance, duration);
+                if (property != "frame" && typeof startKeyframe[property] != "function") {
+                    if (typeof startKeyframe[property] === "object") {
+                        tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
+                    } else if (typeof startKeyframe[property] === "number") {
+                        var start = startKeyframe[property] || 0;
+                        var distance = (endKeyframe[property] || 1) - start;
+                        startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+                    }
                 }
             }
         }
