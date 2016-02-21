@@ -194,11 +194,11 @@
                     sx: 1,
                     sy: 1,
                     // rotate: 30,
-                    ease: KeyframeTweener.linear,
+                    ease: KeyframeTweener.slowStart,
                     center: { x: 200, y: 400 },
                     ntinnerRadius: 10,
                     ntbeforeRadius: 10,
-                    outerRadius: 50,
+                    ntouterRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
                     glowIncrement: true,
@@ -214,7 +214,7 @@
                         direction: {forward: true, left: false, right: false },
                         color: "rgba(200, 200, 200, 0.5)",
                         wingsInward: true,
-                        beforeX: outerRadius + 10,
+                        ntbeforeX: outerRadius + 10,
                         flutterSpeed: 4
                     }
                     // ** add properties that call functions on themselves
@@ -224,16 +224,16 @@
 
                 {
                     frame: 100,
-                    tx: 100,
-                    ty: 0,
+                    tx: 300,
+                    ty: -300,
                     sx: 1,
                     sy: 1,
                     // rotate: -30,
-                    ease: KeyframeTweener.linear,
+                    // ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
                     ntinnerRadius: 20,
                     ntbeforeRadius: 20,
-                    outerRadius: 50,
+                    ntouterRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
                     glowIncrement: true,
@@ -249,74 +249,74 @@
                         direction: {forward: true, left: false, right: false },
                         color: "rgba(200, 200, 200, 0.5)",
                         wingsInward: true,
-                        beforeX: outerRadius + 10,
+                        ntbeforeX: outerRadius + 10,
                         flutterSpeed: 10
                     }
                 },
 
-                {
-                    frame: 150,
-                    tx: 100,
-                    ty: -100,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: -30,
-                    ease: KeyframeTweener.linear,
-                    center: { x: 200, y: 400 },
-                    ntinnerRadius: 20,
-                    ntbeforeRadius: 20,
-                    outerRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    fairyWings: {
-                        ntstartPoint: { x: 0, y: 0 },
-                        ntcontrolPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        ntcontrolPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        ntendPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        beforeX: outerRadius + 10,
-                        flutterSpeed: 10
-                    }
-                },
+                // {
+                //     frame: 150,
+                //     tx: 100,
+                //     ty: -100,
+                //     sx: 1,
+                //     sy: 1,
+                //     // rotate: -30,
+                //     ease: KeyframeTweener.linear,
+                //     center: { x: 200, y: 400 },
+                //     ntinnerRadius: 20,
+                //     ntbeforeRadius: 20,
+                //     outerRadius: 50,
+                //     innerColor: "white",
+                //     outerColor: "rgb(137, 255, 249)",
+                //     glowIncrement: true,
+                //     up: true,
+                //     fairyWings: {
+                //         ntstartPoint: { x: 0, y: 0 },
+                //         ntcontrolPoint1: { x: outerRadius, 
+                //             y: -outerRadius - 40 },
+                //         ntcontrolPoint2: { x: outerRadius + 30, 
+                //             y: -outerRadius},
+                //         ntendPoint: { x: outerRadius - 10, 
+                //             y: 0 },
+                //         direction: {forward: true, left: false, right: false },
+                //         color: "rgba(200, 200, 200, 0.5)",
+                //         wingsInward: true,
+                //         beforeX: outerRadius + 10,
+                //         flutterSpeed: 10
+                //     }
+                // },
 
-                {
-                    frame: 200,
-                    tx: 150,
-                    ty: -150,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: -30,
-                    ease: KeyframeTweener.linear,
-                    center: { x: 200, y: 400 },
-                    ntinnerRadius: 20,
-                    ntbeforeRadius: 20,
-                    outerRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    fairyWings: {
-                        ntstartPoint: { x: 0, y: 0 },
-                        ntcontrolPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        ntcontrolPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        ntendPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        beforeX: outerRadius + 10,
-                        flutterSpeed: 7
-                    }
-                },
+                // {
+                //     frame: 200,
+                //     tx: 150,
+                //     ty: -150,
+                //     sx: 1,
+                //     sy: 1,
+                //     // rotate: -30,
+                //     ease: KeyframeTweener.linear,
+                //     center: { x: 200, y: 400 },
+                //     ntinnerRadius: 20,
+                //     ntbeforeRadius: 20,
+                //     outerRadius: 50,
+                //     innerColor: "white",
+                //     outerColor: "rgb(137, 255, 249)",
+                //     glowIncrement: true,
+                //     up: true,
+                //     fairyWings: {
+                //         ntstartPoint: { x: 0, y: 0 },
+                //         ntcontrolPoint1: { x: outerRadius, 
+                //             y: -outerRadius - 40 },
+                //         ntcontrolPoint2: { x: outerRadius + 30, 
+                //             y: -outerRadius},
+                //         ntendPoint: { x: outerRadius - 10, 
+                //             y: 0 },
+                //         direction: {forward: true, left: false, right: false },
+                //         color: "rgba(200, 200, 200, 0.5)",
+                //         wingsInward: true,
+                //         beforeX: outerRadius + 10,
+                //         flutterSpeed: 7
+                //     }
+                // }
             ]
         },
 
@@ -412,7 +412,7 @@
         // }
     ];
 
-    
+
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
     // to display, of course.

@@ -116,10 +116,8 @@
                             data: startKeyframe
                         };
 
-                        sprites[i].draw(properties);
-
                         // Draw the sprite.
-                        // sprites[i].draw(startKeyframe);
+                        sprites[i].draw(properties);
 
                         // Clean up.
                         renderingContext.restore();
@@ -154,7 +152,7 @@
             }
         }
     }
-    
+
     window.KeyframeTweener = {
         // The module comes with a library of common easing functions.
         linear: function (currentTime, start, distance, duration) {
@@ -187,8 +185,16 @@
         },
 
         // ** add tweening function
+        snap: function (currentTime, start, distance, duration) {
+            var percentComplete = currentTime / duration;
+            return Math.pow(distance * percentComplete, 3) + start;
+        },
 
         // ** add tweening function
+        slowStart: function (currentTime, start, distance, duration) {
+            var percentComplete = currentTime / duration;
+            return distance * Math.pow(percentComplete, 3) + start;
+        },
 
         initialize: initializeAnimation
     };
