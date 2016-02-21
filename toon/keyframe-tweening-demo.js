@@ -21,17 +21,152 @@
         renderingContext.stroke();
     };
 
+    var startsWithNT = function (string) {
+        return string.match(/^nt/) === null ? false : true;
+    };
+
+    var rename = function (data, key, newKey, value) {
+        data[newKey] = value;
+        delete data[key];
+        return data;
+    };
+
+    var rememberKeys = function (data, keyStack) {
+        var keys = Object.keys(data);
+        for (property of keys) {
+            keyStack.push(property);
+            if (typeof data[property] === "object") {
+                rememberKeys(data[property], keyStack);
+            }
+        }
+        return keyStack;
+    };
+
+    var unTag = function (data) {
+        var keys = Object.keys(data);
+        for (property of keys) {
+            if (startsWithNT(property)) {
+                rename(data, property, property.replace("nt", ""), data[property]);
+            }
+            if (typeof data[property] === "object") {
+                unTag(data[property]);
+            }
+        }
+        return data;
+    };
+
+    var reTag = function (data, rememberedKeys) {
+        var keys = Object.keys(data);
+        for (property of keys) {
+            for (var index = 0; index < rememberedKeys.length; index++) {
+                if (startsWithNT(rememberedKeys[index])) {
+                    if (rememberedKeys[index].replace("nt", "") === property) {
+                        rename(data, property, rememberedKeys[index], data[property]);
+                    }
+                }
+            }
+            if (typeof data[property] === "object") {
+                reTag(data[property], rememberedKeys);
+            }
+        }
+        return data;
+    };
+
     // ** engine should pass an entire obejct into drawing function
     // ** supply defaults!
     // ** add tweening functions for each property or range of properties
     // ** add background
     var drawFairy = function (properties) {
+        // Method 1
+        // ********
+        // For now, passing in all of the tweened data, but the sprite
+        // only takes in the tweened data that it wants.
+        // So even though other values were tweened, it doesn't have
+        // to take them all in.
+        // ********
+
+        // Method 2
+        // ********
+        // creating proxy object with properties that will remain
+        // constant (untweened), at last minute, will replace the tweened
+        // values in the properties object to keep those values constant
+        // doing it this way because passing in this proxyData directly
+        // into the SpriteLibrary.fairy function will keep all values constant
+        // block the properties object from being modified. When changes are 
+        // made to the fairyData or fairyWings objects in fairy.js, those changes
+        // are preserved in the next iteration in keyframe-tweener.js via
+        // the properties object.
+
+        var proxyData = {
+            fairyData: {
+                    center: { x: 200, y: 400 },
+                    innerRadius: 10, // properties.data.innerRadius,
+                    beforeRadius: 10, // properties.data.beforeRadius,
+                    outerRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true,
+                    up: true
+                },
+                fairyWings: {
+                    startPoint: { x: 0, y: 0 },
+                    controlPoint1: { x: outerRadius, 
+                        y: -outerRadius - 40 },
+                    controlPoint2: { x: outerRadius + 30, 
+                        y: -outerRadius},
+                    endPoint: { x: outerRadius - 10, 
+                        y: 0 },
+                    direction: {forward: true, left: false, right: false },
+                    color: "rgba(200, 200, 200, 0.5)",
+                    wingsInward: true,
+                    beforeX: outerRadius + 10,
+                    flutterSpeed: 4 // properties.data.fairyWings.flutterSpeed
+                }
+        };
+
+        // things to remain constant
+        // properties.data.center = proxyData.fairyData.center;
+        // properties.data.outerRadius = proxyData.fairyData.outerRadius;
+        // properties.data.fairyWings.startPoint = proxyData.fairyWings.startPoint;
+        // properties.data.fairyWings.controlPoint1 = proxyData.fairyWings.controlPoint1;
+        // properties.data.fairyWings.controlPoint2 = proxyData.fairyWings.controlPoint2;
+        // properties.data.fairyWings.endPoint = proxyData.fairyWings.endPoint;
+
+        var rememberedKeys = rememberKeys(properties, []);
+        unTag(properties);
+
+        var innerRadius = 10;
+        var outerRadius = 50;
         window.SpriteLibrary.fairy({
                     context: properties.context,
                     //setting: backGround,
-                    fairyData: properties.data,
-                    fairyWings: properties.data.fairyWings
+                    fairyData: properties.data, //{
+                    //     center: { x: 200, y: 400 },
+                    //     innerRadius: 10, // properties.data.innerRadius,
+                    //     beforeRadius: 10, // properties.data.beforeRadius,
+                    //     outerRadius: 50,
+                    //     innerColor: "white",
+                    //     outerColor: "rgb(137, 255, 249)",
+                    //     // glowIncrement: true,
+                    //     up: true
+                    // },
+                    fairyWings: properties.data.fairyWings //{
+                    //     startPoint: { x: 0, y: 0 },
+                    //     controlPoint1: { x: outerRadius, 
+                    //         y: -outerRadius - 40 },
+                    //     controlPoint2: { x: outerRadius + 30, 
+                    //         y: -outerRadius},
+                    //     endPoint: { x: outerRadius - 10, 
+                    //         y: 0 },
+                    //     direction: {forward: true, left: false, right: false },
+                    //     color: "rgba(200, 200, 200, 0.5)",
+                    //     wingsInward: true,
+                    //     beforeX: outerRadius + 10,
+                    //     flutterSpeed: 4 // properties.data.fairyWings.flutterSpeed
+                    // }
                 });
+
+        reTag(properties, rememberedKeys);
     }
 
     var drawTree = function (renderingContext) {
@@ -118,22 +253,22 @@
                     sx: 1,
                     sy: 1,
                     // rotate: 30,
-                    ease: KeyframeTweener.quadEaseInOut,
+                    ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
-                    innerRadius: 10,
-                    beforeRadius: 10,
+                    ntinnerRadius: 10,
+                    ntbeforeRadius: 10,
                     outerRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
                     glowIncrement: true,
                     up: true,
                     fairyWings: {
-                        startPoint: { x: 0, y: 0 },
-                        controlPoint1: { x: outerRadius, 
+                        ntstartPoint: { x: 0, y: 0 },
+                        ntcontrolPoint1: { x: outerRadius, 
                             y: -outerRadius - 40 },
-                        controlPoint2: { x: outerRadius + 30, 
+                        ntcontrolPoint2: { x: outerRadius + 30, 
                             y: -outerRadius},
-                        endPoint: { x: outerRadius - 10, 
+                        ntendPoint: { x: outerRadius - 10, 
                             y: 0 },
                         direction: {forward: true, left: false, right: false },
                         color: "rgba(200, 200, 200, 0.5)",
@@ -147,7 +282,7 @@
                 },
 
                 {
-                    frame: 50,
+                    frame: 150,
                     tx: 0,
                     ty: 0,
                     sx: 1,
@@ -155,20 +290,20 @@
                     // rotate: -30,
                     ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
-                    innerRadius: 20,
-                    beforeRadius: 20,
+                    ntinnerRadius: 20,
+                    ntbeforeRadius: 20,
                     outerRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
                     glowIncrement: true,
                     up: true,
                     fairyWings: {
-                        startPoint: { x: 0, y: 0 },
-                        controlPoint1: { x: outerRadius, 
+                        ntstartPoint: { x: 0, y: 0 },
+                        ntcontrolPoint1: { x: outerRadius, 
                             y: -outerRadius - 40 },
-                        controlPoint2: { x: outerRadius + 30, 
+                        ntcontrolPoint2: { x: outerRadius + 30, 
                             y: -outerRadius},
-                        endPoint: { x: outerRadius - 10, 
+                        ntendPoint: { x: outerRadius - 10, 
                             y: 0 },
                         direction: {forward: true, left: false, right: false },
                         color: "rgba(200, 200, 200, 0.5)",
@@ -178,69 +313,69 @@
                     }
                 },
 
-                {
-                    frame: 150,
-                    tx: 400,
-                    ty: 50,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: 30,
-                    ease: KeyframeTweener.linear,
-                    center: { x: 200, y: 400 },
-                    innerRadius: 30,
-                    beforeRadius: 30,
-                    outerRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    fairyWings: {
-                        startPoint: { x: 0, y: 0 },
-                        controlPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        controlPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        endPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        beforeX: outerRadius + 10,
-                        flutterSpeed: 4
-                    }
+                // {
+                //     frame: 150,
+                //     tx: 400,
+                //     ty: 50,
+                //     sx: 1,
+                //     sy: 1,
+                //     // rotate: 30,
+                //     ease: KeyframeTweener.linear,
+                //     center: { x: 200, y: 400 },
+                //     innerRadius: 30,
+                //     beforeRadius: 30,
+                //     outerRadius: 50,
+                //     innerColor: "white",
+                //     outerColor: "rgb(137, 255, 249)",
+                //     glowIncrement: true,
+                //     up: true,
+                //     fairyWings: {
+                //         startPoint: { x: 0, y: 0 },
+                //         controlPoint1: { x: outerRadius, 
+                //             y: -outerRadius - 40 },
+                //         controlPoint2: { x: outerRadius + 30, 
+                //             y: -outerRadius},
+                //         endPoint: { x: outerRadius - 10, 
+                //             y: 0 },
+                //         direction: {forward: true, left: false, right: false },
+                //         color: "rgba(200, 200, 200, 0.5)",
+                //         wingsInward: true,
+                //         beforeX: outerRadius + 10,
+                //         flutterSpeed: 4
+                //     }
 
-                },
+                // },
 
-                {
-                    frame: 200,
-                    tx: 400,
-                    ty: 50,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: -30,
-                    center: { x: 200, y: 400 },
-                    innerRadius: 30,
-                    beforeRadius: 30,
-                    outerRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    fairyWings: {
-                        startPoint: { x: 0, y: 0 },
-                        controlPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        controlPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        endPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        beforeX: outerRadius + 10,
-                        flutterSpeed: 4
-                    }
-                }
+                // {
+                //     frame: 200,
+                //     tx: 400,
+                //     ty: 50,
+                //     sx: 1,
+                //     sy: 1,
+                //     // rotate: -30,
+                //     center: { x: 200, y: 400 },
+                //     innerRadius: 30,
+                //     beforeRadius: 30,
+                //     outerRadius: 50,
+                //     innerColor: "white",
+                //     outerColor: "rgb(137, 255, 249)",
+                //     glowIncrement: true,
+                //     up: true,
+                //     fairyWings: {
+                //         startPoint: { x: 0, y: 0 },
+                //         controlPoint1: { x: outerRadius, 
+                //             y: -outerRadius - 40 },
+                //         controlPoint2: { x: outerRadius + 30, 
+                //             y: -outerRadius},
+                //         endPoint: { x: outerRadius - 10, 
+                //             y: 0 },
+                //         direction: {forward: true, left: false, right: false },
+                //         color: "rgba(200, 200, 200, 0.5)",
+                //         wingsInward: true,
+                //         beforeX: outerRadius + 10,
+                //         flutterSpeed: 4
+                //     }
+                // }
             ]
         },
 

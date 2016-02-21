@@ -118,6 +118,8 @@
                             context: renderingContext,
                             data: startKeyframe
                         };
+                        console.log(properties);
+                        console.log(properties.data.fairyWings.flutterSpeed);
                         sprites[i].draw(properties);
 
                         // Draw the sprite.
@@ -135,10 +137,14 @@
             window.requestAnimationFrame(nextFrame);
         };
 
+        var startsWithNT = function (string) {
+            return string.match(/^nt/) === null ? false : true;
+        };
+
         var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
             var keys = Object.keys(startKeyframe);
             for (property of keys) {
-                if (property != "frame" && typeof startKeyframe[property] != "function") {
+                if (!startsWithNT(property) && property != "frame" && typeof startKeyframe[property] != "function") {
                     if (typeof startKeyframe[property] === "object") {
                         tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
                     } else if (typeof startKeyframe[property] === "number") {
