@@ -181,9 +181,17 @@
         sine: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / duration;
             var theta = Math.PI * 2 * percentComplete;
-            return start + (distance * percentComplete) + Math.sin(theta);
+            return start + (distance * percentComplete) + (distance * Math.sin(theta));
         },
 
+        // Take the end points and do the in-between point
+        // return the value of where that object would be at
+        // the given moment
+        // almost always should have a percentComplete
+        // How far along will the function be at this time?
+        // identify "landmarks" in the function to deduce a pattern
+        // apply percentComplete to that pattern (like parametric functions,
+        // percentComplete is the t variable)
         // ** add tweening function
         snap: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / duration;
