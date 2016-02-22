@@ -193,7 +193,7 @@
         // ** add tweening function
         slowStart: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / duration;
-            return distance * Math.pow(percentComplete, 3) + start;
+            return (distance * Math.pow(percentComplete, 3)) + start;
         },
 
         initialize: initializeAnimation
