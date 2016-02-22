@@ -172,84 +172,12 @@
         // ** tweening properties should be able to be interpolated from their
         // ** present value to a future value, and have a function that determines
         // ** how those values are interpolated (quadratically, linearly, . . . etc.)
-        {
-            //** engine should be able to tween n number of properties in each keyframe
-            // ** tweenable properties should be in the keyframe objects in the keyframes array
-            // ** can have functions that the tweener consults to receive data about
-            // ** the current state of the sprite
-            // ** idea is that animator can look at keyframes and see the state of the sprite
-            // ** at any given keyframe, the computer takes care of what happens in between
-            draw: drawFairy,
-            keyframes: [
-                {
-                    frame: 0,
-                    tx: 0,
-                    ty: 0,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: 30,
-                    ease: KeyframeTweener.slowStart,
-                    center: { x: 200, y: 400 },
-                    ntinnerRadius: 10,
-                    ntbeforeRadius: 10,
-                    ntouterRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    fairyWings: {
-                        ntstartPoint: { x: 0, y: 0 },
-                        ntcontrolPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        ntcontrolPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        ntendPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        ntbeforeX: outerRadius + 10,
-                        flutterSpeed: 4
-                    }
-                    // ** add properties that call functions on themselves
-                    // ** this is probably where non-monotonic tweening
-                    // ** functions would go
-                },
-
-                {
-                    frame: 200,
-                    tx: 350,
-                    ty: 0,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: -30,
-                    // ease: KeyframeTweener.linear,
-                    center: { x: 200, y: 400 },
-                    ntinnerRadius: 20,
-                    ntbeforeRadius: 20,
-                    ntouterRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    fairyWings: {
-                        ntstartPoint: { x: 0, y: 0 },
-                        ntcontrolPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        ntcontrolPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        ntendPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        ntbeforeX: outerRadius + 10,
-                        flutterSpeed: 10
-                    }
-                },
-            ]
-        },
-
+        //** engine should be able to tween n number of properties in each keyframe
+        // ** tweenable properties should be in the keyframe objects in the keyframes array
+        // ** can have functions that the tweener consults to receive data about
+        // ** the current state of the sprite
+        // ** idea is that animator can look at keyframes and see the state of the sprite
+        // ** at any given keyframe, the computer takes care of what happens in between
         {
             draw: drawTree,
             keyframes: [
@@ -360,6 +288,77 @@
             ]
         },
 
+        {
+            draw: drawFairy,
+            keyframes: [
+                {
+                    frame: 0,
+                    tx: 0,
+                    ty: 0,
+                    sx: 1,
+                    sy: 1,
+                    // rotate: 30,
+                    ease: KeyframeTweener.slowStart,
+                    center: { x: 200, y: 400 },
+                    ntinnerRadius: 10,
+                    ntbeforeRadius: 10,
+                    ntouterRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true,
+                    up: true,
+                    fairyWings: {
+                        ntstartPoint: { x: 0, y: 0 },
+                        ntcontrolPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        ntcontrolPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        ntendPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: {forward: true, left: false, right: false },
+                        color: "rgba(200, 200, 200, 0.5)",
+                        wingsInward: true,
+                        ntbeforeX: outerRadius + 10,
+                        flutterSpeed: 4
+                    }
+                    // ** add properties that call functions on themselves
+                    // ** this is probably where non-monotonic tweening
+                    // ** functions would go
+                },
+
+                {
+                    frame: 200,
+                    tx: 350,
+                    ty: 0,
+                    sx: 1,
+                    sy: 1,
+                    // rotate: -30,
+                    // ease: KeyframeTweener.linear,
+                    center: { x: 200, y: 400 },
+                    ntinnerRadius: 20,
+                    ntbeforeRadius: 20,
+                    ntouterRadius: 50,
+                    innerColor: "white",
+                    outerColor: "rgb(137, 255, 249)",
+                    glowIncrement: true,
+                    up: true,
+                    fairyWings: {
+                        ntstartPoint: { x: 0, y: 0 },
+                        ntcontrolPoint1: { x: outerRadius, 
+                            y: -outerRadius - 40 },
+                        ntcontrolPoint2: { x: outerRadius + 30, 
+                            y: -outerRadius},
+                        ntendPoint: { x: outerRadius - 10, 
+                            y: 0 },
+                        direction: {forward: true, left: false, right: false },
+                        color: "rgba(200, 200, 200, 0.5)",
+                        wingsInward: true,
+                        ntbeforeX: outerRadius + 10,
+                        flutterSpeed: 10
+                    }
+                },
+            ]
+        },
     ];
 
     var addFairyKeyFrame = function (frame) {
@@ -397,7 +396,7 @@
     };
 
     //var fairies = function (number, sprites) {
-        var fairyKeyframes = sprites[0].keyframes;
+        var fairyKeyframes = sprites[2].keyframes;
         var currentFrame = 0;
         var frameDelta = 10;
         for (var index = 0; index < 7; index++) {
