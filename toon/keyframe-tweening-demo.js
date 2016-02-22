@@ -90,8 +90,8 @@
     // ** supply defaults!
     // ** add tweening functions for each property or range of properties
     // ** add background
-    var drawFairy = function (properties) {
 
+    var drawFairy = function (properties) {
         var rememberedKeys = rememberKeys(properties, []);
         unTag(properties);
 
@@ -109,38 +109,28 @@
         var rememberedKeys = rememberKeys(properties, []);
         unTag(properties);
 
-        console.log(properties);
         window.SpriteLibrary.tree({
             context: properties.context,
             //setting: backGround,
-            treeData: properties.data //{
-            //         trunk: {
-            //             position: { x: 700, y: 400},
-            //             dimensions: { width: 50, height: 300 }
-            //         },
-            //         branches: {
-            //             dimensions: { width: 50, height: 75 },
-            //             nextThickness: 0.5,
-            //             angles: (Math.PI/9),
-            //             layers: 3,
-            //             leaves: {
-            //                 position: { x: 500, y: 250 },
-            //                 radius: 20,
-            //                 startAngle: 0,
-            //                 endAngle: 4 * Math.PI/3,
-            //                 counterClockwise: true,
-            //                 leafColor: "green",
-            //                 hasLeaves: false,
-            //                 count: 2,
-            //                 shakeIncrement: true
-            //             },
-            //         },
-            //         barkColor: "rgb(90, 55, 45)",
-            // },
+            treeData: properties.data
         });
         
         reTag(properties, rememberedKeys);
     };
+
+    var drawWater = function (properties) {
+        var rememberedKeys = rememberKeys(properties, []);
+        unTag(properties);
+
+        console.log(properties);
+        window.SpriteLibrary.water({
+            context: properties.context,
+            //setting: backGround,
+            waterData: properties.data
+        });
+
+        reTag(properties, rememberedKeys);
+    }
 
     var treeTweener = function (data) {
         console.log("inside");
@@ -174,6 +164,8 @@
 
     // properties that are not to be tweened are tagged with
     // "nt" at the beginning of their key names.
+    // The "nt" must be added to the same property across all keyframes
+    // of the sprite to avoid an error.
     var sprites = [
         // ** can also use automation to build the keyframes
         // ** tweening: the calculation of intermediate steps and execution
@@ -326,73 +318,124 @@
         {
             draw: drawTree,
             keyframes: [
+                // {
+                //     frame: 0,
+                //     tx: 100,
+                //     ty: 0,
+                //     ease: KeyframeTweener.linear,
+                //     trunk: {
+                //         position: { x: 700, y: 400},
+                //         dimensions: { width: 50, height: 300 }
+                //     },
+                //     branches: {
+                //         dimensions: { width: 50, height: 75 },
+                //         nextThickness: 0.5,
+                //         angles: (Math.PI/9),
+                //         layers: 3,
+                //         ntleaves: {
+                //             position: { x: 500, y: 250 },
+                //             radius: 20,
+                //             startAngle: 0,
+                //             endAngle: 4 * Math.PI/3,
+                //             counterClockwise: true,
+                //             leafColor: "green",
+                //             hasLeaves: false,
+                //             count: 2,
+                //             shakeIncrement: true
+                //         },
+                //     },
+                //     barkColor: "rgb(90, 55, 45)"
+                // },
+
+                // {
+                //     frame: 200,
+                //     tx: 100,
+                //     ty: 0,
+                //     ease: KeyframeTweener.linear,
+                //     trunk: {
+                //         position: { x: 700, y: 400},
+                //         dimensions: { width: 50, height: 300 }
+                //     },
+                //     branches: {
+                //         dimensions: { width: 50, height: 75 },
+                //         nextThickness: 0.5,
+                //         angles: (Math.PI/10),
+                //         layers: 7,
+                //         ntleaves: {
+                //             position: { x: 500, y: 250 },
+                //             radius: 20,
+                //             startAngle: 0,
+                //             endAngle: 4 * Math.PI/3,
+                //             counterClockwise: true,
+                //             leafColor: "green",
+                //             hasLeaves: false,
+                //             count: 2,
+                //             shakeIncrement: true
+                //         },
+                //     },
+                //     barkColor: "rgb(90, 55, 45)"
+                // }
+
+                // {
+                //     frame: 500,
+                //     tx: -100,
+                //     ty: 0,
+                // }
+            ]
+        },
+
+        {
+            draw: drawWater,
+            keyframes: [
                 {
                     frame: 0,
-                    tx: 100,
+                    tx: 50,
                     ty: 0,
                     ease: KeyframeTweener.linear,
-                    trunk: {
-                        position: { x: 700, y: 400},
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/9),
-                        layers: 3,
-                        ntleaves: {
-                            position: { x: 500, y: 250 },
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            hasLeaves: false,
-                            count: 2,
-                            shakeIncrement: true
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)"
+                    startPoint: { x: 350, y: 700 },
+                        radius: 300,
+                        ntstartAngle: 0,
+                        ntendAngle: Math.PI*2,
+                        counterClockwise: true,
+                        color: "rgba(0, 130, 255, 0.9)",
+                        ntwaves: {
+                            startPoint: { x: 0, y: 0 },
+                            controlPoint1: { x: 0, y: 0 },
+                            controlPoint2: { x: 0, y: 10 },
+                            endPoint: { x: 15, y: 10 },
+                            color: "rgb(60, 200, 255)",
+                            numberWaves: 30
+                    }
                 },
 
                 {
                     frame: 200,
-                    tx: 100,
+                    tx: -100,
                     ty: 0,
                     ease: KeyframeTweener.linear,
-                    trunk: {
-                        position: { x: 700, y: 400},
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/10),
-                        layers: 7,
-                        ntleaves: {
-                            position: { x: 500, y: 250 },
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            hasLeaves: false,
-                            count: 2,
-                            shakeIncrement: true
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)"
-                }
+                    startPoint: { x: 350, y: 700 },
+                        radius: 300,
+                        ntstartAngle: 0,
+                        ntendAngle: Math.PI*2,
+                        counterClockwise: true,
+                        color: "rgba(0, 130, 255, 0.9)",
+                        ntwaves: {
+                            startPoint: { x: 0, y: 0 },
+                            controlPoint1: { x: 0, y: 0 },
+                            controlPoint2: { x: 0, y: 10 },
+                            endPoint: { x: 15, y: 10 },
+                            color: "rgb(60, 200, 255)",
+                            numberWaves: 30
+                    }
+                },
 
-        //         // {
-        //         //     frame: 500,
-        //         //     tx: -100,
-        //         //     ty: 0,
-        //         // }
+                // {
+                //     frame: 500,
+                //     tx: -100,
+                //     ty: 0,
+                // }
             ]
         },
-
-        
 
         // {
         //     draw: square,
