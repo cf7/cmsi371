@@ -10,6 +10,7 @@ $(function () {
         ctx = specifications.context;
         backGround = specifications.setting;
         treeData = specifications.treeData;
+        treeData.branches.leaves.position = { x: 0, y: 0 };
 
         var clear = function () {
             backGround();
