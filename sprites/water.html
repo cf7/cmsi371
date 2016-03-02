@@ -34,7 +34,6 @@
                     context: ctx,
                     setting: backGround,
                     waterData: {
-                        startPoint: { x: 350, y: 700 },
                         radius: 300,
                         startAngle: 0,
                         endAngle: Math.PI*2,
@@ -43,7 +42,7 @@
                         numberWaves: 30
                     }
                 });
-                ctx.restore();
+            ctx.restore();
                 // window.requestAnimationFrame(drawScene);
             };
             window.requestAnimationFrame(drawScene);
