@@ -11,6 +11,15 @@ $(function () {
         backGround = specifications.setting;
         waterData = specifications.waterData;
         
+        var waves = {
+            startPoint: { x: 0, y: 0 },
+            controlPoint1: { x: 0, y: 0 },
+            controlPoint2: { x: 0, y: 10 },
+            endPoint: { x: 15, y: 10 },
+            color: "rgb(60, 200, 255)",
+            numberWaves: waterData.numberWaves
+        }
+
         var clear = function () {
             backGround();
         }
@@ -29,8 +38,7 @@ $(function () {
             ctx.restore();
         }
 
-        var drawingSetup = function (water) {
-            var waves = water.waves;
+        var drawingSetup = function (water, waves) {
             ctx.save();
             waves.startPoint.x = (Math.random()*(water.radius*0.6)*Math.pow(-1, Math.round(Math.random()*2)));
             waves.startPoint.y = (Math.random()*(water.radius*0.25 + 10)*Math.pow(-1, Math.round(Math.random()*2)));
@@ -40,11 +48,10 @@ $(function () {
             ctx.restore();
         }
 
-        var pour = function (water) {
+        var pour = function (water, waves) {
             // clear();
             ctx.save();
             ctx.fillStyle = water.color;
-            ctx.translate(water.startPoint.x, water.startPoint.y);
             ctx.scale(1, 0.5);
             ctx.beginPath();
             ctx.arc(0, 0, water.radius, water.startAngle, water.endAngle, water.counterClockwise);
@@ -52,13 +59,12 @@ $(function () {
             ctx.restore();
 
             ctx.save();
-            ctx.translate(water.startPoint.x, water.startPoint.y);
-            for (var index = 0; index < water.waves.numberWaves; index++) {
-                drawingSetup(water);
+            for (var index = 0; index < waves.numberWaves; index++) {
+                drawingSetup(water, waves);
             }
             ctx.restore();
         }
 
-        pour(waterData);
+        pour(waterData, waves);
     }
 });

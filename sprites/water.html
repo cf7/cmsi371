@@ -26,8 +26,10 @@
                 ctx.restore();
             }
 
+            ctx.save();
+            ctx.translate(350, 700);
             var drawScene = function () {
-                backGround();
+                //backGround();
                 SpriteLibrary.water({
                     context: ctx,
                     setting: backGround,
@@ -38,16 +40,10 @@
                         endAngle: Math.PI*2,
                         counterClockwise: true,
                         color: "rgba(0, 130, 255, 0.9)",
-                        waves: {
-                            startPoint: { x: 0, y: 0 },
-                            controlPoint1: { x: 0, y: 0 },
-                            controlPoint2: { x: 0, y: 10 },
-                            endPoint: { x: 15, y: 10 },
-                            color: "rgb(60, 200, 255)",
-                            numberWaves: 30
-                        }
+                        numberWaves: 30
                     }
                 });
+                ctx.restore();
                 // window.requestAnimationFrame(drawScene);
             };
             window.requestAnimationFrame(drawScene);
