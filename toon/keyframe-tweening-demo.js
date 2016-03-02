@@ -183,11 +183,10 @@
             keyframes: [
                 {
                     frame: 0,
-                    tx: 100,
-                    ty: 0,
+                    tx: 800,
+                    ty: 400,
                     ease: KeyframeTweener.linear,
                     trunk: {
-                        position: { x: 700, y: 400},
                         dimensions: { width: 50, height: 300 }
                     },
                     branches: {
@@ -196,7 +195,6 @@
                         angles: (Math.PI/9),
                         layers: 3,
                         ntleaves: {
-                            position: { x: 500, y: 250 },
                             radius: 20,
                             startAngle: 0,
                             endAngle: 4 * Math.PI/3,
@@ -212,11 +210,10 @@
 
                 {
                     frame: 200,
-                    tx: 100,
-                    ty: 0,
+                    tx: 800,
+                    ty: 400,
                     ease: KeyframeTweener.linear,
                     trunk: {
-                        position: { x: 700, y: 400},
                         dimensions: { width: 50, height: 300 }
                     },
                     branches: {
@@ -225,7 +222,6 @@
                         angles: (Math.PI/10),
                         layers: 7,
                         ntleaves: {
-                            position: { x: 500, y: 250 },
                             radius: 20,
                             startAngle: 0,
                             endAngle: 4 * Math.PI/3,
@@ -246,44 +242,28 @@
             keyframes: [
                 {
                     frame: 0,
-                    tx: 50,
-                    ty: 0,
+                    tx: 300,
+                    ty: 700,
                     ease: KeyframeTweener.linear,
-                    startPoint: { x: 350, y: 700 },
-                        radius: 30,
-                        ntstartAngle: 0,
-                        ntendAngle: Math.PI*2,
-                        counterClockwise: true,
-                        color: "rgba(0, 130, 255, 0.9)",
-                        ntwaves: {
-                            startPoint: { x: 0, y: 0 },
-                            controlPoint1: { x: 0, y: 0 },
-                            controlPoint2: { x: 0, y: 10 },
-                            endPoint: { x: 15, y: 10 },
-                            color: "rgb(60, 200, 255)",
-                            numberWaves: 30
-                    }
+                    radius: 30,
+                    ntstartAngle: 0,
+                    ntendAngle: Math.PI*2,
+                    counterClockwise: true,
+                    color: "rgba(0, 130, 255, 0.9)",
+                    numberWaves: 30
                 },
 
                 {
                     frame: 200,
-                    tx: 50,
-                    ty: 0,
+                    tx: 300,
+                    ty: 700,
                     ease: KeyframeTweener.linear,
-                    startPoint: { x: 350, y: 700 },
-                        radius: 300,
-                        ntstartAngle: 0,
-                        ntendAngle: Math.PI*2,
-                        counterClockwise: true,
-                        color: "rgba(0, 130, 255, 0.9)",
-                        ntwaves: {
-                            startPoint: { x: 0, y: 0 },
-                            controlPoint1: { x: 0, y: 0 },
-                            controlPoint2: { x: 0, y: 10 },
-                            endPoint: { x: 15, y: 10 },
-                            color: "rgb(60, 200, 255)",
-                            numberWaves: 30
-                    }
+                    radius: 300,
+                    ntstartAngle: 0,
+                    ntendAngle: Math.PI*2,
+                    counterClockwise: true,
+                    color: "rgba(0, 130, 255, 0.9)",
+                    numberWaves: 30
                 },
             ]
         },
@@ -293,8 +273,8 @@
             keyframes: [
                 {
                     frame: 0,
-                    tx: 0,
-                    ty: 0,
+                    tx: 400,
+                    ty: 400,
                     sx: 1,
                     sy: 1,
                     // rotate: 30,
@@ -307,20 +287,10 @@
                     outerColor: "rgb(137, 255, 249)",
                     glowIncrement: true,
                     up: true,
-                    fairyWings: {
-                        ntstartPoint: { x: 0, y: 0 },
-                        ntcontrolPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        ntcontrolPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        ntendPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        ntbeforeX: outerRadius + 10,
-                        flutterSpeed: 4
-                    }
+                    direction: {forward: true, left: false, right: false },
+                    wingsInward: true,
+                    ntbeforeX: outerRadius + 10,
+                    flutterSpeed: 4
                     // ** add properties that call functions on themselves
                     // ** this is probably where non-monotonic tweening
                     // ** functions would go
@@ -328,8 +298,8 @@
 
                 {
                     frame: 200,
-                    tx: 350,
-                    ty: 0,
+                    tx: 400,
+                    ty: 400,
                     sx: 1,
                     sy: 1,
                     // rotate: -30,
@@ -342,20 +312,10 @@
                     outerColor: "rgb(137, 255, 249)",
                     glowIncrement: true,
                     up: true,
-                    fairyWings: {
-                        ntstartPoint: { x: 0, y: 0 },
-                        ntcontrolPoint1: { x: outerRadius, 
-                            y: -outerRadius - 40 },
-                        ntcontrolPoint2: { x: outerRadius + 30, 
-                            y: -outerRadius},
-                        ntendPoint: { x: outerRadius - 10, 
-                            y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        ntbeforeX: outerRadius + 10,
-                        flutterSpeed: 10
-                    }
+                    direction: {forward: true, left: false, right: false },
+                    wingsInward: true,
+                    ntbeforeX: outerRadius + 10,
+                    flutterSpeed: 10
                 },
             ]
         },
@@ -364,8 +324,8 @@
     var addFairyKeyFrame = function (frame) {
         return {
             frame: frame,
-            tx: (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
-            ty: (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            tx: 400 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            ty: 200 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
             sx: 1,
             sy: 1,
             // rotate: -30,
@@ -378,20 +338,10 @@
             outerColor: "rgb(137, 255, 249)",
             glowIncrement: true,
             up: true,
-            fairyWings: {
-                ntstartPoint: { x: 0, y: 0 },
-                ntcontrolPoint1: { x: outerRadius, 
-                    y: -outerRadius - 40 },
-                ntcontrolPoint2: { x: outerRadius + 30, 
-                    y: -outerRadius},
-                ntendPoint: { x: outerRadius - 10, 
-                    y: 0 },
-                direction: {forward: true, left: false, right: false },
-                color: "rgba(200, 200, 200, 0.5)",
-                wingsInward: true,
-                ntbeforeX: outerRadius + 10,
-                flutterSpeed: 10
-            }
+            direction: {forward: true, left: false, right: false },
+            wingsInward: true,
+            ntbeforeX: outerRadius + 10,
+            flutterSpeed: 10
         };
     };
 
