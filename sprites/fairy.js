@@ -10,18 +10,18 @@ $(function () {
         ctx = specifications.context;
         backGround = specifications.setting;
         fairyData = specifications.fairyData;
-        fairyWings = specifications.fairyWings;
-        // var fairyWings = {
-        //     startPoint: { x: 0, y: 0 },
-        //     controlPoint1: { x: fairyData.outerRadius, 
-        //         y: -fairyData.outerRadius - 40 },
-        //     controlPoint2: { x: fairyData.outerRadius + 30, 
-        //         y: -fairyData.outerRadius},
-        //     endPoint: { x: fairyData.outerRadius - 10, 
-        //         y: 0 },
-        //     direction: fairyData.direction,
-        //     color: "rgba(200, 200, 200, 0.5)"
-        // };
+        //fairyWings = specifications.fairyWings;
+        var fairyWings = {
+            startPoint: { x: 0, y: 0 },
+            controlPoint1: { x: fairyData.outerRadius, 
+                y: -fairyData.outerRadius - 40 },
+            controlPoint2: { x: fairyData.outerRadius + 30, 
+                y: -fairyData.outerRadius},
+            endPoint: { x: fairyData.outerRadius - 10, 
+                y: 0 },
+            direction: fairyData.direction,
+            color: "rgba(200, 200, 200, 0.5)"
+        };
 
         var clear = function () {
             backGround();
@@ -110,28 +110,28 @@ $(function () {
             var glowIncrement = fairyData.glowIncrement;
             var beforeRadius = fairyData.beforeRadius;
 
-            if (fairyWings.controlPoint1.x < 10) {
-                fairyWings.wingsInward = false;
-            } else if (fairyWings.controlPoint1.x >= fairyWings.beforeX) {
-                fairyWings.wingsInward = true;
-            }
-            if (fairyWings.wingsInward) {
-                wingsInward(fairyWings);
-            } else if (!fairyWings.wingsInward) {
-                wingsOutward(fairyWings);
-            }
+            // if (fairyWings.controlPoint1.x < 10) {
+            //     fairyWings.wingsInward = false;
+            // } else if (fairyWings.controlPoint1.x >= fairyWings.beforeX) {
+            //     fairyWings.wingsInward = true;
+            // }
+            // if (fairyWings.wingsInward) {
+            //     wingsInward(fairyWings);
+            // } else if (!fairyWings.wingsInward) {
+            //     wingsOutward(fairyWings);
+            // }
             wings(fairyWings);
 
-            if (innerRadius < beforeRadius) {
-                fairyData.glowIncrement = true;
-            } else if (innerRadius >= outerRadius/2 ) {
-                fairyData.glowIncrement = false;
-            }
-            if (fairyData.glowIncrement) {
-                fairyData.innerRadius = innerRadius + 1;
-            } else if (!fairyData.glowIncrement) {
-                fairyData.innerRadius = innerRadius - 1;
-            }
+            // if (innerRadius < beforeRadius) {
+            //     fairyData.glowIncrement = true;
+            // } else if (innerRadius >= outerRadius/2 ) {
+            //     fairyData.glowIncrement = false;
+            // }
+            // if (fairyData.glowIncrement) {
+            //     fairyData.innerRadius = innerRadius + 1;
+            // } else if (!fairyData.glowIncrement) {
+            //     fairyData.innerRadius = innerRadius - 1;
+            // }
 
             var radialGradient = ctx.createRadialGradient(
                 0, 0, innerRadius, 0, 0, outerRadius - glowIncrement);

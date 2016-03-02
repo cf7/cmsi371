@@ -38,26 +38,18 @@
                     context: ctx,
                     //setting: backGround,
                     fairyData: {
-                        center: { x: 200, y: 400 },
                         innerRadius: 10, // properties.data.innerRadius,
                         beforeRadius: 10, // properties.data.beforeRadius,
                         outerRadius: 50,
                         innerColor: "white",
                         outerColor: "rgb(137, 255, 249)",
+                        direction: {forward: true, left: false, right: false },
                         glowIncrement: true,
                         up: true
                     },
-                    fairyWings: {
-                        startPoint: { x: 0, y: 0 },
-                        controlPoint1: { x: outerRadius, y: -outerRadius - 40 },
-                        controlPoint2: { x: outerRadius + 30, y: -outerRadius},
-                        endPoint: { x: outerRadius - 10, y: 0 },
-                        direction: {forward: true, left: false, right: false },
-                        color: "rgba(200, 200, 200, 0.5)",
-                        wingsInward: true,
-                        beforeX: outerRadius + 10,
-                        flutterSpeed: 4 // properties.data.fairyWings.flutterSpeed
-                    }
+                    wingsInward: true,
+                    beforeX: outerRadius + 10,
+                    flutterSpeed: 4
                 });
                 ctx.restore();
                 // window.requestAnimationFrame(drawScene);
