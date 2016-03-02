@@ -26,8 +26,10 @@
                 ctx.restore();
             }
 
+            ctx.save();
+            ctx.translate(500, 500);
             var drawScene = function () {
-                backGround();
+                //backGround();
                 SpriteLibrary.tree({
                     context: ctx,
                     setting: backGround,
@@ -55,6 +57,7 @@
                         barkColor: "rgb(90, 55, 45)"
                     }
                 });
+                ctx.restore();
                 // window.requestAnimationFrame(drawScene);
             };
             window.requestAnimationFrame(drawScene);

@@ -115,7 +115,7 @@ $(function () {
         var growTree = function (tree) {
             // clear();
             ctx.save();
-            ctx.translate(tree.trunk.position.x, tree.trunk.position.y);
+            //ctx.translate(tree.trunk.position.x, tree.trunk.position.y);
             ctx.fillStyle = tree.barkColor;
             trunk(tree.trunk);
             branches(tree.branches);
