@@ -32,6 +32,8 @@
                 var outerRadius = 50;
                 var direction = { forward: true, left: false, right: false };
 
+                ctx.save();
+                ctx.translate(200, 400);
                 SpriteLibrary.fairy({
                     context: ctx,
                     //setting: backGround,
@@ -57,6 +59,7 @@
                         flutterSpeed: 4 // properties.data.fairyWings.flutterSpeed
                     }
                 });
+                ctx.restore();
                 // window.requestAnimationFrame(drawScene);
             };
             window.requestAnimationFrame(drawScene);

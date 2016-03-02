@@ -101,7 +101,7 @@ $(function () {
         var bodyAt = function (fairyData, fairyWings) {
             // clear();
             ctx.save();
-            ctx.translate(fairyData.center.x, fairyData.center.y);
+            //ctx.translate(fairyData.center.x, fairyData.center.y);
 
             var innerRadius = fairyData.innerRadius;
             var outerRadius = fairyData.outerRadius;
