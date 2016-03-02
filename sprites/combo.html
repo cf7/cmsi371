@@ -28,45 +28,51 @@
             }
 
             var drawScene = function () {
-                backGround();
+                //backGround();
+                ctx.save();
+                ctx.translate(200, 400);
                 SpriteLibrary.fairy({
                     context: ctx,
-                    setting: backGround,
+                    //setting: backGround,
                     fairyData: {
-                        center: { x: 200, y: 400 },
-                        innerRadius: 10,
+                        innerRadius: 10, 
+                        beforeRadius: 10,
                         outerRadius: 50,
                         innerColor: "white",
                         outerColor: "rgb(137, 255, 249)",
-                        glowIncrement: 1
-                    }
+                        direction: {forward: true, left: false, right: false },
+                        glowIncrement: true,
+                        up: true
+                    },
+                    wingsInward: true,
+                    beforeX: outerRadius + 10,
+                    flutterSpeed: 4
                 });
+                ctx.restore();
+
+                ctx.save();
+                ctx.translate(350, 700);
                 SpriteLibrary.water({
                     context: ctx,
                     setting: backGround,
                     waterData: {
-                        startPoint: { x: 350, y: 700 },
                         radius: 300,
                         startAngle: 0,
                         endAngle: Math.PI*2,
                         counterClockwise: true,
                         color: "rgba(0, 130, 255, 0.9)",
-                        waves: {
-                            startPoint: { x: 0, y: 0 },
-                            controlPoint1: { x: 0, y: 0 },
-                            controlPoint2: { x: 0, y: 10 },
-                            endPoint: { x: 15, y: 10 },
-                            color: "rgb(60, 200, 255)",
-                            numberWaves: 30
-                        }
+                        numberWaves: 30
                     }
                 });
+                ctx.restore();
+
+                ctx.save();
+                ctx.translate(700, 400);
                 SpriteLibrary.tree({
                     context: ctx,
                     setting: backGround,
                     treeData: {
                         trunk: {
-                            position: { x: 700, y: 400},
                             dimensions: { width: 50, height: 300 }
                         },
                         branches: {
@@ -75,7 +81,6 @@
                             angles: (Math.PI/9),
                             layers: 7,
                             leaves: {
-                                position: { x: 500, y: 250 },
                                 radius: 20,
                                 startAngle: 0,
                                 endAngle: 4 * Math.PI/3,
@@ -83,11 +88,12 @@
                                 leafColor: "green",
                                 hasLeaves: false,
                                 count: 2
-                            },
+                            }
                         },
                         barkColor: "rgb(90, 55, 45)"
                     }
                 });
+                ctx.restore();
                 //window.requestAnimationFrame(drawScene);
             };
             window.requestAnimationFrame(drawScene);
