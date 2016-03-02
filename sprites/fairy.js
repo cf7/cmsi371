@@ -10,7 +10,7 @@ $(function () {
         ctx = specifications.context;
         backGround = specifications.setting;
         fairyData = specifications.fairyData;
-        //fairyWings = specifications.fairyWings;
+
         var fairyWings = {
             startPoint: { x: 0, y: 0 },
             controlPoint1: { x: fairyData.outerRadius, 
