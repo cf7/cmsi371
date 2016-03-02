@@ -20,7 +20,8 @@ $(function () {
             endPoint: { x: fairyData.outerRadius - 10, 
                 y: 0 },
             direction: fairyData.direction,
-            color: "rgba(200, 200, 200, 0.5)"
+            color: "rgba(200, 200, 200, 0.5)",
+            flutterSpeed: fairyData.flutterSpeed
         };
 
         var clear = function () {
