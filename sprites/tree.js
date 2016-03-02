@@ -37,7 +37,7 @@ $(function () {
                 leaves.count = 2;
                 return;
             }
-        }
+        };
 
         var rightBranch = function (x, y, width, height, nextThickness, angle, layers, leaves) {
             ctx.save();
