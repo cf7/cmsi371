@@ -18,7 +18,7 @@ $(function () {
             endPoint: { x: 15, y: 10 },
             color: "rgb(60, 200, 255)",
             numberWaves: waterData.numberWaves
-        }
+        };
 
         var clear = function () {
             backGround();
