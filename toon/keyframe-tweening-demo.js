@@ -350,10 +350,6 @@
         return data;
     }
 
-    var flip = function (value) {
-        return -value;
-    }
-
     var flutterAndGlow = function (frame, open) {
         var fairyKeyframes = sprites[2].keyframes;
         var currentFrame = 0;
@@ -370,7 +366,7 @@
         console.log("frame: " + currentFrame);
         flutterAndGlow(currentFrame, open);
         currentFrame += frameDelta;
-        open = flip(open);
+        open *= -1;
     }
     //var fairies = function (number, sprites) {
     // var fairyKeyframes = sprites[2].keyframes;
