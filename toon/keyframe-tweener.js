@@ -144,9 +144,12 @@
                         // ** then can continue with tweening the other values
                         // startKeyframe = originalStartKeyframe;
                         // endKeyframe = originalEndkeyframe;
-
+                        // ** need to redefine currentTweenFrame and duration based on 
+                        // ** original keyframes
+                        currentTweenFrame = currentFrame - originalStartKeyframe.frame;
+                        duration = originalEndKeyframe.frame - originalStartKeyframe.frame + 1;
                         tweenProcess(originalStartKeyframe, originalEndKeyframe, currentTweenFrame, duration, ease);
-                        
+                        console.log(originalStartKeyframe.howOpen);
                         // ** don't need to pass in position, already translated above
                         // ** using edge keyframes
                         var properties = {

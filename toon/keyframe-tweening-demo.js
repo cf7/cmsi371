@@ -401,6 +401,7 @@
         var currentFrame = 0;
         var duration = frames.lastFrame - frames.firstFrame;
         var newRadius = fairyKeyframes[0].ntinnerRadius;
+        var originalHowOpen = howOpen;
         newRadius = newRadius + howGlowy;
 
         for (var index = 0; index < (duration/frameDelta); index++) {
@@ -417,9 +418,13 @@
                             "innerRadius", newRadius);
             fairyKeyframes.push(newFrame);
             currentFrame += frameDelta;
-            howOpen *= -1;
-            howGlowy *= -1;
-            newRadius = newRadius + howGlowy;
+            if (howOpen > 0) {
+                howOpen = 0;
+            } else if (howOpen === 0) {
+                howOpen = originalHowOpen;
+            }
+            // howGlowy *= -1;
+            // newRadius = newRadius + howGlowy;
         }
     }
 
