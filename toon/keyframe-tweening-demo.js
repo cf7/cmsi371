@@ -279,7 +279,6 @@
                     sy: 1,
                     // rotate: 30,
                     ease: KeyframeTweener.linear,
-                    center: { x: 200, y: 400 },
                     ntinnerRadius: 10,
                     ntbeforeRadius: 10,
                     ntouterRadius: 50,
@@ -305,7 +304,6 @@
                     sy: 1,
                     // rotate: -30,
                     // ease: KeyframeTweener.linear,
-                    center: { x: 200, y: 400 },
                     ntinnerRadius: 20,
                     ntbeforeRadius: 20,
                     ntouterRadius: 50,
@@ -316,7 +314,7 @@
                     direction: {forward: true, left: false, right: false },
                     wingsInward: true,
                     ntbeforeX: outerRadius + 10,
-                    howOpen: 10,
+                    howOpen: 0,
                     flutterSpeed: 10
                 },
             ]
@@ -326,13 +324,12 @@
     var addFairyKeyFrame = function (frame) {
         return {
             frame: frame,
-            tx: 400 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
-            ty: 200 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            tx: 600, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            ty: 400, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
             sx: 1,
             sy: 1,
             // rotate: -30,
             // ease: KeyframeTweener.linear,
-            center: { x: 200, y: 400 },
             ntinnerRadius: 20,
             ntbeforeRadius: 20,
             ntouterRadius: 50,
@@ -342,20 +339,48 @@
             up: true,
             direction: {forward: true, left: false, right: false },
             wingsInward: true,
+            howOpen: 0,
             ntbeforeX: outerRadius + 10,
             flutterSpeed: 10
         };
     };
 
-    //var fairies = function (number, sprites) {
-    var fairyKeyframes = sprites[2].keyframes;
-    var currentFrame = 0;
-    var frameDelta = 10;
-    for (var index = 0; index < 7; index++) {
-        fairyKeyframes.push(addFairyKeyFrame(0));
-        fairyKeyframes.push(addFairyKeyFrame(100));
-        fairyKeyframes.push(addFairyKeyFrame(200));
+    var modifyProperty = function (data, propertyName, newValue) {
+        data[propertyName] = newValue;
+        return data;
     }
+
+    var flip = function (value) {
+        return -value;
+    }
+
+    var flutterAndGlow = function (frame, open) {
+        var fairyKeyframes = sprites[2].keyframes;
+        var currentFrame = 0;
+        //for (var index = 0; index < duration; index++) {
+        fairyKeyframes.push(modifyProperty(addFairyKeyFrame(frame), "howOpen", open));
+        //}
+    }
+    var frameDelta = 5;
+    var currentFrame = 0;
+    var open = 20;
+    var duration = sprites[2].keyframes[1].frame - sprites[2].keyframes[0].frame;
+    for (var index = 0; index < (duration/frameDelta); index++) {
+        console.log("open: " + open);
+        console.log("frame: " + currentFrame);
+        flutterAndGlow(currentFrame, open);
+        currentFrame += frameDelta;
+        open = flip(open);
+    }
+    //var fairies = function (number, sprites) {
+    // var fairyKeyframes = sprites[2].keyframes;
+    // var currentFrame = 0;
+    // var frameDelta = 10;
+    // for (var index = 0; index < 7; index++) {
+    //     fairyKeyframes.push(addFairyKeyFrame(0));
+    //     fairyKeyframes.push(addFairyKeyFrame(100));
+    //     fairyKeyframes.push(addFairyKeyFrame(200));
+    // }
    // };
 
     // var fairyKeyframes = sprites[0].keyframes;

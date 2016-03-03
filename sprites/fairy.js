@@ -58,10 +58,6 @@ $(function () {
         var drawWing = function (wing) {
             // showControlPoints(wing);
 
-            wing.controlPoint1.x = wing.controlPoint1.x + wing.howOpen;
-            wing.controlPoint2.x = wing.controlPoint2.x + wing.howOpen;
-            wing.endPoint.x = wing.endPoint.x + wing.howOpen;
-            
             ctx.save();
             ctx.fillStyle = wing.color;
             ctx.beginPath();
@@ -127,6 +123,9 @@ $(function () {
             // } else if (!fairyWings.wingsInward) {
             //     wingsOutward(fairyWings);
             // }
+            fairyWings.controlPoint1.x = fairyWings.controlPoint1.x + fairyWings.howOpen;
+            fairyWings.controlPoint2.x = fairyWings.controlPoint2.x + fairyWings.howOpen;
+            fairyWings.endPoint.x = fairyWings.endPoint.x + fairyWings.howOpen;
             wings(fairyWings);
 
             // if (innerRadius < beforeRadius) {
