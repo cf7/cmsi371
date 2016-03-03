@@ -385,11 +385,11 @@
         return data;
     }
 
-    var flutterAndGlow = function (flutterSpeed, howOpen, glowSpeed, howGlowy) {
+    var flutterAndGlow = function (frames, flutterSpeed, howOpen, glowSpeed, howGlowy) {
         var fairyKeyframes = sprites[2].keyframes;
         var frameDelta = flutterSpeed;
         var currentFrame = 0;
-        var duration = fairyKeyframes[1].frame - fairyKeyframes[0].frame;
+        var duration = frames.lastFrame - frames.firstFrame;
         var newRadius = fairyKeyframes[0].ntinnerRadius;
         newRadius = newRadius + howGlowy;
 
@@ -410,20 +410,31 @@
         }
     }
 
-    var flutterSpeed = 5;
-    var howOpen = 20;
-    var glowSpeed = 15;
-    var howGlowy = 10;
-    flutterAndGlow(flutterSpeed, howOpen, glowSpeed, howGlowy);
+    // var flutterSpeed = 5;
+    // var howOpen = 20;
+    // var glowSpeed = 15;
+    // var howGlowy = 10;
+    // flutterAndGlow(flutterSpeed, howOpen, glowSpeed, howGlowy);
 
-    var addFairy = function (firstFrame, lastFrame) {
+    var addFairy = function (firstFrame, lastFrame, properties) {
         var fairyKeyframes = sprites[2].keyframes;
+        var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
+
         fairyKeyframes.push(addRandomFairyKeyFrame(firstFrame));
         // ** add fluttering and glowing frames in between first and last
+        flutterAndGlow(frames, properties.flutterSpeed, properties.howOpen, 
+                        properties.glowSpeed, properties.howGlowy);
         fairyKeyframes.push(addRandomFairyKeyFrame(lastFrame));
     }
 
-    addFairy(0, 300);
+    var properties = {
+        flutterSpeed: 5,
+        howOpen: 20,
+        glowSpeed: 15,
+        howGlowy: 10
+    };
+
+    addFairy(0, 300, properties);
    
 
     // Finally, we initialize the engine.  Mainly, it needs
