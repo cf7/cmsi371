@@ -181,59 +181,61 @@
         {
             draw: drawTree,
             keyframes: [
-                // {
-                //     frame: 0,
-                //     tx: 800,
-                //     ty: 400,
-                //     ease: KeyframeTweener.linear,
-                //     trunk: {
-                //         dimensions: { width: 50, height: 300 }
-                //     },
-                //     branches: {
-                //         dimensions: { width: 50, height: 75 },
-                //         nextThickness: 0.5,
-                //         angles: (Math.PI/9),
-                //         layers: 3,
-                //         ntleaves: {
-                //             radius: 20,
-                //             startAngle: 0,
-                //             endAngle: 4 * Math.PI/3,
-                //             counterClockwise: true,
-                //             leafColor: "green",
-                //             hasLeaves: false,
-                //             count: 2,
-                //             shakeIncrement: true
-                //         },
-                //     },
-                //     barkColor: "rgb(90, 55, 45)"
-                // },
+                {
+                    frame: 0,
+                    tx: 800,
+                    ty: 400,
+                    ease: KeyframeTweener.linear,
+                    trunk: {
+                        dimensions: { width: 50, height: 300 }
+                    },
+                    branches: {
+                        dimensions: { width: 50, height: 75 },
+                        nextThickness: 0.5,
+                        angles: (Math.PI/9),
+                        layers: 3,
+                        ntleaves: {
+                            radius: 20,
+                            startAngle: 0,
+                            endAngle: 4 * Math.PI/3,
+                            counterClockwise: true,
+                            leafColor: "green",
+                            hasLeaves: false,
+                            count: 2,
+                            shakeIncrement: true
+                        },
+                    },
+                    barkColor: "rgb(90, 55, 45)",
+                    edge: "edge"
+                },
 
-                // {
-                //     frame: 200,
-                //     tx: 800,
-                //     ty: 400,
-                //     ease: KeyframeTweener.linear,
-                //     trunk: {
-                //         dimensions: { width: 50, height: 300 }
-                //     },
-                //     branches: {
-                //         dimensions: { width: 50, height: 75 },
-                //         nextThickness: 0.5,
-                //         angles: (Math.PI/10),
-                //         layers: 7,
-                //         ntleaves: {
-                //             radius: 20,
-                //             startAngle: 0,
-                //             endAngle: 4 * Math.PI/3,
-                //             counterClockwise: true,
-                //             leafColor: "green",
-                //             hasLeaves: false,
-                //             count: 2,
-                //             shakeIncrement: true
-                //         },
-                //     },
-                //     barkColor: "rgb(90, 55, 45)"
-                // },
+                {
+                    frame: 200,
+                    tx: 800,
+                    ty: 400,
+                    ease: KeyframeTweener.linear,
+                    trunk: {
+                        dimensions: { width: 50, height: 300 }
+                    },
+                    branches: {
+                        dimensions: { width: 50, height: 75 },
+                        nextThickness: 0.5,
+                        angles: (Math.PI/10),
+                        layers: 7,
+                        ntleaves: {
+                            radius: 20,
+                            startAngle: 0,
+                            endAngle: 4 * Math.PI/3,
+                            counterClockwise: true,
+                            leafColor: "green",
+                            hasLeaves: false,
+                            count: 2,
+                            shakeIncrement: true
+                        },
+                    },
+                    barkColor: "rgb(90, 55, 45)",
+                    edge: "edge"
+                },
             ]
         },
 
