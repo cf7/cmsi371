@@ -22,7 +22,7 @@ $(function () {
             direction: fairyData.direction || {forward: true, left: false, right: false },
             color: "rgba(200, 200, 200, 0.5)",
             howOpen: fairyData.howOpen,
-            flutterSpeed: fairyData.flutterSpeed,
+            flutterSpeed: fairyData.flutterSpeed || 10,
         };
 
         var clear = function () {
