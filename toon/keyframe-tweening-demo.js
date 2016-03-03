@@ -328,7 +328,7 @@
     // ** does not matter what order the keyframes are in!!!
     // ** keyframe-tweener only checks whether properties changed
 
-    var addRandomFairyKeyFrame = function (frame) {
+    var addRandomFairyKeyframe = function (frame) {
         return {
             frame: frame,
             tx: 400 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
@@ -354,7 +354,7 @@
         };
     };
 
-    var addStaticFairyKeyFrame = function (frame) {
+    var addStaticFairyKeyframe = function (frame) {
         return {
             frame: frame,
             tx: 600, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
@@ -368,17 +368,23 @@
             ntouterRadius: 50,
             innerColor: "white",
             outerColor: "rgb(137, 255, 249)",
-            glowIncrement: true,
-            up: true,
             direction: {forward: true, left: false, right: false },
-            wingsInward: true,
             howOpen: 0,
-            ntbeforeX: outerRadius + 10,
             flutterSpeed: 10,
             howGlowy: 10,
             glowSpeed: 0
         };
     };
+
+    var addFlutterAndGlowKeyframe = function (frame) {
+        return {
+            frame: frame,
+            howOpen: 0,
+            flutterSpeed: 10,
+            howGlowy: 10,
+            glowSpeed: 0
+        };
+    }
 
     var modifyProperty = function (data, propertyName, newValue) {
         data[propertyName] = newValue;
@@ -399,7 +405,10 @@
             // console.log("frame: " + currentFrame);
             // console.log("glow: " + howGlowy);
             // console.log("frame: " + currentFrame);
-            var newFrame = modifyProperty(modifyProperty(addStaticFairyKeyFrame(currentFrame), 
+            // var newFrame = modifyProperty(modifyProperty(addStaticFairyKeyFrame(currentFrame), 
+            //                 "howOpen", howOpen), 
+            //                 "innerRadius", newRadius);
+            var newFrame = modifyProperty(modifyProperty(addFlutterAndGlowKeyframe(currentFrame), 
                             "howOpen", howOpen), 
                             "innerRadius", newRadius);
             fairyKeyframes.push(newFrame);
@@ -420,11 +429,11 @@
         var fairyKeyframes = sprites[2].keyframes;
         var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
 
-        fairyKeyframes.push(addRandomFairyKeyFrame(firstFrame));
+        fairyKeyframes.push(addRandomFairyKeyframe(firstFrame));
         // ** add fluttering and glowing frames in between first and last
         flutterAndGlow(frames, properties.flutterSpeed, properties.howOpen, 
                         properties.glowSpeed, properties.howGlowy);
-        fairyKeyframes.push(addRandomFairyKeyFrame(lastFrame));
+        fairyKeyframes.push(addRandomFairyKeyframe(lastFrame));
     }
 
     var properties = {

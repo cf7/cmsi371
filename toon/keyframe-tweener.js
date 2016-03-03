@@ -29,6 +29,14 @@
     // - tx, ty: the location of the sprite (default is 0, 0)
     // - sx, sy: the scale factor of the sprite (default is 1, 1)
     // - rotate: the rotation angle of the sprite (default is 0)
+
+    // ** courtesy of stackoverflow
+    var keysEqual = function (object1, object2) {
+        var keys1String = Object.keys(object1).sort();
+        var keys2String = Object.keys(object2).sort();
+        return JSON.stringify(keys1String) === JSON.stringify(keys2String);
+    };
+
     var initializeAnimation = function (settings) {
         // We need to keep track of the current frame.
         var currentFrame = 0;
@@ -68,11 +76,14 @@
                 for (var j = 0, maxJ = sprites[i].keyframes.length - 1; j < maxJ; j += 1) {
                     // We look for keyframe pairs such that the current
                     // frame is between their frame numbers.
+                    
+                    var nextKeyframe = sprites[i].keyframes[j + 1];
+
                     if ((sprites[i].keyframes[j].frame <= currentFrame) &&
-                            (currentFrame <= sprites[i].keyframes[j + 1].frame)) {
+                            (currentFrame <= nextKeyframe.frame)) {
                         // Point to the start and end keyframes.
                         var startKeyframe = sprites[i].keyframes[j];
-                        var endKeyframe = sprites[i].keyframes[j + 1];
+                        var endKeyframe = nextKeyframe;
 
                         // Save the rendering context state.
                         renderingContext.save();
