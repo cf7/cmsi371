@@ -181,146 +181,148 @@
         {
             draw: drawTree,
             keyframes: [
-                {
-                    frame: 0,
-                    tx: 800,
-                    ty: 400,
-                    ease: KeyframeTweener.linear,
-                    trunk: {
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/9),
-                        layers: 3,
-                        ntleaves: {
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            hasLeaves: false,
-                            count: 2,
-                            shakeIncrement: true
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)"
-                },
+                // {
+                //     frame: 0,
+                //     tx: 800,
+                //     ty: 400,
+                //     ease: KeyframeTweener.linear,
+                //     trunk: {
+                //         dimensions: { width: 50, height: 300 }
+                //     },
+                //     branches: {
+                //         dimensions: { width: 50, height: 75 },
+                //         nextThickness: 0.5,
+                //         angles: (Math.PI/9),
+                //         layers: 3,
+                //         ntleaves: {
+                //             radius: 20,
+                //             startAngle: 0,
+                //             endAngle: 4 * Math.PI/3,
+                //             counterClockwise: true,
+                //             leafColor: "green",
+                //             hasLeaves: false,
+                //             count: 2,
+                //             shakeIncrement: true
+                //         },
+                //     },
+                //     barkColor: "rgb(90, 55, 45)"
+                // },
 
-                {
-                    frame: 200,
-                    tx: 800,
-                    ty: 400,
-                    ease: KeyframeTweener.linear,
-                    trunk: {
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/10),
-                        layers: 7,
-                        ntleaves: {
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            hasLeaves: false,
-                            count: 2,
-                            shakeIncrement: true
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)"
-                },
+                // {
+                //     frame: 200,
+                //     tx: 800,
+                //     ty: 400,
+                //     ease: KeyframeTweener.linear,
+                //     trunk: {
+                //         dimensions: { width: 50, height: 300 }
+                //     },
+                //     branches: {
+                //         dimensions: { width: 50, height: 75 },
+                //         nextThickness: 0.5,
+                //         angles: (Math.PI/10),
+                //         layers: 7,
+                //         ntleaves: {
+                //             radius: 20,
+                //             startAngle: 0,
+                //             endAngle: 4 * Math.PI/3,
+                //             counterClockwise: true,
+                //             leafColor: "green",
+                //             hasLeaves: false,
+                //             count: 2,
+                //             shakeIncrement: true
+                //         },
+                //     },
+                //     barkColor: "rgb(90, 55, 45)"
+                // },
             ]
         },
 
         {
             draw: drawWater,
             keyframes: [
-                {
-                    frame: 0,
-                    tx: 300,
-                    ty: 700,
-                    ease: KeyframeTweener.linear,
-                    radius: 30,
-                    ntstartAngle: 0,
-                    ntendAngle: Math.PI*2,
-                    counterClockwise: true,
-                    color: "rgba(0, 130, 255, 0.9)",
-                    numberWaves: 30
-                },
+                // {
+                //     frame: 0,
+                //     tx: 300,
+                //     ty: 700,
+                //     ease: KeyframeTweener.linear,
+                //     radius: 30,
+                //     ntstartAngle: 0,
+                //     ntendAngle: Math.PI*2,
+                //     counterClockwise: true,
+                //     color: "rgba(0, 130, 255, 0.9)",
+                //     numberWaves: 30
+                // },
 
-                {
-                    frame: 200,
-                    tx: 300,
-                    ty: 700,
-                    ease: KeyframeTweener.linear,
-                    radius: 300,
-                    ntstartAngle: 0,
-                    ntendAngle: Math.PI*2,
-                    counterClockwise: true,
-                    color: "rgba(0, 130, 255, 0.9)",
-                    numberWaves: 30
-                },
+                // {
+                //     frame: 200,
+                //     tx: 300,
+                //     ty: 700,
+                //     ease: KeyframeTweener.linear,
+                //     radius: 300,
+                //     ntstartAngle: 0,
+                //     ntendAngle: Math.PI*2,
+                //     counterClockwise: true,
+                //     color: "rgba(0, 130, 255, 0.9)",
+                //     numberWaves: 30
+                // },
             ]
         },
 
         {
             draw: drawFairy,
             keyframes: [
-                {
-                    frame: 0,
-                    tx: 400,
-                    ty: 400,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: 30,
-                    ease: KeyframeTweener.linear,
-                    ntinnerRadius: 20,
-                    ntbeforeRadius: 20,
-                    ntouterRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    direction: {forward: true, left: false, right: false },
-                    wingsInward: true,
-                    ntbeforeX: outerRadius + 10,
-                    howOpen: 0,
-                    flutterSpeed: 4,
-                    howGlowy: 10,
-                    glowSpeed: 0
-                    // ** add properties that call functions on themselves
-                    // ** this is probably where non-monotonic tweening
-                    // ** functions would go
-                },
+                // {
+                //     frame: 0,
+                //     tx: 400,
+                //     ty: 400,
+                //     sx: 1,
+                //     sy: 1,
+                //     // rotate: 30,
+                //     //ease: KeyframeTweener.linear,
+                //     ntinnerRadius: 20,
+                //     ntbeforeRadius: 20,
+                //     ntouterRadius: 50,
+                //     innerColor: "white",
+                //     outerColor: "rgb(137, 255, 249)",
+                //     glowIncrement: true,
+                //     up: true,
+                //     direction: {forward: true, left: false, right: false },
+                //     wingsInward: true,
+                //     ntbeforeX: outerRadius + 10,
+                //     howOpen: 0,
+                //     flutterSpeed: 4,
+                //     howGlowy: 10,
+                //     glowSpeed: 0,
+                //     edge: "edge"
+                //     // ** add properties that call functions on themselves
+                //     // ** this is probably where non-monotonic tweening
+                //     // ** functions would go
+                // },
 
-                {
-                    frame: 200,
-                    tx: 400,
-                    ty: 400,
-                    sx: 1,
-                    sy: 1,
-                    // rotate: -30,
-                    // ease: KeyframeTweener.linear,
-                    ntinnerRadius: 20,
-                    ntbeforeRadius: 20,
-                    ntouterRadius: 50,
-                    innerColor: "white",
-                    outerColor: "rgb(137, 255, 249)",
-                    glowIncrement: true,
-                    up: true,
-                    direction: {forward: true, left: false, right: false },
-                    wingsInward: true,
-                    ntbeforeX: outerRadius + 10,
-                    howOpen: 0,
-                    flutterSpeed: 10,
-                    howGlowy: 10,
-                    glowSpeed: 0
-                },
+                // {
+                //     frame: 200,
+                //     tx: 400,
+                //     ty: 400,
+                //     sx: 1,
+                //     sy: 1,
+                //     // rotate: -30,
+                //     // ease: KeyframeTweener.linear,
+                //     ntinnerRadius: 20,
+                //     ntbeforeRadius: 20,
+                //     ntouterRadius: 50,
+                //     innerColor: "white",
+                //     outerColor: "rgb(137, 255, 249)",
+                //     glowIncrement: true,
+                //     up: true,
+                //     direction: {forward: true, left: false, right: false },
+                //     wingsInward: true,
+                //     ntbeforeX: outerRadius + 10,
+                //     howOpen: 0,
+                //     flutterSpeed: 10,
+                //     howGlowy: 10,
+                //     glowSpeed: 0,
+                //     edge: "edge"
+                // },
             ]
         },
     ];
@@ -350,7 +352,8 @@
             ntbeforeX: outerRadius + 10,
             flutterSpeed: 10,
             howGlowy: 0,
-            glowSpeed: 0
+            glowSpeed: 0,
+            edge: "edge"
         };
     };
 
@@ -379,6 +382,7 @@
     var addFlutterAndGlowKeyframe = function (frame) {
         return {
             frame: frame,
+            innerRadius: 20,
             howOpen: 0,
             flutterSpeed: 10,
             howGlowy: 10,
@@ -443,7 +447,7 @@
         howGlowy: 10
     };
 
-    addFairy(0, 300, properties);
+    addFairy(0, 100, properties);
    
 
     // Finally, we initialize the engine.  Mainly, it needs

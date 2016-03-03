@@ -77,13 +77,29 @@
                     // We look for keyframe pairs such that the current
                     // frame is between their frame numbers.
                     
-                    var nextKeyframe = sprites[i].keyframes[j + 1];
+                    var originalStartKeyframe = sprites[i].keyframes[j];
+                    var originalEndKeyframe = sprites[i].keyframes[j + 1];
 
-                    if ((sprites[i].keyframes[j].frame <= currentFrame) &&
-                            (currentFrame <= nextKeyframe.frame)) {
+                    // ** will branch the keyframe processing here
+                    // ** to compute values for translating, scaling, and rotating
+                    var whileIndex1 = j;
+                    var whileIndex2 = j + 1;
+                    var startEdgeKeyframe = originalStartKeyframe;
+                    var nextEdgeKeyframe = originalEndKeyframe;
+                    while (whileIndex1 >= 0 && !startEdgeKeyframe.hasOwnProperty("edge")) {
+                        whileIndex1--;
+                        startEdgeKeyframe = sprites[i].keyframes[whileIndex1];
+                    }
+                    while (whileIndex2 < maxJ && !nextEdgeKeyframe.hasOwnProperty("edge")) {
+                        whileIndex2++;
+                        nextEdgeKeyframe = sprites[i].keyframes[whileIndex2];
+                    }
+
+                    if ((originalStartKeyframe.frame <= currentFrame) &&
+                            (currentFrame <= originalEndKeyframe.frame)) {
                         // Point to the start and end keyframes.
-                        var startKeyframe = sprites[i].keyframes[j];
-                        var endKeyframe = nextKeyframe;
+                        var startKeyframe = startEdgeKeyframe;
+                        var endKeyframe = nextEdgeKeyframe;
 
                         // Save the rendering context state.
                         renderingContext.save();
@@ -123,11 +139,19 @@
                             ease(currentTweenFrame, syStart, syDistance, duration)
                         );
                         
-                        tweenProcess(startKeyframe, endKeyframe, currentTweenFrame, duration, ease);
+                        // ** after it uses the edge keyframe's data
+                        // ** to translate the context
+                        // ** then can continue with tweening the other values
+                        // startKeyframe = originalStartKeyframe;
+                        // endKeyframe = originalEndkeyframe;
 
+                        tweenProcess(originalStartKeyframe, originalEndKeyframe, currentTweenFrame, duration, ease);
+                        
+                        // ** don't need to pass in position, already translated above
+                        // ** using edge keyframes
                         var properties = {
                             context: renderingContext,
-                            data: startKeyframe
+                            data: originalStartKeyframe
                         };
 
                         // Draw the sprite.
@@ -155,15 +179,17 @@
     var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
         var keys = Object.keys(startKeyframe);
         for (property of keys) {
-            if (!startsWithNT(property) && property != "frame" && typeof startKeyframe[property] != "function") {
-                if (typeof startKeyframe[property] === "object") {
-                    tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
-                } else if (typeof startKeyframe[property] === "number") {
-                    var start = startKeyframe[property] || 0;
-                    var distance = (endKeyframe[property] || 1) - start;
-                    startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+            // if (property !== "tx" && property !== "ty" && property !== "sx" && property !== "sy" && property !== "rotate") {
+                if (!startsWithNT(property) && property !== "frame" && typeof startKeyframe[property] !== "function") {
+                    if (typeof startKeyframe[property] === "object") {
+                        tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
+                    } else if (typeof startKeyframe[property] === "number") {
+                        var start = startKeyframe[property] || 0;
+                        var distance = (endKeyframe[property] || 1) - start;
+                        startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+                    }
                 }
-            }
+            // }
         }
     }
 
