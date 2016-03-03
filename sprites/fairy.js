@@ -104,10 +104,7 @@ $(function () {
         var bodyAt = function (fairyData, fairyWings) {
             // clear();
             ctx.save();
-            //ctx.translate(fairyData.center.x, fairyData.center.y);
-            console.log("innerRadius: " + fairyData.innerRadius);
-            console.log("inside howGlowy: " + fairyData.howGlowy);
-
+            
             var innerRadius = fairyData.innerRadius;
             var outerRadius = fairyData.outerRadius;
             var innerColor = fairyData.innerColor;

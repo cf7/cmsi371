@@ -394,12 +394,14 @@
         newRadius = newRadius + howGlowy;
 
         for (var index = 0; index < (duration/frameDelta); index++) {
-            console.log("------------------");
-            console.log("open: " + howOpen);
-            console.log("frame: " + currentFrame);
-            console.log("glow: " + howGlowy);
-            console.log("frame: " + currentFrame);
-            var newFrame = modifyProperty(modifyProperty(addStaticFairyKeyFrame(currentFrame), "howOpen", howOpen), "innerRadius", newRadius);
+            // console.log("------------------");
+            // console.log("open: " + howOpen);
+            // console.log("frame: " + currentFrame);
+            // console.log("glow: " + howGlowy);
+            // console.log("frame: " + currentFrame);
+            var newFrame = modifyProperty(modifyProperty(addStaticFairyKeyFrame(currentFrame), 
+                            "howOpen", howOpen), 
+                            "innerRadius", newRadius);
             fairyKeyframes.push(newFrame);
             currentFrame += frameDelta;
             howOpen *= -1;
@@ -414,54 +416,15 @@
     var howGlowy = 10;
     flutterAndGlow(flutterSpeed, howOpen, glowSpeed, howGlowy);
 
-    //var fairies = function (number, sprites) {
-    // var fairyKeyframes = sprites[2].keyframes;
-    // var currentFrame = 0;
-    // var frameDelta = 10;
-    // for (var index = 0; index < 7; index++) {
-    //     fairyKeyframes.push(addFairyKeyFrame(0));
-    //     fairyKeyframes.push(addFairyKeyFrame(100));
-    //     fairyKeyframes.push(addFairyKeyFrame(200));
-    // }
-   // };
+    var addFairy = function (firstFrame, lastFrame) {
+        var fairyKeyframes = sprites[2].keyframes;
+        fairyKeyframes.push(addRandomFairyKeyFrame(firstFrame));
+        // ** add fluttering and glowing frames in between first and last
+        fairyKeyframes.push(addRandomFairyKeyFrame(lastFrame));
+    }
 
-    // var fairyKeyframes = sprites[0].keyframes;
-    // var currentFrame = sprites[0].keyframes[sprites[0].keyframes.length - 1].frame;
-    // var frameDelta = 10;
-    // for (var x = 15; x < 600; x += 31) {
-    //     fairyKeyframes.push({
-    //         frame: currentFrame,
-    //         tx: 300 + (x % 2 ? -100 : 100),
-    //         ty: 0,
-    //         sx: 1,
-    //         sy: 1,
-    //         // rotate: -30,
-    //         // ease: KeyframeTweener.linear,
-    //         center: { x: 200, y: 400 },
-    //         ntinnerRadius: 20,
-    //         ntbeforeRadius: 20,
-    //         ntouterRadius: 50,
-    //         innerColor: "white",
-    //         outerColor: "rgb(137, 255, 249)",
-    //         glowIncrement: true,
-    //         up: true,
-    //         fairyWings: {
-    //             ntstartPoint: { x: 0, y: 0 },
-    //             ntcontrolPoint1: { x: outerRadius, 
-    //                 y: -outerRadius - 40 },
-    //             ntcontrolPoint2: { x: outerRadius + 30, 
-    //                 y: -outerRadius},
-    //             ntendPoint: { x: outerRadius - 10, 
-    //                 y: 0 },
-    //             direction: {forward: true, left: false, right: false },
-    //             color: "rgba(200, 200, 200, 0.5)",
-    //             wingsInward: true,
-    //             ntbeforeX: outerRadius + 10,
-    //             flutterSpeed: 10
-    //         }
-    //     });
-    //     currentFrame += frameDelta;
-    // }
+    addFairy(0, 300);
+   
 
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
