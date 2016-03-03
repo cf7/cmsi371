@@ -13,15 +13,15 @@ $(function () {
 
         var fairyWings = {
             startPoint: { x: 0, y: 0 },
-            controlPoint1: { x: fairyData.outerRadius, 
-                y: -fairyData.outerRadius - 40 },
-            controlPoint2: { x: fairyData.outerRadius + 30, 
-                y: -fairyData.outerRadius},
-            endPoint: { x: fairyData.outerRadius - 10, 
+            controlPoint1: { x: fairyData.outerRadius || 50, 
+                y: -fairyData.outerRadius - 40 || -90 },
+            controlPoint2: { x: fairyData.outerRadius + 30 || 80, 
+                y: -fairyData.outerRadius || -50 },
+            endPoint: { x: fairyData.outerRadius - 10 || 40, 
                 y: 0 },
             direction: fairyData.direction || {forward: true, left: false, right: false },
             color: "rgba(200, 200, 200, 0.5)",
-            howOpen: fairyData.howOpen,
+            howOpen: fairyData.howOpen || 0,
             flutterSpeed: fairyData.flutterSpeed || 10,
         };
 
