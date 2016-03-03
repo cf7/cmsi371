@@ -279,8 +279,8 @@
                     sy: 1,
                     // rotate: 30,
                     ease: KeyframeTweener.linear,
-                    ntinnerRadius: 10,
-                    ntbeforeRadius: 10,
+                    ntinnerRadius: 20,
+                    ntbeforeRadius: 20,
                     ntouterRadius: 50,
                     innerColor: "white",
                     outerColor: "rgb(137, 255, 249)",
@@ -290,7 +290,9 @@
                     wingsInward: true,
                     ntbeforeX: outerRadius + 10,
                     howOpen: 0,
-                    flutterSpeed: 4
+                    flutterSpeed: 4,
+                    howGlowy: 10,
+                    glowSpeed: 0
                     // ** add properties that call functions on themselves
                     // ** this is probably where non-monotonic tweening
                     // ** functions would go
@@ -315,17 +317,22 @@
                     wingsInward: true,
                     ntbeforeX: outerRadius + 10,
                     howOpen: 0,
-                    flutterSpeed: 10
+                    flutterSpeed: 10,
+                    howGlowy: 10,
+                    glowSpeed: 0
                 },
             ]
         },
     ];
 
-    var addFairyKeyFrame = function (frame) {
+    // ** does not matter what order the keyframes are in!!!
+    // ** keyframe-tweener only checks whether properties changed
+
+    var addRandomFairyKeyFrame = function (frame) {
         return {
             frame: frame,
-            tx: 600, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
-            ty: 400, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            tx: 400 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            ty: 400 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
             sx: 1,
             sy: 1,
             // rotate: -30,
@@ -341,7 +348,35 @@
             wingsInward: true,
             howOpen: 0,
             ntbeforeX: outerRadius + 10,
-            flutterSpeed: 10
+            flutterSpeed: 10,
+            howGlowy: 0,
+            glowSpeed: 0
+        };
+    };
+
+    var addStaticFairyKeyFrame = function (frame) {
+        return {
+            frame: frame,
+            tx: 600, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            ty: 400, //+ (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
+            sx: 1,
+            sy: 1,
+            // rotate: -30,
+            // ease: KeyframeTweener.linear,
+            innerRadius: 20,
+            ntbeforeRadius: 20,
+            ntouterRadius: 50,
+            innerColor: "white",
+            outerColor: "rgb(137, 255, 249)",
+            glowIncrement: true,
+            up: true,
+            direction: {forward: true, left: false, right: false },
+            wingsInward: true,
+            howOpen: 0,
+            ntbeforeX: outerRadius + 10,
+            flutterSpeed: 10,
+            howGlowy: 10,
+            glowSpeed: 0
         };
     };
 
@@ -350,24 +385,35 @@
         return data;
     }
 
-    var flutterAndGlow = function (frame, open) {
+    var flutterAndGlow = function (flutterSpeed, howOpen, glowSpeed, howGlowy) {
         var fairyKeyframes = sprites[2].keyframes;
+        var frameDelta = flutterSpeed;
         var currentFrame = 0;
-        //for (var index = 0; index < duration; index++) {
-        fairyKeyframes.push(modifyProperty(addFairyKeyFrame(frame), "howOpen", open));
-        //}
+        var duration = fairyKeyframes[1].frame - fairyKeyframes[0].frame;
+        var newRadius = fairyKeyframes[0].ntinnerRadius;
+        newRadius = newRadius + howGlowy;
+
+        for (var index = 0; index < (duration/frameDelta); index++) {
+            console.log("------------------");
+            console.log("open: " + howOpen);
+            console.log("frame: " + currentFrame);
+            console.log("glow: " + howGlowy);
+            console.log("frame: " + currentFrame);
+            var newFrame = modifyProperty(modifyProperty(addStaticFairyKeyFrame(currentFrame), "howOpen", howOpen), "innerRadius", newRadius);
+            fairyKeyframes.push(newFrame);
+            currentFrame += frameDelta;
+            howOpen *= -1;
+            howGlowy *= -1;
+            newRadius = newRadius + howGlowy;
+        }
     }
-    var frameDelta = 5;
-    var currentFrame = 0;
-    var open = 20;
-    var duration = sprites[2].keyframes[1].frame - sprites[2].keyframes[0].frame;
-    for (var index = 0; index < (duration/frameDelta); index++) {
-        console.log("open: " + open);
-        console.log("frame: " + currentFrame);
-        flutterAndGlow(currentFrame, open);
-        currentFrame += frameDelta;
-        open *= -1;
-    }
+
+    var flutterSpeed = 5;
+    var howOpen = 20;
+    var glowSpeed = 15;
+    var howGlowy = 10;
+    flutterAndGlow(flutterSpeed, howOpen, glowSpeed, howGlowy);
+
     //var fairies = function (number, sprites) {
     // var fairyKeyframes = sprites[2].keyframes;
     // var currentFrame = 0;
