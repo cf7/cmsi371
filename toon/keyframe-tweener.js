@@ -82,6 +82,7 @@
 
                     // ** will branch the keyframe processing here
                     // ** to compute values for translating, scaling, and rotating
+                    // ** (expand the window to compute position relative to edge keyframes)
                     var whileIndex1 = j;
                     var whileIndex2 = j + 1;
                     var startEdgeKeyframe = originalStartKeyframe;
@@ -141,16 +142,14 @@
                         
                         // ** after it uses the edge keyframe's data
                         // ** to translate the context
-                        // ** then can continue with tweening the other values
-                        // startKeyframe = originalStartKeyframe;
-                        // endKeyframe = originalEndkeyframe;
+                        // ** then continue with tweening the other values
+                        // ** by reverting to original keyframes
 
                         // ** need to redefine currentTweenFrame and duration based on 
-                        // ** original keyframes
+                        // ** original keyframes (shrink the window back to compute relative to original keyframes)
                         currentTweenFrame = currentFrame - originalStartKeyframe.frame;
                         duration = originalEndKeyframe.frame - originalStartKeyframe.frame + 1;
                         tweenProcess(originalStartKeyframe, originalEndKeyframe, currentTweenFrame, duration, ease);
-                        console.log(originalStartKeyframe.howOpen);
                         // ** don't need to pass in position, already translated above
                         // ** using edge keyframes
                         var properties = {
@@ -183,17 +182,15 @@
     var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
         var keys = Object.keys(startKeyframe);
         for (property of keys) {
-            // if (property !== "tx" && property !== "ty" && property !== "sx" && property !== "sy" && property !== "rotate") {
-                if (!startsWithNT(property) && property !== "frame" && typeof startKeyframe[property] !== "function") {
-                    if (typeof startKeyframe[property] === "object") {
-                        tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
-                    } else if (typeof startKeyframe[property] === "number") {
-                        var start = startKeyframe[property] || 0;
-                        var distance = (endKeyframe[property] || 1) - start;
-                        startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
-                    }
+            if (!startsWithNT(property) && property !== "frame" && typeof startKeyframe[property] !== "function") {
+                if (typeof startKeyframe[property] === "object") {
+                    tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
+                } else if (typeof startKeyframe[property] === "number") {
+                    var start = startKeyframe[property] || 0;
+                    var distance = (endKeyframe[property] || 1) - start;
+                    startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
                 }
-            // }
+            }
         }
     }
 
