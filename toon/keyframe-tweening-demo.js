@@ -418,13 +418,9 @@
                             "innerRadius", newRadius);
             fairyKeyframes.push(newFrame);
             currentFrame += frameDelta;
-            if (howOpen > 0) {
-                howOpen = 0;
-            } else if (howOpen === 0) {
-                howOpen = originalHowOpen;
-            }
-            // howGlowy *= -1;
-            // newRadius = newRadius + howGlowy;
+            howOpen *= -1;
+            howGlowy *= -1;
+            newRadius = newRadius + howGlowy;
         }
     }
 

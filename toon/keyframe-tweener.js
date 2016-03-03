@@ -144,6 +144,7 @@
                         // ** then can continue with tweening the other values
                         // startKeyframe = originalStartKeyframe;
                         // endKeyframe = originalEndkeyframe;
+
                         // ** need to redefine currentTweenFrame and duration based on 
                         // ** original keyframes
                         currentTweenFrame = currentFrame - originalStartKeyframe.frame;
