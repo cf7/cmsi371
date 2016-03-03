@@ -21,7 +21,8 @@ $(function () {
                 y: 0 },
             direction: fairyData.direction,
             color: "rgba(200, 200, 200, 0.5)",
-            flutterSpeed: fairyData.flutterSpeed
+            howOpen: fairyData.howOpen,
+            flutterSpeed: fairyData.flutterSpeed,
         };
 
         var clear = function () {
@@ -56,6 +57,11 @@ $(function () {
 
         var drawWing = function (wing) {
             // showControlPoints(wing);
+
+            wing.controlPoint1.x = wing.controlPoint1.x + wing.howOpen;
+            wing.controlPoint2.x = wing.controlPoint2.x + wing.howOpen;
+            wing.endPoint.x = wing.endPoint.x + wing.howOpen;
+            
             ctx.save();
             ctx.fillStyle = wing.color;
             ctx.beginPath();

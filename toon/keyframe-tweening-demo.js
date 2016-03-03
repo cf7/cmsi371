@@ -278,7 +278,7 @@
                     sx: 1,
                     sy: 1,
                     // rotate: 30,
-                    ease: KeyframeTweener.slowStart,
+                    ease: KeyframeTweener.linear,
                     center: { x: 200, y: 400 },
                     ntinnerRadius: 10,
                     ntbeforeRadius: 10,
@@ -290,6 +290,7 @@
                     direction: {forward: true, left: false, right: false },
                     wingsInward: true,
                     ntbeforeX: outerRadius + 10,
+                    howOpen: 0,
                     flutterSpeed: 4
                     // ** add properties that call functions on themselves
                     // ** this is probably where non-monotonic tweening
@@ -315,6 +316,7 @@
                     direction: {forward: true, left: false, right: false },
                     wingsInward: true,
                     ntbeforeX: outerRadius + 10,
+                    howOpen: 10,
                     flutterSpeed: 10
                 },
             ]
@@ -346,14 +348,14 @@
     };
 
     //var fairies = function (number, sprites) {
-        var fairyKeyframes = sprites[2].keyframes;
-        var currentFrame = 0;
-        var frameDelta = 10;
-        for (var index = 0; index < 7; index++) {
-            fairyKeyframes.push(addFairyKeyFrame(0));
-            fairyKeyframes.push(addFairyKeyFrame(100));
-            fairyKeyframes.push(addFairyKeyFrame(200));
-        }
+    var fairyKeyframes = sprites[2].keyframes;
+    var currentFrame = 0;
+    var frameDelta = 10;
+    for (var index = 0; index < 7; index++) {
+        fairyKeyframes.push(addFairyKeyFrame(0));
+        fairyKeyframes.push(addFairyKeyFrame(100));
+        fairyKeyframes.push(addFairyKeyFrame(200));
+    }
    // };
 
     // var fairyKeyframes = sprites[0].keyframes;

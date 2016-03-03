@@ -42,6 +42,9 @@
 
         var previousTimestamp = null;
 
+        // ** add code to reset currentFrame to 0
+        // ** for animation looping
+        
         var nextFrame = function (timestamp) {
             // Bail-out #1: We just started.
             if (!previousTimestamp) {
