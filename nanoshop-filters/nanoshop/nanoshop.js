@@ -10,9 +10,22 @@ var Nanoshop = {
         return [ r / 2, g / 2, b / 2, a ];
     },
 
+    // ** brightener from in class
     brightener: function (x, y, r, g, b, a) {
         return [ r * 2, g * 2, b * 2, a ];
     },
+
+    // ** add two more filter functions
+    arbitrary: function (x, y, r, g, b, a) {
+        if (x % 5 === 0 && y % 5 === 0) {
+            return [ Math.round(Math.cos(r * (Math.PI/180))), 
+                    Math.round(Math.sin(g * (Math.PI/180))), 
+                    Math.round(b * Math.PI), a ];
+        } else {
+            return [ r, g, b, a ];
+        }
+    },
+
 
     /*
      * Applies the given filter to the given ImageData object,
