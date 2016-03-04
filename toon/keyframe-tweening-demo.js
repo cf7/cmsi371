@@ -414,7 +414,7 @@
                 glowSpeed: 15,
                 howGlowy: 10
             };
-            addFairy(0, 100, properties);
+            addFairy(0, 200, properties);
         }
     }
     

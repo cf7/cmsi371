@@ -37,6 +37,18 @@
         return JSON.stringify(keys1String) === JSON.stringify(keys2String);
     };
 
+    var maxFrame = function (sprites) {
+        var maxFrame = 0;
+        for (var row = 0; row < sprites.length; row++) {
+            for (var col = 0; col < sprites[row].keyframes.length; col++) {
+                if (sprites[row].keyframes[col].frame > maxFrame) {
+                    maxFrame = sprites[row].keyframes[col].frame;
+                }
+            }
+        }
+        return maxFrame;
+    };
+
     var initializeAnimation = function (settings) {
         // We need to keep track of the current frame.
         var currentFrame = 0;
@@ -65,6 +77,11 @@
             if (timestamp - previousTimestamp < (1000 / (settings.frameRate || 24))) {
                 window.requestAnimationFrame(nextFrame);
                 return;
+            }
+
+            console.log(currentFrame);
+            if (currentFrame >= maxFrame(sprites)) {
+                currentFrame = 0;
             }
 
             // Clear the canvas.
