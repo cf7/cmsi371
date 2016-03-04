@@ -26,6 +26,14 @@ var Nanoshop = {
         }
     },
 
+    starDust: function (x, y, r, g, b, a) {
+        var random = Math.round(Math.random() * 21);
+        if (x % random === 0 && y % random === 0) {
+            return [ r, g * 2, b * 3, a ];
+        } else {
+            return [ r, g, b, a ];
+        }
+    },
 
     /*
      * Applies the given filter to the given ImageData object,
