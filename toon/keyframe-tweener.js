@@ -203,9 +203,21 @@
                 if (typeof startKeyframe[property] === "object") {
                     tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
                 } else if (typeof startKeyframe[property] === "number") {
+                    if (property === "startAngle" || property === "endAngle") {
+                        console.log("startKeyframe angle: " + startKeyframe[property]);
+                        console.log("endKeyframe angle: " + endKeyframe[property]);
+                    }
                     var start = startKeyframe[property] || 0;
                     var distance = (endKeyframe[property] || 1) - start;
+                    console.log("distance: " + distance);
+                    // floating point multiplication by 0 
+                    // in ease function makes the values converge to 1 
+                    // because of the 0.0000000000000002 effect
+                    if (endKeyframe[property] === startKeyframe[property]) {
+                        distance = 0;
+                    }
                     startKeyframe[property] = ease(currentTweenFrame, start, distance, duration);
+
                 }
             }
         }

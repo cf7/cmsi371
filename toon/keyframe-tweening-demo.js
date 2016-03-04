@@ -194,15 +194,14 @@
                         nextThickness: 0.5,
                         angles: (Math.PI/9),
                         layers: 3,
-                        ntleaves: {
+                        leaves: {
+                            position: { x: 0, y: 0 },
                             radius: 20,
                             startAngle: 0,
                             endAngle: 4 * Math.PI/3,
                             counterClockwise: true,
                             leafColor: "green",
-                            hasLeaves: false,
                             count: 2,
-                            shakeIncrement: true
                         },
                     },
                     barkColor: "rgb(90, 55, 45)",
@@ -222,15 +221,14 @@
                         nextThickness: 0.5,
                         angles: (Math.PI/10),
                         layers: 7,
-                        ntleaves: {
+                        leaves: {
+                            position: { x: 0, y: 0 },
                             radius: 20,
                             startAngle: 0,
                             endAngle: 4 * Math.PI/3,
                             counterClockwise: true,
                             leafColor: "green",
-                            hasLeaves: false,
                             count: 2,
-                            shakeIncrement: true
                         },
                     },
                     barkColor: "rgb(90, 55, 45)",
@@ -418,7 +416,12 @@
         }
     }
     
-    addFairies(3);
+    //addFairies(3);
+
+
+    var addRandomTreeKeyframe = function (frame) {
+
+    };
 
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
