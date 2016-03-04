@@ -28,11 +28,34 @@ var Nanoshop = {
 
     starDust: function (x, y, r, g, b, a) {
         var random = Math.round(Math.random() * 21);
+        var randGreen = Math.round(Math.random() * 3);
+        var randBlue = Math.round(Math.random() * 4);
         if (x % random === 0 && y % random === 0) {
             return [ r, g * 2, b * 3, a ];
         } else {
             return [ r, g, b, a ];
         }
+    },
+
+    waves: function (x, y, r, g, b, a) {
+        var radii = [];
+        var counter = 99999;
+        var counterDelta = 100;
+        while (counter > 0) {
+            radii.push(counter);
+            counter -= counterDelta;
+        }
+        radii.reverse();
+        var circle = x*x + y*y;
+        var randGreen = Math.round(Math.random() * 3);
+        var randBlue = Math.round(Math.random() * 4);
+        var newPixel = [ r, g, b, a ];
+        for (var index = 0, maxI = radii.length - 1; index < maxI; index++) {
+            if (radii[index] <= circle && circle <= radii[index + 1]) {
+                newPixel = [ r, g * randGreen, b * randBlue, a ];
+            }
+        }
+        return newPixel;
     },
 
     /*

@@ -92,7 +92,7 @@
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                Nanoshop.starDust
+                Nanoshop.waves
             ),
             0, 0
         );
