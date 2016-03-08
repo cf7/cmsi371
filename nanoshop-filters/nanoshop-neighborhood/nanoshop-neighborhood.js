@@ -3,6 +3,12 @@
  * pixel-level image processing using a pixel's "neighborhood."
  */
 var NanoshopNeighborhood = {
+
+    // rgbaNeighborhood is array of nine pixels (this pixel and surrounding pixels)
+    // index 4 is this pixel (center pixel)
+    // these functions still return a single color that goes to the center pixel
+    // ** primitives are picked up at 2-11 43:47
+    
     /*
      * A basic "darkener"---this one does not even use the entire pixel neighborhood;
      * just the exact current pixel like the original Nanoshop.
@@ -16,6 +22,31 @@ var NanoshopNeighborhood = {
         ];
     },
 
+    // if drawing line, center pixel remains black, surrounding pixels remain
+    // previous colors
+
+    // edgeDetector
+    edgeDetector: function (x, y, rgbaNeighborhood) {
+        var rTotal = 0;
+        var gTotal = 0;
+        var bTotal = 0;
+        var aTotal = 0;
+
+        for (var i = 0; i < 9; i += 1) {
+            if (i !== 4) {
+                rTotal += rgbaNeighborhood[i].r;
+                gTotal += rgbaNeighborhood[i].g;
+                bTotal += rgbaNeighborhood[i].b;
+                aTotal += rgbaNeighborhood[i].a;
+            }
+        }
+        var thisAverage = (rgbaNeighborhood[4].r + rgbaNeighborhood[4].g + rgbaNeighborhood[4].b) / 3;
+        var neighborAverage = ((rTotal + gTotal + bTotal) / 3) / 8;
+        // if this average is darker than surrounding pixels' average,
+        // return black, else return white
+        return thisAverage < neighborAverage ?
+                [0, 0, 0, rgbaNeighborhood[4].a] : [255, 255, 255, rgbaNeighborhood[4].a];
+    },
     /*
      * A basic "averager"---this one returns the average of all the pixels in the
      * given neighborhood.
@@ -51,8 +82,7 @@ var NanoshopNeighborhood = {
         var myAverage = (rgbaNeighborhood[4].r + rgbaNeighborhood[4].g + rgbaNeighborhood[4].b) / 3;
         var neighborAverage = neighborTotal / 3 / 8; // Three components, eight neighbors.
 
-        return myAverage < neighborAverage ? [ 0, 0, 0, rgbaNeighborhood[4].a ] :
-                [ 255, 255, 255, rgbaNeighborhood[4].a ];
+        return myAverage < neighborAverage ? [ 0, 0, 0, rgbaNeighborhood[4].a ] : [ 255, 255, 255, rgbaNeighborhood[4].a ];
     },
 
     /*
