@@ -181,59 +181,59 @@
         {
             draw: drawTree,
             keyframes: [
-                {
-                    frame: 0,
-                    tx: 800,
-                    ty: 400,
-                    ease: KeyframeTweener.linear,
-                    trunk: {
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/9),
-                        layers: 3,
-                        leaves: {
-                            position: { x: 0, y: 0 },
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            count: 2,
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)",
-                    edge: "edge"
-                },
+                // {
+                //     frame: 0,
+                //     tx: 800,
+                //     ty: 400,
+                //     ease: KeyframeTweener.linear,
+                //     trunk: {
+                //         dimensions: { width: 50, height: 300 }
+                //     },
+                //     branches: {
+                //         dimensions: { width: 50, height: 75 },
+                //         nextThickness: 0.5,
+                //         angles: (Math.PI/9),
+                //         layers: 3,
+                //         leaves: {
+                //             position: { x: 0, y: 0 },
+                //             radius: 20,
+                //             startAngle: 0,
+                //             endAngle: 4 * Math.PI/3,
+                //             counterClockwise: true,
+                //             leafColor: "green",
+                //             count: 2,
+                //         },
+                //     },
+                //     barkColor: "rgb(90, 55, 45)",
+                //     edge: "edge"
+                // },
 
-                {
-                    frame: 200,
-                    tx: 800,
-                    ty: 400,
-                    ease: KeyframeTweener.linear,
-                    trunk: {
-                        dimensions: { width: 50, height: 300 }
-                    },
-                    branches: {
-                        dimensions: { width: 50, height: 75 },
-                        nextThickness: 0.5,
-                        angles: (Math.PI/10),
-                        layers: 7,
-                        leaves: {
-                            position: { x: 0, y: 0 },
-                            radius: 20,
-                            startAngle: 0,
-                            endAngle: 4 * Math.PI/3,
-                            counterClockwise: true,
-                            leafColor: "green",
-                            count: 2,
-                        },
-                    },
-                    barkColor: "rgb(90, 55, 45)",
-                    edge: "edge"
-                },
+                // {
+                //     frame: 200,
+                //     tx: 800,
+                //     ty: 400,
+                //     ease: KeyframeTweener.linear,
+                //     trunk: {
+                //         dimensions: { width: 50, height: 300 }
+                //     },
+                //     branches: {
+                //         dimensions: { width: 50, height: 75 },
+                //         nextThickness: 0.5,
+                //         angles: (Math.PI/10),
+                //         layers: 7,
+                //         leaves: {
+                //             position: { x: 0, y: 0 },
+                //             radius: 20,
+                //             startAngle: 0,
+                //             endAngle: 4 * Math.PI/3,
+                //             counterClockwise: true,
+                //             leafColor: "green",
+                //             count: 2,
+                //         },
+                //     },
+                //     barkColor: "rgb(90, 55, 45)",
+                //     edge: "edge"
+                // },
             ]
         },
 
@@ -324,11 +324,16 @@
                 //     edge: "edge"
                 // },
             ]
-        },
+        }
     ];
 
     // ** does not matter what order the keyframes are in!!!
     // ** keyframe-tweener only checks whether properties changed
+
+    // ** keyframe-tweener now only looks for keyframes with edge properties
+    // ** to mark as endpoints, when in-between keyframes are generated
+    // ** (for the internal movements), then the tweener processes them in
+    // ** relation to the two edge keyframes
 
     var addRandomFairyKeyframe = function (frame) {
         return {
@@ -369,7 +374,14 @@
     }
 
     var modifyProperty = function (data, propertyName, newValue) {
-        data[propertyName] = newValue;
+        var keys = Object.keys(data);
+        for (property of keys) {
+            if (typeof data[property] === "object") {
+                modifyProperty(data[property], propertyName, newValue);
+            } else if (property === propertyName) {
+                data[property] = newValue;
+            }
+        }
         return data;
     }
 
@@ -419,9 +431,67 @@
     //addFairies(3);
 
 
-    var addRandomTreeKeyframe = function (frame) {
-
+    var addStaticTreeKeyframe = function (frame) {
+        return  {
+            frame: frame,
+            tx: 800,
+            ty: 400,
+            // ease: KeyframeTweener.linear,
+            trunk: {
+                dimensions: { width: 50, height: 300 }
+            },
+            branches: {
+                dimensions: { width: 50, height: 75 },
+                nextThickness: 0.5,
+                angles: (Math.PI/10),
+                layers: 7,
+                leaves: {
+                    position: { x: 0, y: 0 },
+                    radius: 20,
+                    startAngle: 0,
+                    endAngle: 4 * Math.PI/3,
+                    counterClockwise: true,
+                    leafColor: "green",
+                    count: 2,
+                },
+            },
+            barkColor: "rgb(90, 55, 45)",
+            edge: "edge"
+        }
     };
+
+    var rustleLeaves = function (frames, leafRadius, howOpen, rustleSpeed) {
+        var treeKeyframes = sprites[0].keyframes;
+        var frameDelta = rustleSpeed;
+        var currentFrame = frames.firstFrame;
+        var duration = frames.lastFrame - frames.firstFrame;
+        for (var index = 0; index < (duration/frameDelta); index++) {
+            var newRadius =  leafRadius + Math.round((Math.random() * howOpen));
+            console.log(newRadius);
+            var newFrame = addStaticTreeKeyframe(currentFrame);
+            newFrame = modifyProperty(newFrame, "radius", newRadius);
+            console.log(newFrame);
+            treeKeyframes.push(newFrame);
+            currentFrame += frameDelta;
+        }
+    };
+
+    var addTree = function (firstFrame, lastFrame, properties) {
+        var treeKeyframes = sprites[0].keyframes;
+        var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
+
+        treeKeyframes.push(addStaticTreeKeyframe(firstFrame));
+        rustleLeaves(frames, properties.leafRadius, properties.howOpen, properties.rustleSpeed);
+        treeKeyframes.push(addStaticTreeKeyframe(lastFrame));
+    };
+
+    var properties = {
+        leafRadius: 20,
+        howOpen: 10,
+        rustleSpeed: 10
+    };
+
+    addTree(0, 250, properties);
 
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
