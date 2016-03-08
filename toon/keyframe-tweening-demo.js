@@ -4,17 +4,20 @@
  */
 (function () {
     var canvas = document.getElementById("canvas");
-    var startFrame = 0;
-    var endFrame = 250;
 
     // --------------------------------------------
     // ** Animation variables!!! **
-    // Feel free to modify to see what happens in the animation!
+    // Feel free to modify these to see what happens in the animation!
 
+    var startFrame = 0;
+    var endFrame = 250;
     var numberOfFairies = 3;
     var numberOfTrees = 3;
+    var treeBranchAngleIncrement = Math.PI/20;
 
     // --------------------------------------------
+
+
     // First, a selection of "drawing functions" from which we
     // can choose.  Their common trait: they all accept a single
     // renderingContext argument.
@@ -475,7 +478,7 @@
     var addTree = function (firstFrame, lastFrame, properties) {
         var treeKeyframes = sprites[0].keyframes;
         var negOrPos = Math.pow(-1, Math.round(Math.random()*2));
-        var angleVariability = Math.random()*(Math.PI/20);
+        var angleVariability = Math.random()*(treeBranchAngleIncrement);
         var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
         var newFirstFrame = addRandomTreeKeyframe(firstFrame);
         var newLastFrame = modifyProperty(addStaticTreeKeyframe(lastFrame),
