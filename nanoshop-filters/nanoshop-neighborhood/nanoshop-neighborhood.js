@@ -52,11 +52,15 @@ var NanoshopNeighborhood = {
         var green = 0;
         var blue = 0;
         var alpha = 0;
+        var thisRed = rgbaNeighborhood[4].r;
+        var thisGreen = rgbaNeighborhood[4].g;
+        var thisBlue = rgbaNeighborhood[4].b;
+        var thisAlpha = rgbaNeighborhood[4].a;
         var color = [
-            rgbaNeighborhood[4].r,
-            rgbaNeighborhood[4].g,
-            rgbaNeighborhood[4].b,
-            rgbaNeighborhood[4].a
+            thisRed,
+            thisGreen,
+            thisBlue,
+            thisAlpha
         ];
         var circle = (x-400)*(x-400) + (y-400)*(y-400);
         var direction = Math.floor(Math.random() * 9);
@@ -66,13 +70,41 @@ var NanoshopNeighborhood = {
             green = rgbaNeighborhood[index].g;
             blue = rgbaNeighborhood[index].b;
             alpha = rgbaNeighborhood[index].a;
-            if (300 <= Math.sqrt(circle) && Math.sqrt(circle) <= 500) {
+            if (200 <= Math.sqrt(circle) && Math.sqrt(circle) <= 800) {
                 if (direction === index) {
-                    color = [ red, green*2, blue*3, alpha ];
+                    color = [ red*2, green*2, blue*2, alpha ];
                 }
-                if (direction2 === index) {
-                    if (y % 10 === 0) {
-                    color = [ red*3, green*2, blue, alpha ];
+            }
+        }
+        return color;
+    },
+
+    outline: function (x, y, rgbaNeighborhood) {
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        var alpha = 0;
+        var thisRed = rgbaNeighborhood[4].r;
+        var thisGreen = rgbaNeighborhood[4].g;
+        var thisBlue = rgbaNeighborhood[4].b;
+        var thisAlpha = rgbaNeighborhood[4].a;
+        var color = [
+            thisRed,
+            thisGreen,
+            thisBlue,
+            thisAlpha
+        ];
+        for (var index = 0; index < 9; index++) {
+            red = rgbaNeighborhood[index].r;
+            green = rgbaNeighborhood[index].g;
+            blue = rgbaNeighborhood[index].b;
+            alpha = rgbaNeighborhood[index].a;
+            if (index !== 4) {
+                if (Math.abs(thisRed - red) > 20) {
+                    if (Math.abs(thisGreen - green) > 20) {
+                        if (Math.abs(thisBlue - blue) > 20) {
+                            color = [ red*2, green*2, blue*2, alpha ];
+                        }
                     }
                 }
             }
