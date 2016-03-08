@@ -61,9 +61,6 @@
         var sprites = settings.sprites;
 
         var previousTimestamp = null;
-
-        // ** add code to reset currentFrame to 0
-        // ** for animation looping
         
         var nextFrame = function (timestamp) {
             // Bail-out #1: We just started.
@@ -96,9 +93,6 @@
                     var originalStartKeyframe = sprites[i].keyframes[j];
                     var originalEndKeyframe = sprites[i].keyframes[j + 1];
 
-                    // ** will branch the keyframe processing here
-                    // ** to compute values for translating, scaling, and rotating
-                    // ** (expand the window to compute position relative to edge keyframes)
                     var whileIndex1 = j;
                     var whileIndex2 = j + 1;
                     var startEdgeKeyframe = originalStartKeyframe;
@@ -156,18 +150,10 @@
                             ease(currentTweenFrame, syStart, syDistance, duration)
                         );
                         
-                        // ** after it uses the edge keyframe's data
-                        // ** to translate the context
-                        // ** then continue with tweening the other values
-                        // ** by reverting to original keyframes
-
-                        // ** need to redefine currentTweenFrame and duration based on 
-                        // ** original keyframes (shrink the window back to compute relative to original keyframes)
                         currentTweenFrame = currentFrame - originalStartKeyframe.frame;
                         duration = originalEndKeyframe.frame - originalStartKeyframe.frame + 1;
                         tweenProcess(originalStartKeyframe, originalEndKeyframe, currentTweenFrame, duration, ease);
-                        // ** don't need to pass in position, already translated above
-                        // ** using edge keyframes
+
                         var properties = {
                             context: renderingContext,
                             data: originalStartKeyframe
@@ -204,9 +190,9 @@
                 } else if (typeof startKeyframe[property] === "number") {
                     var start = startKeyframe[property] || 0;
                     var distance = (endKeyframe[property] || 1) - start;
-                    // floating point multiplication by 0 
-                    // in ease function makes the values converge to 1 
-                    // because of the 0.0000000000000002 effect
+                    // ** floating point multiplication by 0 
+                    // ** in ease function makes the values converge to 1 
+                    // ** because of the 0.0000000000000002 effect
                     if (endKeyframe[property] === startKeyframe[property]) {
                         distance = 0;
                     }
