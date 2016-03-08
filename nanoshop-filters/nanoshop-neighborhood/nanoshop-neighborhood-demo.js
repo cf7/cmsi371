@@ -127,8 +127,8 @@
                 renderingContext,
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
                 // NanoshopNeighborhood.darkener
-                NanoshopNeighborhood.edgeDetector
                 // NanoshopNeighborhood.averager // Convenience comment for easy switching.
+                NanoshopNeighborhood.dream
             ),
             0, 0
         );

@@ -8,7 +8,7 @@ var NanoshopNeighborhood = {
     // index 4 is this pixel (center pixel)
     // these functions still return a single color that goes to the center pixel
     // ** primitives are picked up at 2-11 43:47
-    
+
     /*
      * A basic "darkener"---this one does not even use the entire pixel neighborhood;
      * just the exact current pixel like the original Nanoshop.
@@ -22,31 +22,99 @@ var NanoshopNeighborhood = {
         ];
     },
 
+    standard: function (x, y, rgbaNeighborhood) {
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        var alpha = 0;
+        var color = [
+            rgbaNeighborhood[4].r,
+            rgbaNeighborhood[4].g,
+            rgbaNeighborhood[4].b,
+            rgbaNeighborhood[4].a
+        ];
+        var direction = Math.floor(Math.random() * 9);
+
+        for (var index = 0; index < 9; index++) {
+            red = rgbaNeighborhood[index].r;
+            green = rgbaNeighborhood[index].g;
+            blue = rgbaNeighborhood[index].b;
+            alpha = rgbaNeighborhood[index].a;
+            if (red < 170 && green < 170 && blue < 120) {
+                color = [ red, green*2, blue*3, alpha ];
+            }
+        }
+        return color;
+    },
+
+    dream: function (x, y, rgbaNeighborhood) {
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        var alpha = 0;
+        var color = [
+            rgbaNeighborhood[4].r,
+            rgbaNeighborhood[4].g,
+            rgbaNeighborhood[4].b,
+            rgbaNeighborhood[4].a
+        ];
+        var circle = (x-400)*(x-400) + (y-400)*(y-400);
+        var direction = Math.floor(Math.random() * 9);
+        var direction2 = Math.floor(Math.random() * 9);
+        for (var index = 0; index < 9; index++) {
+            red = rgbaNeighborhood[index].r;
+            green = rgbaNeighborhood[index].g;
+            blue = rgbaNeighborhood[index].b;
+            alpha = rgbaNeighborhood[index].a;
+            if (300 <= Math.sqrt(circle) && Math.sqrt(circle) <= 500) {
+                if (direction === index) {
+                    color = [ red, green*2, blue*3, alpha ];
+                }
+                if (direction2 === index) {
+                    if (y % 10 === 0) {
+                    color = [ red*3, green*2, blue, alpha ];
+                    }
+                }
+            }
+        }
+        return color;
+    },
+
+    freeze: function (x, y, rgbaNeighborhood) {
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        var alpha = 0;
+        var color = [
+            rgbaNeighborhood[4].r,
+            rgbaNeighborhood[4].g,
+            rgbaNeighborhood[4].b,
+            rgbaNeighborhood[4].a
+        ];
+        var direction = Math.floor(Math.random() * 9);
+        for (var index = 0; index < 9; index++) {
+            red = rgbaNeighborhood[index].r;
+            green = rgbaNeighborhood[index].g;
+            blue = rgbaNeighborhood[index].b;
+            alpha = rgbaNeighborhood[index].a;
+            if (direction === index) {
+                color = [ red, green*2, blue*3, alpha ];
+            }
+        }
+        return color;
+    },
+
+    illuminated: function (x, y, rgbaNeighborhood) {
+        // red 120 - 180, green 130 - 170, blue 100 - 130
+    },
+
+    sunlight: function (x, y, rgbaNeighborhood) {
+        // circle radius, gradient
+    },
+
     // if drawing line, center pixel remains black, surrounding pixels remain
     // previous colors
 
-    // edgeDetector
-    edgeDetector: function (x, y, rgbaNeighborhood) {
-        var rTotal = 0;
-        var gTotal = 0;
-        var bTotal = 0;
-        var aTotal = 0;
-
-        for (var i = 0; i < 9; i += 1) {
-            if (i !== 4) {
-                rTotal += rgbaNeighborhood[i].r;
-                gTotal += rgbaNeighborhood[i].g;
-                bTotal += rgbaNeighborhood[i].b;
-                aTotal += rgbaNeighborhood[i].a;
-            }
-        }
-        var thisAverage = (rgbaNeighborhood[4].r + rgbaNeighborhood[4].g + rgbaNeighborhood[4].b) / 3;
-        var neighborAverage = ((rTotal + gTotal + bTotal) / 3) / 8;
-        // if this average is darker than surrounding pixels' average,
-        // return black, else return white
-        return thisAverage < neighborAverage ?
-                [0, 0, 0, rgbaNeighborhood[4].a] : [255, 255, 255, rgbaNeighborhood[4].a];
-    },
     /*
      * A basic "averager"---this one returns the average of all the pixels in the
      * given neighborhood.
