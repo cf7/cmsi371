@@ -4,6 +4,8 @@
  */
 (function () {
     var canvas = document.getElementById("canvas");
+    var startFrame = 0;
+    var endFrame = 250;
 
     // First, a selection of "drawing functions" from which we
     // can choose.  Their common trait: they all accept a single
@@ -240,31 +242,33 @@
         {
             draw: drawWater,
             keyframes: [
-                // {
-                //     frame: 0,
-                //     tx: 300,
-                //     ty: 700,
-                //     ease: KeyframeTweener.linear,
-                //     radius: 30,
-                //     ntstartAngle: 0,
-                //     ntendAngle: Math.PI*2,
-                //     counterClockwise: true,
-                //     color: "rgba(0, 130, 255, 0.9)",
-                //     numberWaves: 30
-                // },
+                {
+                    frame: startFrame,
+                    tx: 300,
+                    ty: 700,
+                    ease: KeyframeTweener.linear,
+                    radius: 30,
+                    ntstartAngle: 0,
+                    ntendAngle: Math.PI*2,
+                    counterClockwise: true,
+                    color: "rgba(0, 130, 255, 0.9)",
+                    numberWaves: 30,
+                    edge: "edge"
+                },
 
-                // {
-                //     frame: 200,
-                //     tx: 300,
-                //     ty: 700,
-                //     ease: KeyframeTweener.linear,
-                //     radius: 300,
-                //     ntstartAngle: 0,
-                //     ntendAngle: Math.PI*2,
-                //     counterClockwise: true,
-                //     color: "rgba(0, 130, 255, 0.9)",
-                //     numberWaves: 30
-                // },
+                {
+                    frame: endFrame,
+                    tx: 300,
+                    ty: 700,
+                    ease: KeyframeTweener.linear,
+                    radius: 300,
+                    ntstartAngle: 0,
+                    ntendAngle: Math.PI*2,
+                    counterClockwise: true,
+                    color: "rgba(0, 130, 255, 0.9)",
+                    numberWaves: 30,
+                    edge: "edge"
+                },
             ]
         },
 
@@ -424,7 +428,7 @@
                 glowSpeed: 15,
                 howGlowy: 10
             };
-            addFairy(0, 200, properties);
+            addFairy(startFrame, endFrame, properties);
         }
     }
     
@@ -463,11 +467,11 @@
     };
 
     var addRandomTreeKeyframe = function (frame) {
-        var xVariability = (Math.random()*(500)*Math.pow(-1, Math.round(Math.random()*2)));
+        var xVariability = (Math.random()*(400)*Math.pow(-1, Math.round(Math.random()*2)));
         xVariability = Math.round(xVariability);
         return  {
             frame: frame,
-            tx: 400 + xVariability,
+            tx: 500 + xVariability,
             ty: 300,
             sx: 0.75,
             sy: 0.75,
@@ -533,12 +537,12 @@
                 howOpen: 10,
                 rustleSpeed: 10,
             };
-            addTree(0, 250, properties);
+            addTree(startFrame, endFrame, properties);
         }
     };
 
-    addTrees(5);
-    
+    addTrees(3);
+
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
     // to display, of course.
