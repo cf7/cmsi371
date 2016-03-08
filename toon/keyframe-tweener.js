@@ -222,6 +222,14 @@
             return -distance * percentComplete * (percentComplete - 2) + start;
         },
 
+        // ** divides duration by 2 so that percentComplete will pass 1
+        // ** range of percentComplete is now between 0 and 2
+        // ** also need to divide distance by 2 so it doesn't go too far
+        // ** when percentComplete < 1, it will calculate using quadEaseIn
+        // ** when percentComplete > 1, it will calculate using quadEaseOut
+        // ** in the quadEaseOut section, need to subtract percentComplete by 1
+        // ** in certain calculations because percentComplete will have passed 1
+        // ** by this time
         quadEaseInAndOut: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / (duration / 2);
             return (percentComplete < 1) ?
@@ -245,14 +253,26 @@
         // apply percentComplete to that pattern (like parametric functions,
         // percentComplete is the t variable)
         // ** add tweening function
+        // 
         //          percentComplete
         // start |------|----------------| start + distance
 
+        // distance is the x value
+        // percentComplete is the t value
         fairyRandom: function (currentTime, start, distance, duration) {
-            var percentComplete = currentTime / duration;
-            var theta = Math.PI * 2 * percentComplete;
-            return start + (distance * percentComplete) + (distance * Math.cos(theta));
-            
+            var percentComplete = currentTime / (duration/3);
+            if (percentComplete < 1) {
+                console.log("inside 1st: " + percentComplete);
+                return start + (-(distance/3) * percentComplete * (percentComplete - 2));
+            } else if (1 < percentComplete && percentComplete < 2) {
+                console.log("inside 2nd: " + percentComplete);
+                return start + ((distance/3) * percentComplete);
+            } else if (percentComplete > 2) {
+                console.log("inside 3rd: " + percentComplete*percentComplete);
+                return start + ((distance/3) * percentComplete * (percentComplete - 1));
+            } else {
+                return start + ((distance/3) * percentComplete);
+            }
         },
 
         // ** add tweening function
