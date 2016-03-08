@@ -150,9 +150,11 @@
                             ease(currentTweenFrame, syStart, syDistance, duration)
                         );
                         
+                        var linearEase = KeyframeTweener.linear;
                         currentTweenFrame = currentFrame - originalStartKeyframe.frame;
                         duration = originalEndKeyframe.frame - originalStartKeyframe.frame + 1;
-                        tweenProcess(originalStartKeyframe, originalEndKeyframe, currentTweenFrame, duration, ease);
+                        tweenProcess(originalStartKeyframe, originalEndKeyframe, 
+                                    currentTweenFrame, duration, linearEase);
 
                         var properties = {
                             context: renderingContext,
@@ -178,8 +180,8 @@
     };
     
     var startsWithNT = function (string) {
-            return string.match(/^nt/) === null ? false : true;
-        };
+        return string.match(/^nt/) === null ? false : true;
+    };
 
     var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
         var keys = Object.keys(startKeyframe);
@@ -243,9 +245,14 @@
         // apply percentComplete to that pattern (like parametric functions,
         // percentComplete is the t variable)
         // ** add tweening function
-        snap: function (currentTime, start, distance, duration) {
+        //          percentComplete
+        // start |------|----------------| start + distance
+
+        fairyRandom: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / duration;
-            return Math.pow(distance * percentComplete, 3) + start;
+            var theta = Math.PI * 2 * percentComplete;
+            return start + (distance * percentComplete) + (distance * Math.cos(theta));
+            
         },
 
         // ** add tweening function

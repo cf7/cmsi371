@@ -313,6 +313,33 @@
         return data;
     };
 
+    var randomEaseFunction = function () {
+        var easeFunctions = []
+        var keys = Object.keys(window.KeyframeTweener);
+        for (property of keys) {
+            easeFunctions.push(window.KeyframeTweener[property]);
+        }
+        var length = easeFunctions.length;
+        return easeFunctions[Math.floor(Math.random() * length)];
+    };
+
+
+    var fairyTweeningFunctions = function () {
+        var startsWithFairy = function (string) {
+            return string.match(/^fairy/) === null ? false : true;
+        };
+        var defaultEaseFunction = window.KeyframeTweener.linear;
+        var easeFunctions = []
+        var keys = Object.keys(window.KeyframeTweener);
+        for (property of keys) {
+            if (startsWithFairy(property)) {
+                easeFunctions.push(window.KeyframeTweener[property]);
+            }
+        }
+        var length = easeFunctions.length;
+        return easeFunctions[Math.floor(Math.random() * length)] || defaultEaseFunction;
+    };
+
     var addRandomFairyKeyframe = function (frame) {
         return {
             frame: frame,
@@ -320,9 +347,9 @@
             ty: 400 + (Math.random()*(300)*Math.pow(-1, Math.round(Math.random()*2))),
             sx: 1,
             sy: 1,
-            // rotate: -30,
-            // ease: KeyframeTweener.linear,
-            ntinnerRadius: 20,
+            // rotate: 0 + Math.floor(Math.random()*(30)*Math.pow(-1, Math.round(Math.random()*2))),
+            ease: KeyframeTweener.linear,
+            ntinnerRadius: 15,
             ntbeforeRadius: 20,
             ntouterRadius: 50,
             innerColor: "white",
@@ -376,7 +403,10 @@
         var fairyKeyframes = sprites[2].keyframes;
         var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
 
-        fairyKeyframes.push(addRandomFairyKeyframe(firstFrame));
+        var newFirstFrame = addRandomFairyKeyframe(firstFrame);
+        newFirstFrame = modifyProperty(newFirstFrame, "ease", fairyTweeningFunctions());
+
+        fairyKeyframes.push(newFirstFrame);
         flutterAndGlow(frames, properties.flutterSpeed, properties.howOpen, 
                         properties.glowSpeed, properties.howGlowy);
         fairyKeyframes.push(addRandomFairyKeyframe(lastFrame));
@@ -404,7 +434,7 @@
             ty: 300,
             sx: 0.75,
             sy: 0.75,
-            // ease: KeyframeTweener.linear,
+            ease: KeyframeTweener.linear,
             trunk: {
                 dimensions: { width: 50, height: 300 }
             },
@@ -437,7 +467,7 @@
             ty: 300,
             sx: 0.75,
             sy: 0.75,
-            // ease: KeyframeTweener.linear,
+            ease: KeyframeTweener.linear,
             trunk: {
                 dimensions: { width: 50, height: 300 }
             },
