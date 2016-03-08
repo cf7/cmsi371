@@ -7,36 +7,31 @@
     var startFrame = 0;
     var endFrame = 250;
 
+    // --------------------------------------------
+    // ** Animation variables!!! **
+    // Feel free to modify to see what happens in the animation!
+
+    var numberOfFairies = 3;
+    var numberOfTrees = 3;
+
+    // --------------------------------------------
     // First, a selection of "drawing functions" from which we
     // can choose.  Their common trait: they all accept a single
     // renderingContext argument.
-    var square = function (renderingContext) {
-        renderingContext.fillStyle = "blue";
-        renderingContext.fillRect(-20, -20, 40, 40);
-    };
+    // var square = function (renderingContext) {
+    //     renderingContext.fillStyle = "blue";
+    //     renderingContext.fillRect(-20, -20, 40, 40);
+    // };
 
-    var circle = function (properties) {    
-        var renderingContext = properties.context;
-        renderingContext.strokeStyle = "red";
-        renderingContext.beginPath();
-        renderingContext.arc(properties.x, 0, 50, 0, properties.angle);
-        renderingContext.stroke();
-    };
+    // var circle = function (properties) {    
+    //     var renderingContext = properties.context;
+    //     renderingContext.strokeStyle = "red";
+    //     renderingContext.beginPath();
+    //     renderingContext.arc(properties.x, 0, 50, 0, properties.angle);
+    //     renderingContext.stroke();
+    // };
 
-    // Reasoning
-    // *******
-    // The way the tweenProcess function in keyframe-tweener.js is set up,
-    // it tweens every number property that exists in an object, no matter how nested.
-    // Because of this, it is important to be able to not tween certain properties.
-    // Although simply passing untweenable properties into another object and then
-    // passing that object into the fairy drawing function would work, the changes to
-    // the properties that occurr in fairy.js would not be preserved in iterations
-    // over the same startKeyframe in keyframe-tweener.js (because a "new" object
-    // is pasesed in every time).
-    // Therefore, there is a way to continually pass in the same object while
-    // still being able to designate which properties should not be tweened.
-    // The four functions below accomplish this by handling properties that are
-    // tagged (beging with) the string "nt" which stands for "no tweening"
+
     var startsWithNT = function (string) {
         return string.match(/^nt/) === null ? false : true;
     };
@@ -133,28 +128,6 @@
         reTag(properties, rememberedKeys);
     }
 
-    var treeTweener = function (data) {
-        console.log("inside");
-        // if (data.branches.leaves.endAngle < 4*Math.PI/3 - Math.PI/15) {
-        //     data.shakeIncrement = true;
-        // }
-        // if (data.shakeIncrement) {
-        //     data.branches.leaves.endAngle = data.branches.leaves.endAngle += Math.PI/20;
-        // }
-        // if (data.branches.leaves.endAngle > 4*Math.PI/3 + Math.PI/15) {
-        //     data.shakeIncrement = false;
-        // }
-        // if (!data.shakeIncrement) {
-        //     data.branches.leaves.endAngle = data.branches.leaves.endAngle -= Math.PI/20;
-        // }
-
-        if (data.frame % 100 === 0) {
-            console.log("inside");
-            data.branches.layers = data.branches.layers + 1;
-        }
-        return data;
-    }
-
     // Then, we have "easing functions" that determine how
     // intermediate frames are computed.
 
@@ -168,23 +141,11 @@
     // The "nt" must be added to the same property across all keyframes
     // of the sprite to avoid an error.
     var sprites = [
-        // ** can also use automation to build the keyframes
-        // ** tweening: the calculation of intermediate steps and execution
-        // ** of those intermediate frames (interpolation basically)
-        // ** tweening properties should be able to be interpolated from their
-        // ** present value to a future value, and have a function that determines
-        // ** how those values are interpolated (quadratically, linearly, . . . etc.)
-        //** engine should be able to tween n number of properties in each keyframe
-        // ** tweenable properties should be in the keyframe objects in the keyframes array
-        // ** can have functions that the tweener consults to receive data about
-        // ** the current state of the sprite
-        // ** idea is that animator can look at keyframes and see the state of the sprite
-        // ** at any given keyframe, the computer takes care of what happens in between
         {
             draw: drawTree,
             keyframes: [
                 // {
-                //     frame: 0,
+                //     frame: startFrame,
                 //     tx: 800,
                 //     ty: 400,
                 //     ease: KeyframeTweener.linear,
@@ -211,7 +172,7 @@
                 // },
 
                 // {
-                //     frame: 200,
+                //     frame: endFrame,
                 //     tx: 800,
                 //     ty: 400,
                 //     ease: KeyframeTweener.linear,
@@ -266,7 +227,7 @@
                     ntendAngle: Math.PI*2,
                     counterClockwise: true,
                     color: "rgba(0, 130, 255, 0.9)",
-                    numberWaves: 30,
+                    numberWaves: 50,
                     edge: "edge"
                 },
             ]
@@ -331,13 +292,23 @@
         }
     ];
 
-    // ** does not matter what order the keyframes are in!!!
-    // ** keyframe-tweener only checks whether properties changed
 
     // ** keyframe-tweener now only looks for keyframes with edge properties
     // ** to mark as endpoints, when in-between keyframes are generated
     // ** (for the internal movements), then the tweener processes them in
     // ** relation to the two edge keyframes
+
+    var modifyProperty = function (data, propertyName, newValue) {
+        var keys = Object.keys(data);
+        for (property of keys) {
+            if (typeof data[property] === "object") {
+                modifyProperty(data[property], propertyName, newValue);
+            } else if (property === propertyName) {
+                data[property] = newValue;
+            }
+        }
+        return data;
+    };
 
     var addRandomFairyKeyframe = function (frame) {
         return {
@@ -375,19 +346,7 @@
             howGlowy: 10,
             glowSpeed: 0
         };
-    }
-
-    var modifyProperty = function (data, propertyName, newValue) {
-        var keys = Object.keys(data);
-        for (property of keys) {
-            if (typeof data[property] === "object") {
-                modifyProperty(data[property], propertyName, newValue);
-            } else if (property === propertyName) {
-                data[property] = newValue;
-            }
-        }
-        return data;
-    }
+    };
 
     var flutterAndGlow = function (frames, flutterSpeed, howOpen, glowSpeed, howGlowy) {
         var fairyKeyframes = sprites[2].keyframes;
@@ -408,7 +367,7 @@
             howGlowy *= -1;
             newRadius = newRadius + howGlowy;
         }
-    }
+    };
 
     var addFairy = function (firstFrame, lastFrame, properties) {
         var fairyKeyframes = sprites[2].keyframes;
@@ -418,7 +377,7 @@
         flutterAndGlow(frames, properties.flutterSpeed, properties.howOpen, 
                         properties.glowSpeed, properties.howGlowy);
         fairyKeyframes.push(addRandomFairyKeyframe(lastFrame));
-    }
+    };
 
     var addFairies = function (number) {
         for (var index = 0; index < number; index++) {
@@ -430,9 +389,9 @@
             };
             addFairy(startFrame, endFrame, properties);
         }
-    }
+    };
     
-    addFairies(3);
+    addFairies(numberOfFairies);
 
 
     var addStaticTreeKeyframe = function (frame) {
@@ -541,7 +500,7 @@
         }
     };
 
-    addTrees(3);
+    addTrees(numberOfTrees);
 
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
