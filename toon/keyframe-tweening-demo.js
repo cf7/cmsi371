@@ -460,6 +460,7 @@
         }
     };
 
+
     var rustleLeaves = function (frames, leafRadius, howOpen, rustleSpeed) {
         var treeKeyframes = sprites[0].keyframes;
         var frameDelta = rustleSpeed;
@@ -467,10 +468,8 @@
         var duration = frames.lastFrame - frames.firstFrame;
         for (var index = 0; index < (duration/frameDelta); index++) {
             var newRadius =  leafRadius + Math.round((Math.random() * howOpen));
-            console.log(newRadius);
             var newFrame = addStaticTreeKeyframe(currentFrame);
             newFrame = modifyProperty(newFrame, "radius", newRadius);
-            console.log(newFrame);
             treeKeyframes.push(newFrame);
             currentFrame += frameDelta;
         }
@@ -488,7 +487,7 @@
     var properties = {
         leafRadius: 20,
         howOpen: 10,
-        rustleSpeed: 10
+        rustleSpeed: 10,
     };
 
     addTree(0, 250, properties);
