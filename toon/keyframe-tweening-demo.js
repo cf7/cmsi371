@@ -428,14 +428,16 @@
         }
     }
     
-    //addFairies(3);
+    addFairies(3);
 
 
     var addStaticTreeKeyframe = function (frame) {
         return  {
             frame: frame,
             tx: 800,
-            ty: 400,
+            ty: 300,
+            sx: 0.75,
+            sy: 0.75,
             // ease: KeyframeTweener.linear,
             trunk: {
                 dimensions: { width: 50, height: 300 }
@@ -460,6 +462,38 @@
         }
     };
 
+    var addRandomTreeKeyframe = function (frame) {
+        var xVariability = (Math.random()*(500)*Math.pow(-1, Math.round(Math.random()*2)));
+        xVariability = Math.round(xVariability);
+        return  {
+            frame: frame,
+            tx: 400 + xVariability,
+            ty: 300,
+            sx: 0.75,
+            sy: 0.75,
+            // ease: KeyframeTweener.linear,
+            trunk: {
+                dimensions: { width: 50, height: 300 }
+            },
+            branches: {
+                dimensions: { width: 50, height: 75 },
+                nextThickness: 0.5,
+                angles: (Math.PI/10),
+                layers: 2,
+                leaves: {
+                    position: { x: 0, y: 0 },
+                    radius: 20,
+                    startAngle: 0,
+                    endAngle: 4 * Math.PI/3,
+                    counterClockwise: true,
+                    leafColor: "green",
+                    count: 2,
+                },
+            },
+            barkColor: "rgb(90, 55, 45)",
+            edge: "edge"
+        }
+    };
 
     var rustleLeaves = function (frames, leafRadius, howOpen, rustleSpeed) {
         var treeKeyframes = sprites[0].keyframes;
@@ -477,21 +511,34 @@
 
     var addTree = function (firstFrame, lastFrame, properties) {
         var treeKeyframes = sprites[0].keyframes;
+        var negOrPos = Math.pow(-1, Math.round(Math.random()*2));
+        var angleVariability = Math.random()*(Math.PI/20);
         var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
+        var newFirstFrame = addRandomTreeKeyframe(firstFrame);
+        var newLastFrame = modifyProperty(addStaticTreeKeyframe(lastFrame),
+                    "layers", newFirstFrame.branches.layers + 2 + Math.round(Math.random() * 3));
+        newLastFrame = modifyProperty(newLastFrame, "angles", 
+                    newFirstFrame.branches.angles + angleVariability);
+        newLastFrame = modifyProperty(newLastFrame, "tx", newFirstFrame.tx);
 
-        treeKeyframes.push(addStaticTreeKeyframe(firstFrame));
-        rustleLeaves(frames, properties.leafRadius, properties.howOpen, properties.rustleSpeed);
-        treeKeyframes.push(addStaticTreeKeyframe(lastFrame));
+        treeKeyframes.push(newFirstFrame);
+        // rustleLeaves(frames, properties.leafRadius, properties.howOpen, properties.rustleSpeed);
+        treeKeyframes.push(newLastFrame);
     };
 
-    var properties = {
-        leafRadius: 20,
-        howOpen: 10,
-        rustleSpeed: 10,
+    var addTrees = function (number) {
+        for (var index = 0; index < number; index++) {
+            var properties = {
+                leafRadius: 20,
+                howOpen: 10,
+                rustleSpeed: 10,
+            };
+            addTree(0, 250, properties);
+        }
     };
 
-    addTree(0, 250, properties);
-
+    addTrees(5);
+    
     // Finally, we initialize the engine.  Mainly, it needs
     // to know the rendering context to use.  And the animations
     // to display, of course.
