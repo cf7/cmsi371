@@ -38,22 +38,21 @@ var Nanoshop = {
     },
 
     waves: function (x, y, r, g, b, a) {
-        var radii = [];
-        var counter = 99999;
-        var counterDelta = 100;
-        while (counter > 0) {
-            radii.push(counter);
-            counter -= counterDelta;
-        }
-        radii.reverse();
         var circle = x*x + y*y;
         var randGreen = Math.round(Math.random() * 3);
         var randBlue = Math.round(Math.random() * 4);
         var newPixel = [ r, g, b, a ];
-        for (var index = 0, maxI = radii.length - 1; index < maxI; index++) {
-            if (radii[index] <= circle && circle <= radii[index + 1]) {
-                newPixel = [ r, g * randGreen, b * randBlue, a ];
-            }
+        if (100 <= Math.sqrt(circle) && Math.sqrt(circle) <= 200) {
+            newPixel = [ r, g * randGreen, b * randBlue, a ];
+        }
+        if (250 <= Math.sqrt(circle) && Math.sqrt(circle) <= 300) {
+            newPixel = [ r, g * randGreen, b * randBlue, a ];
+        }
+        if (350 <= Math.sqrt(circle) && Math.sqrt(circle) <= 400) {
+            newPixel = [ r, g * randGreen, b * randBlue, a ];
+        }
+        if (450 <= Math.sqrt(circle) && Math.sqrt(circle) <= 500) {
+            newPixel = [ r, g * randGreen, b * randBlue, a ];
         }
         return newPixel;
     },
