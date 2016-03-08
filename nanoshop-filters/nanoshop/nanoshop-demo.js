@@ -92,7 +92,9 @@
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                Nanoshop.waves
+                Nanoshop.blueFinder
+                // Nanoshop.fairyDust
+                // Nanoshop.waves
             ),
             0, 0
         );

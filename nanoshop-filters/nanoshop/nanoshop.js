@@ -16,17 +16,15 @@ var Nanoshop = {
     },
 
     // ** add two more filter functions
-    arbitrary: function (x, y, r, g, b, a) {
-        if (x % 5 === 0 && y % 5 === 0) {
-            return [ Math.round(Math.cos(r * (Math.PI/180))), 
-                    Math.round(Math.sin(g * (Math.PI/180))), 
-                    Math.round(b * Math.PI), a ];
+    blueFinder: function (x, y, r, g, b, a) {
+        if (b > 150) {
+            return [ r, g * 3, b * 10, a ];
         } else {
             return [ r, g, b, a ];
         }
     },
 
-    starDust: function (x, y, r, g, b, a) {
+    fairyDust: function (x, y, r, g, b, a) {
         var random = Math.round(Math.random() * 21);
         var randGreen = Math.round(Math.random() * 3);
         var randBlue = Math.round(Math.random() * 4);
