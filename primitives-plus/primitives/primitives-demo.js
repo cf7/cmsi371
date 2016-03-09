@@ -26,13 +26,14 @@
     var color = [ 0, 255, 255 ];
     var color2 = [ 255, 0, 255 ];
     var color3 = [ 255, 255, 0 ];
-    var color4 = [ 200, 200, 200 ]; 
+    var color4 = [ 200, 200, 200 ];
+
     // A few circles.
     Primitives.circleTrig(renderingContext, 105, 315, 100, color);
     Primitives.circleDDA(renderingContext, 310, 315, 100, color);
-    Primitives.circleBres1(renderingContext, 515, 315, 100, color);
-    Primitives.circleBres2(renderingContext, 720, 315, 100, color);
-    Primitives.circleBres3(renderingContext, 925, 315, 100, color);
+    Primitives.circleBres1(renderingContext, 515, 315, 100, color, color2);
+    Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
+    Primitives.circleBres3(renderingContext, 925, 315, 100, color, color2, color3, color4);
 
     // And finally...polygon fills!
     renderingContext.save();
