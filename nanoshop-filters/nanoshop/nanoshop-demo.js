@@ -2,7 +2,7 @@
  * This demo script uses the Nanoshop module to apply a simple
  * filter on a canvas drawing.
  */
-(function () {
+$(function () {
     var canvas = $("#picture")[0];
     var renderingContext = canvas.getContext("2d");
     console.log(window.SpriteLibrary);
@@ -142,4 +142,4 @@
             0, 0
         );
     });
-}());
+});
