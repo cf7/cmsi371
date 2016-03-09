@@ -91,6 +91,7 @@ var Primitives = {
                             currentColor[2]);
 
                     // Move to the next color horizontally.
+                    // ** hDelta - "horizontal delta"
                     currentColor[0] += hDelta[0];
                     currentColor[1] += hDelta[1];
                     currentColor[2] += hDelta[2];
@@ -114,6 +115,9 @@ var Primitives = {
             fillRectOneColor();
         } else if (!c3) {
             // For this case, we set up the left vertical deltas.
+            // ** the second color of the whole rectangle minus
+            // ** the first color of the whole rectangle divided by
+            // ** the height of the whole rectangle
             leftVDelta = [(c2[0] - c1[0]) / h,
                       (c2[1] - c1[1]) / h,
                       (c2[2] - c1[2]) / h];
@@ -266,6 +270,9 @@ var Primitives = {
         }
     },
 
+
+    // ** generate rectangle, use circle as cookie cutter, fill one eighth and rotate
+    // ** the eighth
     /*
      * Time for the circles.  First, we observe that it is sufficient
      * to compute one-eighth of a circle: the other seven portions are
@@ -273,6 +280,20 @@ var Primitives = {
      * function that all of the circle implementations will use...
      */
     plotCirclePoints: function (context, xc, yc, x, y, color) {
+        // ** see fillRectFourColors()
+        // ** figure out delta to increment colors by
+        // ** to get from first color to second color
+        // ** for 4 colors, there are deltas from left to right
+        // ** and from top to bottom, but just take the two sides
+        // ** delta for . . . color in top left going to color bottom left
+        // ** and detla for . . . color top right going to color bottom right
+        // ** but travel from left to right, and calculate going from current
+        // ** pixel to next pixel (that takes care of gradation going left to right)
+        // ** the colors on the left and right sides will have changed by the time
+        // ** computing current pixel to next pixel going left to right (because
+        // ** up and down deltas change the colors beforehand)
+        // ** (compute the new horizontal deltas on the fly b/w the leftmost
+        // ** and rightmost colors)
         color = color || [0, 0, 0];
         this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
         this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
@@ -284,8 +305,10 @@ var Primitives = {
         this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
     },
 
+    // ** add more parameters to accept four colors to all of these
+    // ** circle functions
     // First, the most naive possible implementation: circle by trigonometry.
-    circleTrig: function (context, xc, yc, r, color) {
+    circleTrig: function (context, xc, yc, r, color, color2, color3, color4) {
         var theta = 1 / r;
 
         // At the very least, we compute our sine and cosine just once.
@@ -297,33 +320,33 @@ var Primitives = {
         var y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
             x = x * c - y * s;
             y = x * s + y * c;
         }
     },
 
     // Now DDA.
-    circleDDA: function (context, xc, yc, r, color) {
+    circleDDA: function (context, xc, yc, r, color, color2, color3, color4) {
         var epsilon = 1 / r;
         var x = r;
         var y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
             x = x - (epsilon * y);
             y = y + (epsilon * x);
         }
     },
 
     // One of three Bresenham-like approaches.
-    circleBres1: function (context, xc, yc, r, color) {
+    circleBres1: function (context, xc, yc, r, color, color2, color3, color4) {
         var p = 3 - 2 * r;
         var x = 0;
         var y = r;
 
         while (x < y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
             if (p < 0) {
                 p = p + 4 * x + 6;
             } else {
@@ -333,12 +356,12 @@ var Primitives = {
             x += 1;
         }
         if (x === y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
         }
     },
 
     // And another...
-    circleBres2: function (context, xc, yc, r, color) {
+    circleBres2: function (context, xc, yc, r, color, color2, color3, color4) {
         var x = 0;
         var y = r;
         var e = 1 - r;
@@ -346,7 +369,7 @@ var Primitives = {
         var v = e - r;
 
         while (x <= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
             if (e < 0) {
                 x += 1;
                 u += 2;
@@ -363,13 +386,13 @@ var Primitives = {
     },
 
     // Last but not least...
-    circleBres3: function (context, xc, yc, r, color) {
+    circleBres3: function (context, xc, yc, r, color, color2, color3, color4) {
         var x = r;
         var y = 0;
         var e = 0;
 
         while (y <= x) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
             y += 1;
             e += (2 * y - 1);
             if (e > x) {
