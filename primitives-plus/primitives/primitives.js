@@ -294,21 +294,31 @@ var Primitives = {
         // ** up and down deltas change the colors beforehand)
         // ** (compute the new horizontal deltas on the fly b/w the leftmost
         // ** and rightmost colors)
-        console.log("color1: " + color);
-        console.log("color2: " + (color2 || 0));
-
-        console.log("color3: " + (color3 || 0));
-        console.log("color4: " + (color4 || 0));
+        // ** xc and yc - "center x" and "center y"
+        // ** xc + x, yc + y  - vertices on the perimeter of the circle!
+        // ** Idea1:
+        // **  - shrink the radius and redraw
+        // ** Idea2:
+        // **  - draw lines across the circle
+        // ** Idea3:
+        // **  - fill a rectangle first and then deterimine a radius
+        // **  from xc and yc to cut the circle
 
         color = color || [0, 0, 0];
-        this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc - x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
+        while (x > 0 && y > 0) {
+            this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
+            this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
+            this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
+            this.setPixel(context, xc + y, yc - x, color[0], color[1], color[2]);
+            this.setPixel(context, xc - x, yc + y, color[0], color[1], color[2]);
+            this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
+            this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
+            this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
+
+            x -= 0.1;
+            y -= 0.1;
+        }
+        this.setPixel(context, xc, yc, color[0], color[1], color[2]);
     },
 
     // ** add more parameters to accept four colors to all of these
