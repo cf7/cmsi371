@@ -304,8 +304,22 @@ var Primitives = {
         // **  - fill a rectangle first and then deterimine a radius
         // **  from xc and yc to cut the circle
 
-        color = color || [0, 0, 0];
+        color = color || [255, 255, 255];
+        color2 = color2 || [255, 255, 255];
+        color3 = color3 || [255, 255, 255];
+        color4 = color4 || [255, 255, 255];
+
+        var h = y;
+        var w = x;
+        var leftVDelta = [(color3[0] - color[0]) / h,
+                  (color3[1] - color[1]) / h,
+                  (color3[2] - color[2]) / h];
+        var rightVDelta = [(color4[0] - color2[0]) / h,
+                  (color4[1] - color2[1]) / h,
+                  (color4[2] - color2[2]) / h];
+        var coordinates = [];
         while (x > 0 && y > 0) {
+
             this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
             this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
             this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
@@ -314,11 +328,61 @@ var Primitives = {
             this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
             this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
             this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
-
+            
             x -= 0.1;
             y -= 0.1;
         }
         this.setPixel(context, xc, yc, color[0], color[1], color[2]);
+
+        // var i;
+        // var j;
+        // var h = y;
+        // var w = x;
+        // var bottom = yc + h;
+        // var right = xc + w;
+        // var leftColor = color ? [color[0], color[1], color[2]] : color;
+        // var rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2;
+        // var leftVDelta;
+        // var rightVDelta;
+        // var hDelta;
+        // var currentColor;
+
+        // color4 = color4 || color3;
+
+        // leftVDelta = [(color3[0] - color[0]) / h,
+        //           (color3[1] - color[1]) / h,
+        //           (color3[2] - color[2]) / h];
+        // rightVDelta = [(color4[0] - color2[0]) / h,
+        //           (color4[1] - color2[1]) / h,
+        //           (color4[2] - color2[2]) / h];
+        // for (i = y; i < bottom; i += 1) {
+        //         // Move to the next "vertical" color level.
+        //         currentColor = [leftColor[0], leftColor[1], leftColor[2]];
+        //         hDelta = [(rightColor[0] - leftColor[0]) / w,
+        //                   (rightColor[1] - leftColor[1]) / w,
+        //                   (rightColor[2] - leftColor[2]) / w];
+
+        //         for (j = x; j < right; j += 1) {
+        //             this.setPixel(context, j, i,
+        //                     currentColor[0],
+        //                     currentColor[1],
+        //                     currentColor[2]);
+
+        //             // Move to the next color horizontally.
+        //             // ** hDelta - "horizontal delta"
+        //             currentColor[0] += hDelta[0];
+        //             currentColor[1] += hDelta[1];
+        //             currentColor[2] += hDelta[2];
+        //         }
+
+        //         // The color on each side "grades" at different rates.
+        //         leftColor[0] += leftVDelta[0];
+        //         leftColor[1] += leftVDelta[1];
+        //         leftColor[2] += leftVDelta[2];
+        //         rightColor[0] += rightVDelta[0];
+        //         rightColor[1] += rightVDelta[1];
+        //         rightColor[2] += rightVDelta[2];
+        //     }
     },
 
     // ** add more parameters to accept four colors to all of these

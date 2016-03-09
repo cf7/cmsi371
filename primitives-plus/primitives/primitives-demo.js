@@ -29,10 +29,10 @@
     var color4 = [ 200, 200, 200 ];
 
     // A few circles.
-    Primitives.circleTrig(renderingContext, 105, 315, 100, color);
-    Primitives.circleDDA(renderingContext, 310, 315, 100, color);
-    Primitives.circleBres1(renderingContext, 515, 315, 100, color, color2);
-    Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
+    // Primitives.circleTrig(renderingContext, 105, 315, 100, color);
+    // Primitives.circleDDA(renderingContext, 310, 315, 100, color);
+    // Primitives.circleBres1(renderingContext, 515, 315, 100, color, color2);
+    // Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
     Primitives.circleBres3(renderingContext, 925, 315, 100, color, color2, color3, color4);
 
     // And finally...polygon fills!
