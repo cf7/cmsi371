@@ -5,7 +5,8 @@
 $(function () {
     var canvas = $("#picture")[0];
     var renderingContext = canvas.getContext("2d");
-    console.log(window.SpriteLibrary);
+
+    renderingContext.save();
     // Scene created by Angela Elgar: https://github.com/aelgar
     renderingContext.translate(400, 200);
     Sprites.Wall.draw(renderingContext, { });
@@ -86,48 +87,71 @@ $(function () {
     renderingContext.scale(5, 2.5);
     Sprites.RoomLight.draw(renderingContext, { brightness: 0.4 });
 
+    renderingContext.restore();
+
+    renderingContext.save();
+    renderingContext.translate(600, 100);
     window.SpriteLibrary.fairy({
-        innerRadius: 20,
-        beforeRadius: 20,
-        outerRadius: 50,
-        innerColor: "white",
-        outerColor: "rgb(137, 255, 249)",
-        direction: {forward: true, left: false, right: false },
-        wingsInward: true,
-        howOpen: 0,
-        flutterSpeed: 4,
-        howGlowy: 10,
-        glowSpeed: 0
+        context: renderingContext,
+        fairyData: {
+            innerRadius: 20,
+            beforeRadius: 20,
+            outerRadius: 50,
+            innerColor: "white",
+            outerColor: "rgb(137, 255, 249)",
+            direction: {forward: true, left: false, right: false },
+            wingsInward: true,
+            howOpen: 0,
+            flutterSpeed: 4,
+            howGlowy: 10,
+            glowSpeed: 0
+        }
     });
-    // window.SpriteLibrary.tree({
-    //     trunk: {
-    //         dimensions: { width: 50, height: 300 }
-    //     },
-    //     branches: {
-    //         dimensions: { width: 50, height: 75 },
-    //         nextThickness: 0.5,
-    //         angles: (Math.PI/9),
-    //         layers: 7,
-    //         leaves: {
-    //             position: { x: 0, y: 0 },
-    //             radius: 20,
-    //             startAngle: 0,
-    //             endAngle: 4 * Math.PI/3,
-    //             counterClockwise: true,
-    //             leafColor: "green",
-    //             count: 2,
-    //         },
-    //     },
-    //     barkColor: "rgb(90, 55, 45)"                
-    // });
-    // window.SpriteLibrary.water({
-    //     radius: 30,
-    //     startAngle: 0,
-    //     endAngle: Math.PI*2,
-    //     counterClockwise: true,
-    //     color: "rgba(0, 130, 255, 0.9)",
-    //     numberWaves: 30
-    // });
+    renderingContext.restore();
+
+    renderingContext.save();
+    renderingContext.scale(0.5, 0.5);
+    renderingContext.translate(400, 600);
+    window.SpriteLibrary.tree({
+        context: renderingContext,
+        treeData: {
+            trunk: {
+                dimensions: { width: 50, height: 300 }
+            },
+            branches: {
+                dimensions: { width: 50, height: 75 },
+                nextThickness: 0.5,
+                angles: (Math.PI/9),
+                layers: 7,
+                leaves: {
+                    position: { x: 0, y: 0 },
+                    radius: 20,
+                    startAngle: 0,
+                    endAngle: 4 * Math.PI/3,
+                    counterClockwise: true,
+                    leafColor: "green",
+                    count: 2,
+                },
+            },
+            barkColor: "rgb(90, 55, 45)" 
+        }               
+    });
+    renderingContext.restore();
+
+    renderingContext.save();
+    renderingContext.translate(500, 450);
+    window.SpriteLibrary.water({
+        context: renderingContext,
+        waterData: {
+            radius: 200,
+            startAngle: 0,
+            endAngle: Math.PI*2,
+            counterClockwise: true,
+            color: "rgba(0, 130, 255, 0.9)",
+            numberWaves: 30
+        }
+    });
+    renderingContext.restore();
 
     // Set a little event handler to apply the filter.
     $("#apply-filter-button").click(function () {
@@ -135,8 +159,8 @@ $(function () {
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                Nanoshop.blueFinder
-                // Nanoshop.fairyDust
+                // Nanoshop.blueFinder
+                Nanoshop.fairyDust
                 // Nanoshop.waves
             ),
             0, 0
