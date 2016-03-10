@@ -32,7 +32,14 @@
     // Primitives.circleTrig(renderingContext, 105, 315, 100, color);
     // Primitives.circleDDA(renderingContext, 310, 315, 100, color);
     // Primitives.circleBres1(renderingContext, 515, 315, 100, color, color2);
-    // Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
+    color = [0, 0, 200];
+    color2 = [0, 255, 0];
+    color3 = [190, 140, 0];
+    Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
+    color = [255, 0, 0];
+    color2 = [255, 255, 0];
+    color3 = [0, 200, 0];
+    color4 = [0, 0, 100];
     Primitives.circleBres3(renderingContext, 925, 315, 100, color, color2, color3, color4);
 
     // And finally...polygon fills!

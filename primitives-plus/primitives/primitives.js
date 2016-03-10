@@ -318,12 +318,14 @@ var Primitives = {
         color1 = color1 || [255, 255, 255];
         color2 = color2 || [255, 255, 255];
         color3 = color3 || [255, 255, 255];
-        color4 = color4 || [255, 255, 255];
+        color4 = color4 || color3;
         var module = this;
 
-        var colorPoints = function (r, rowStart, rowMax, colStart, colMax) {
-            var i;
-            var j;
+        var colorPointsTwo = function (r, rowStart, rowMax, colStart, colMax) {
+
+        };
+
+        var colorPointsFour = function (r, rowStart, rowMax, colStart, colMax) {
             var h = r;
             var w = r;
             var leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1;
@@ -335,7 +337,6 @@ var Primitives = {
 
             color4 = color4 || color3;
 
-           
             leftVDelta = [(color3[0] - color1[0]) / h,
                       (color3[1] - color1[1]) / h,
                       (color3[2] - color1[2]) / h];
@@ -364,7 +365,7 @@ var Primitives = {
                 rightColor[2] += rightVDelta[2];
             }
         }
-        
+
         var circleCutter = function (context, r) {
             for (var row = -r; row < r; row++) {
                 for (var col = -r; col < r; col++) {
@@ -377,13 +378,13 @@ var Primitives = {
 
         context.save();
         context.translate(xc - r, yc - r);
-        colorPoints(2 * r, 0, 2 * r, 0, 2 * r);
+        colorPointsFour(2 * r, 0, 2 * r, 0, 2 * r);
         context.restore();
         context.save();
         context.translate(xc, yc);
         circleCutter(context, r);
         context.restore();
-        
+
         // context.save();
         // context.translate(xc, yc);
         // colorPoints(2 * r, -x, x, -y, y);
@@ -477,7 +478,7 @@ var Primitives = {
     },
 
     // And another...
-    circleBres2: function (context, xc, yc, r, color, color2, color3, color4) {
+    circleBres2: function (context, xc, yc, r, color, color2, color3) {
         var x = 0;
         var y = r;
         var e = 1 - r;
@@ -485,7 +486,7 @@ var Primitives = {
         var v = e - r;
 
         while (x <= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color, color2, color3);
             if (e < 0) {
                 x += 1;
                 u += 2;
