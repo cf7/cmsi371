@@ -319,8 +319,8 @@ var Primitives = {
         color2 = color2 || [255, 255, 255];
         color3 = color3 || [255, 255, 255];
         color4 = color4 || [255, 255, 255];
-        
         var module = this;
+
         var colorPoints = function (r, rowStart, rowMax, colStart, colMax) {
             var i;
             var j;
@@ -365,13 +365,30 @@ var Primitives = {
             }
         }
         
+        var circleCutter = function (context, r) {
+            for (var row = -r; row < r; row++) {
+                for (var col = -r; col < r; col++) {
+                    if ((col*col) + (row*row) > (r*r)) {
+                        module.setPixel(context, col, row, 255, 255, 255);
+                    }
+                }
+            }
+        };
+
         context.save();
         context.translate(xc - r, yc - r);
         colorPoints(2 * r, 0, 2 * r, 0, 2 * r);
         context.restore();
-        colorPoints(r, yc - x, yc + x, xc - y, xc + y);
-        colorPoints(r, yc - y, yc + y, xc - x, xc + x);
-
+        context.save();
+        context.translate(xc, yc);
+        circleCutter(context, r);
+        context.restore();
+        
+        // context.save();
+        // context.translate(xc, yc);
+        // colorPoints(2 * r, -x, x, -y, y);
+        // colorPoints(2 * r, -y, y, -x, x);
+        // context.restore();
 
         // color rectangle
         // draw circle and setPixel to currentColor without changing it
