@@ -111,7 +111,7 @@ $(function () {
 
     renderingContext.save();
     renderingContext.scale(0.5, 0.5);
-    renderingContext.translate(400, 600);
+    renderingContext.translate(400, 500);
     window.SpriteLibrary.tree({
         context: renderingContext,
         treeData: {
@@ -139,7 +139,8 @@ $(function () {
     renderingContext.restore();
 
     renderingContext.save();
-    renderingContext.translate(500, 450);
+    renderingContext.scale(0.75, 0.75);
+    renderingContext.translate(700, 450);
     window.SpriteLibrary.water({
         context: renderingContext,
         waterData: {

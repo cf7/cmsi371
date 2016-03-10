@@ -40,9 +40,13 @@ var Nanoshop = {
         var randGreen = Math.round(Math.random() * 3);
         var randBlue = Math.round(Math.random() * 4);
         var newPixel = [ r, g, b, a ];
-        for (var index = 0; index < 1000; index += 100) {
+        for (var index = 0; index < 10000; index += 100) {
             if (index <= Math.sqrt(circle) && Math.sqrt(circle) <= index + 50) {
-                newPixel = [ r, g * randGreen, b * randBlue, a ];
+                if (g === 255 || b === 255) {
+                    newPixel = [ r, g, b, a ];
+                } else {
+                    newPixel = [ r, g * randGreen, b * randBlue, a ];
+                }
             }
         }
         return newPixel;
