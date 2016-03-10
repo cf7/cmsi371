@@ -321,45 +321,41 @@ var Primitives = {
         color4 = color4 || [255, 255, 255];
         
         var module = this;
-        var i;
-        var j;
-        var h = y;
-        var w = x;
-        var leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1;
-        var rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2;
-        var leftVDelta;
-        var rightVDelta;
-        var hDelta;
-        var currentColor;
+        var colorPoints = function (rowStart, rowMax, colStart, colMax) {
+            var i;
+            var j;
+            var h = y;
+            var w = x;
+            var leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1;
+            var rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2;
+            var leftVDelta;
+            var rightVDelta;
+            var hDelta;
+            var currentColor;
 
-        color4 = color4 || color3;
+            color4 = color4 || color3;
 
-       
-        leftVDelta = [(color3[0] - color1[0]) / h,
-                  (color3[1] - color1[1]) / h,
-                  (color3[2] - color1[2]) / h];
-        rightVDelta = [(color4[0] - color2[0]) / h,
-                  (color4[1] - color2[1]) / h,
-                  (color4[2] - color2[2]) / h];
-        for (i = (yc - x); i < (yc + x); i += 1) {
-                // Move to the next "vertical" color level.
+           
+            leftVDelta = [(color3[0] - color1[0]) / h,
+                      (color3[1] - color1[1]) / h,
+                      (color3[2] - color1[2]) / h];
+            rightVDelta = [(color4[0] - color2[0]) / h,
+                      (color4[1] - color2[1]) / h,
+                      (color4[2] - color2[2]) / h];
+
+            for (var row = rowStart; row < rowMax; row++) {
                 currentColor = [leftColor[0], leftColor[1], leftColor[2]];
                 hDelta = [(rightColor[0] - leftColor[0]) / w,
                           (rightColor[1] - leftColor[1]) / w,
                           (rightColor[2] - leftColor[2]) / w];
 
-                for (j = (xc - y); j < (xc + y); j += 1) {
-                    
-                    this.setPixel(context, j, i, currentColor[0], currentColor[1], currentColor[2]);
-                    
-                    // Move to the next color horizontally.
-                    // ** hDelta - "horizontal delta"
+                for (var col = colStart; col < colMax; col++) {
+                    module.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
                     currentColor[0] += hDelta[0];
                     currentColor[1] += hDelta[1];
                     currentColor[2] += hDelta[2];
                 }
 
-                // The color on each side "grades" at different rates.
                 leftColor[0] += leftVDelta[0];
                 leftColor[1] += leftVDelta[1];
                 leftColor[2] += leftVDelta[2];
@@ -367,7 +363,10 @@ var Primitives = {
                 rightColor[1] += rightVDelta[1];
                 rightColor[2] += rightVDelta[2];
             }
-
+        }
+        
+        colorPoints(yc - x, yc + x, xc - y, xc + y);
+        colorPoints(yc - y, yc + y, xc - x, xc + x);
             // for (var row = (yc - x); row < (yc + x); row++) {
             //     for (var col = (xc - y); col < (xc + y); col++) {
             //         this.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
