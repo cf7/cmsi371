@@ -197,6 +197,8 @@ $(function () {
                 // NanoshopNeighborhood.darkener
                 // NanoshopNeighborhood.averager // Convenience comment for easy switching.
                 NanoshopNeighborhood.dream
+                // NanoshopNeighborhood.outline
+                // NanoshopNeighborhood.crystal
             ),
             0, 0
         );

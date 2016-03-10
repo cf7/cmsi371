@@ -70,9 +70,9 @@ var NanoshopNeighborhood = {
             green = rgbaNeighborhood[index].g;
             blue = rgbaNeighborhood[index].b;
             alpha = rgbaNeighborhood[index].a;
-            if (200 <= Math.sqrt(circle) && Math.sqrt(circle) <= 800) {
-                if (direction === index) {
-                    color = [ red*2, green*2, blue*2, alpha ];
+            if (400 <= Math.sqrt(circle) && Math.sqrt(circle) <= 800) {
+                if (x % 4 === 0 || x % 4 === 1 || x % 4 || 2) {
+                    color = [ red, green * 2, blue * 2, alpha ];
                 }
             }
         }
@@ -112,7 +112,7 @@ var NanoshopNeighborhood = {
         return color;
     },
 
-    freeze: function (x, y, rgbaNeighborhood) {
+    crystal: function (x, y, rgbaNeighborhood) {
         var red = 0;
         var green = 0;
         var blue = 0;
@@ -137,7 +137,27 @@ var NanoshopNeighborhood = {
     },
 
     illuminated: function (x, y, rgbaNeighborhood) {
-        // red 120 - 180, green 130 - 170, blue 100 - 130
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        var alpha = 0;
+        var color = [
+            rgbaNeighborhood[4].r,
+            rgbaNeighborhood[4].g,
+            rgbaNeighborhood[4].b,
+            rgbaNeighborhood[4].a
+        ];
+        var direction = Math.floor(Math.random() * 9);
+        for (var index = 0; index < 9; index++) {
+            red = rgbaNeighborhood[index].r;
+            green = rgbaNeighborhood[index].g;
+            blue = rgbaNeighborhood[index].b;
+            alpha = rgbaNeighborhood[index].a;
+            if (direction === index) {
+                color = [ red, green*2, blue*3, alpha ];
+            }
+        }
+        return color;
     },
 
     sunlight: function (x, y, rgbaNeighborhood) {
