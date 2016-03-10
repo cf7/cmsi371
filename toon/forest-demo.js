@@ -34,101 +34,29 @@
     //     renderingContext.stroke();
     // };
 
-
-    var startsWithNT = function (string) {
-        return string.match(/^nt/) === null ? false : true;
-    };
-
-    var rename = function (data, key, newKey, value) {
-        data[newKey] = value;
-        delete data[key];
-        return data;
-    };
-
-    var rememberKeys = function (data, keyStack) {
-        var keys = Object.keys(data);
-        for (property of keys) {
-            keyStack.push(property);
-            if (typeof data[property] === "object") {
-                rememberKeys(data[property], keyStack);
-            }
-        }
-        return keyStack;
-    };
-
-    var unTag = function (data) {
-        var keys = Object.keys(data);
-        for (property of keys) {
-            if (startsWithNT(property)) {
-                rename(data, property, property.replace("nt", ""), data[property]);
-            }
-            if (typeof data[property] === "object") {
-                unTag(data[property]);
-            }
-        }
-        return data;
-    };
-
-    var reTag = function (data, rememberedKeys) {
-        var keys = Object.keys(data);
-        for (property of keys) {
-            for (var index = 0; index < rememberedKeys.length; index++) {
-                if (startsWithNT(rememberedKeys[index])) {
-                    if (rememberedKeys[index].replace("nt", "") === property) {
-                        rename(data, property, rememberedKeys[index], data[property]);
-                    }
-                }
-            }
-            if (typeof data[property] === "object") {
-                reTag(data[property], rememberedKeys);
-            }
-        }
-        return data;
-    };
-
-    // ** engine should pass an entire obejct into drawing function
-    // ** supply defaults!
-    // ** add tweening functions for each property or range of properties
-    // ** add background
-
     var drawFairy = function (properties) {
-        var rememberedKeys = rememberKeys(properties, []);
-        unTag(properties);
-
         window.SpriteLibrary.fairy({
-                    context: properties.context,
-                    //setting: backGround,
-                    fairyData: properties.data,
-                    fairyWings: properties.data.fairyWings
-                });
-
-        reTag(properties, rememberedKeys);
+            context: properties.context,
+            //setting: backGround,
+            fairyData: properties.data,
+            fairyWings: properties.data.fairyWings
+        });
     }
 
     var drawTree = function (properties) {
-        var rememberedKeys = rememberKeys(properties, []);
-        unTag(properties);
-
         window.SpriteLibrary.tree({
             context: properties.context,
             //setting: backGround,
             treeData: properties.data
         });
-        
-        reTag(properties, rememberedKeys);
     };
 
     var drawWater = function (properties) {
-        var rememberedKeys = rememberKeys(properties, []);
-        unTag(properties);
-
         window.SpriteLibrary.water({
             context: properties.context,
             //setting: backGround,
             waterData: properties.data
         });
-
-        reTag(properties, rememberedKeys);
     }
 
     // Then, we have "easing functions" that determine how
@@ -139,10 +67,6 @@
     var innerRadius = 10;
     var outerRadius = 50;
 
-    // properties that are not to be tweened are tagged with
-    // "nt" at the beginning of their key names.
-    // The "nt" must be added to the same property across all keyframes
-    // of the sprite to avoid an error.
     var sprites = [
         {
             draw: drawTree,
@@ -212,8 +136,8 @@
                     ty: 700,
                     ease: KeyframeTweener.linear,
                     radius: 30,
-                    ntstartAngle: 0,
-                    ntendAngle: Math.PI*2,
+                    startAngle: 0,
+                    endAngle: Math.PI*2,
                     counterClockwise: true,
                     color: "rgba(0, 130, 255, 0.9)",
                     numberWaves: 30,
@@ -226,8 +150,8 @@
                     ty: 700,
                     ease: KeyframeTweener.linear,
                     radius: 300,
-                    ntstartAngle: 0,
-                    ntendAngle: Math.PI*2,
+                    startAngle: 0,
+                    endAngle: Math.PI*2,
                     counterClockwise: true,
                     color: "rgba(0, 130, 255, 0.9)",
                     numberWaves: 50,
@@ -332,7 +256,7 @@
         var easeFunctions = []
         var keys = Object.keys(window.KeyframeTweener);
         for (property of keys) {
-            if (startsWithFairy(property)) {
+            if (startsWithFairy(property) || property === "linear") {
                 easeFunctions.push(window.KeyframeTweener[property]);
             }
         }
@@ -349,17 +273,13 @@
             sy: 1,
             // rotate: 0 + Math.floor(Math.random()*(30)*Math.pow(-1, Math.round(Math.random()*2))),
             ease: KeyframeTweener.linear,
-            ntinnerRadius: 15,
-            ntbeforeRadius: 20,
-            ntouterRadius: 50,
+            innerRadius: 15,
+            beforeRadius: 20,
+            outerRadius: 50,
             innerColor: "white",
             outerColor: "rgb(137, 255, 249)",
-            glowIncrement: true,
-            up: true,
             direction: {forward: true, left: false, right: false },
-            wingsInward: true,
             howOpen: 0,
-            ntbeforeX: outerRadius + 10,
             flutterSpeed: 10,
             howGlowy: 0,
             glowSpeed: 0,
@@ -383,7 +303,7 @@
         var frameDelta = flutterSpeed;
         var currentFrame = 0;
         var duration = frames.lastFrame - frames.firstFrame;
-        var newRadius = fairyKeyframes[0].ntinnerRadius;
+        var newRadius = fairyKeyframes[0].innerRadius;
         var originalHowOpen = howOpen;
         newRadius = newRadius + howGlowy;
 
@@ -396,6 +316,7 @@
             howOpen *= -1;
             howGlowy *= -1;
             newRadius = newRadius + howGlowy;
+            console.log(newRadius);
         }
     };
 
