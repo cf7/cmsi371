@@ -15,6 +15,9 @@
     var numberOfFairies = 3;
     var numberOfTrees = 3;
     var treeBranchAngleIncrement = Math.PI/20;
+    var treeSpread = 400;
+    var waterRadius = 300;
+    var numberOfWaves = 30;
 
     // --------------------------------------------
 
@@ -124,7 +127,7 @@
                     endAngle: Math.PI*2,
                     counterClockwise: true,
                     color: "rgba(0, 130, 255, 0.9)",
-                    numberWaves: 30,
+                    numberWaves: 0,
                     edge: "edge"
                 },
 
@@ -133,12 +136,12 @@
                     tx: 300,
                     ty: 700,
                     ease: KeyframeTweener.linear,
-                    radius: 300,
+                    radius: waterRadius,
                     startAngle: 0,
                     endAngle: Math.PI*2,
                     counterClockwise: true,
                     color: "rgba(0, 130, 255, 0.9)",
-                    numberWaves: 50,
+                    numberWaves: numberOfWaves,
                     edge: "edge"
                 },
             ]
@@ -350,7 +353,7 @@
     };
 
     var addRandomTreeKeyframe = function (frame) {
-        var xVariability = (Math.random()*(400)*Math.pow(-1, Math.round(Math.random()*2)));
+        var xVariability = (Math.random()*(treeSpread)*Math.pow(-1, Math.round(Math.random()*2)));
         xVariability = Math.round(xVariability);
         return  {
             frame: frame,
