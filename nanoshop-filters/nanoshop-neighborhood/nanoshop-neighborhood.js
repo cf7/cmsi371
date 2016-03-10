@@ -47,29 +47,6 @@ var NanoshopNeighborhood = {
         return color;
     },
 
-    dream: function (x, y, rgbaNeighborhood) {
-        var red = 0;
-        var green = 0;
-        var blue = 0;
-        var alpha = 0;
-        var thisRed = rgbaNeighborhood[4].r;
-        var thisGreen = rgbaNeighborhood[4].g;
-        var thisBlue = rgbaNeighborhood[4].b;
-        var thisAlpha = rgbaNeighborhood[4].a;
-        var color = [
-            thisRed,
-            thisGreen,
-            thisBlue,
-            thisAlpha
-        ];
-
-        green = thisGreen / thisBlue;
-        blue = thisBlue / thisRed;       
-
-        color = [ red, green, blue, thisAlpha ];
-        return color;
-    },
-
     outline: function (x, y, rgbaNeighborhood) {
         var red = 0;
         var green = 0;
