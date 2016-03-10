@@ -62,20 +62,11 @@ var NanoshopNeighborhood = {
             thisBlue,
             thisAlpha
         ];
-        var circle = (x-400)*(x-400) + (y-400)*(y-400);
-        var direction = Math.floor(Math.random() * 9);
-        var direction2 = Math.floor(Math.random() * 9);
-        for (var index = 0; index < 9; index++) {
-            red = rgbaNeighborhood[index].r;
-            green = rgbaNeighborhood[index].g;
-            blue = rgbaNeighborhood[index].b;
-            alpha = rgbaNeighborhood[index].a;
-            if (400 <= Math.sqrt(circle) && Math.sqrt(circle) <= 800) {
-                if (x % 4 === 0 || x % 4 === 1 || x % 4 || 2) {
-                    color = [ red, green * 2, blue * 2, alpha ];
-                }
-            }
-        }
+
+        green = thisGreen / thisBlue;
+        blue = thisBlue / thisRed;       
+
+        color = [ red, green, blue, thisAlpha ];
         return color;
     },
 
@@ -137,6 +128,7 @@ var NanoshopNeighborhood = {
     },
 
     illuminated: function (x, y, rgbaNeighborhood) {
+        // red 120 - 180, green 130 - 170, blue 100 - 130
         var red = 0;
         var green = 0;
         var blue = 0;
@@ -147,21 +139,44 @@ var NanoshopNeighborhood = {
             rgbaNeighborhood[4].b,
             rgbaNeighborhood[4].a
         ];
-        var direction = Math.floor(Math.random() * 9);
         for (var index = 0; index < 9; index++) {
             red = rgbaNeighborhood[index].r;
             green = rgbaNeighborhood[index].g;
             blue = rgbaNeighborhood[index].b;
             alpha = rgbaNeighborhood[index].a;
-            if (direction === index) {
-                color = [ red, green*2, blue*3, alpha ];
+            if (120 < red && red < 180) {
+                if (130 < green && green < 170) {
+                    if (100 < blue && blue < 130) {
+                        color = [ red*3, green*3, blue, alpha ];
+                    }
+                }
             }
         }
         return color;
     },
 
     sunlight: function (x, y, rgbaNeighborhood) {
-        // circle radius, gradient
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        var alpha = 0;
+        var color = [
+            rgbaNeighborhood[4].r,
+            rgbaNeighborhood[4].g,
+            rgbaNeighborhood[4].b,
+            rgbaNeighborhood[4].a
+        ];
+        
+        for (var index = 0; index < 9; index++) {
+            red = rgbaNeighborhood[index].r;
+            green = rgbaNeighborhood[index].g;
+            blue = rgbaNeighborhood[index].b;
+            alpha = rgbaNeighborhood[index].a;
+            if (index === 0) {
+                color = [ red*2, green*2, blue, alpha ];
+            }
+        }
+        return color;
     },
 
     // if drawing line, center pixel remains black, surrounding pixels remain
