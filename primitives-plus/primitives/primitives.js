@@ -322,7 +322,24 @@ var Primitives = {
         var module = this;
 
         var colorPointsTwo = function (r, rowStart, rowMax, colStart, colMax) {
-
+            var h = r;
+            var leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1;
+            var leftVDelta = [(color2[0] - color1[0]) / h,
+                      (color2[1] - color1[1]) / h,
+                      (color2[2] - color1[2]) / h];
+            // This modifies the color vertically only.
+            for (var row = rowStart; row < rowMax; row++) {
+                for (var col = colStart; col < colMax; col++) {
+                    module.setPixel(context, col, row,
+                            leftColor[0],
+                            leftColor[1],
+                            leftColor[2]);
+                }
+                // Move to the next level of the gradient.
+                leftColor[0] += leftVDelta[0];
+                leftColor[1] += leftVDelta[1];
+                leftColor[2] += leftVDelta[2];
+            }
         };
 
         var colorPointsFour = function (r, rowStart, rowMax, colStart, colMax) {
@@ -378,12 +395,22 @@ var Primitives = {
 
         context.save();
         context.translate(xc - r, yc - r);
-        colorPointsFour(2 * r, 0, 2 * r, 0, 2 * r);
+        colorPointsTwo(2 * r, 0, 2 * r, 0, 2 * r);
         context.restore();
         context.save();
         context.translate(xc, yc);
         circleCutter(context, r);
         context.restore();
+        // } else {
+        //     context.save();
+        //     context.translate(xc - r, yc - r);
+        //     colorPointsFour(2 * r, 0, 2 * r, 0, 2 * r);
+        //     context.restore();
+        //     context.save();
+        //     context.translate(xc, yc);
+        //     circleCutter(context, r);
+        //     context.restore();
+        // }
 
         // context.save();
         // context.translate(xc, yc);
@@ -463,7 +490,7 @@ var Primitives = {
         var y = r;
 
         while (x < y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color, color2, color3);
             if (p < 0) {
                 p = p + 4 * x + 6;
             } else {
