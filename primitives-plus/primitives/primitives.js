@@ -279,7 +279,7 @@ var Primitives = {
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    plotCirclePoints: function (context, xc, yc, x, y, color1, color2, color3, color4) {
+    plotCirclePoints: function (context, xc, yc, x, y, r, color1, color2, color3, color4) {
         // screencast 2/9 1:07:32
         // ** see fillRectFourColors()
         // ** figure out delta to increment colors by
@@ -321,11 +321,11 @@ var Primitives = {
         color4 = color4 || [255, 255, 255];
         
         var module = this;
-        var colorPoints = function (rowStart, rowMax, colStart, colMax) {
+        var colorPoints = function (r, rowStart, rowMax, colStart, colMax) {
             var i;
             var j;
-            var h = y;
-            var w = x;
+            var h = r;
+            var w = r;
             var leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1;
             var rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2;
             var leftVDelta;
@@ -365,8 +365,17 @@ var Primitives = {
             }
         }
         
-        colorPoints(yc - x, yc + x, xc - y, xc + y);
-        colorPoints(yc - y, yc + y, xc - x, xc + x);
+        context.save();
+        context.translate(xc - r, yc - r);
+        colorPoints(2 * r, 0, 2 * r, 0, 2 * r);
+        context.restore();
+        colorPoints(r, yc - x, yc + x, xc - y, xc + y);
+        colorPoints(r, yc - y, yc + y, xc - x, xc + x);
+
+
+        // color rectangle
+        // draw circle and setPixel to currentColor without changing it
+        // white out perimeter
             // for (var row = (yc - x); row < (yc + x); row++) {
             //     for (var col = (xc - y); col < (xc + y); col++) {
             //         this.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
@@ -482,7 +491,7 @@ var Primitives = {
         var e = 0;
 
         while (y <= x) {
-            this.plotCirclePoints(context, xc, yc, x, y, color, color2, color3, color4);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color, color2, color3, color4);
             y += 1;
             e += (2 * y - 1);
             if (e > x) {

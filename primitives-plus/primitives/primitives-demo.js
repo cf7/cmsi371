@@ -23,10 +23,10 @@
     Primitives.lineBres3(renderingContext, 620, 210, 819, 110);
     Primitives.lineBresenham(renderingContext, 825, 210, 1024, 110);
 
-    var color = [ 0, 255, 255 ];
-    var color2 = [ 255, 0, 255 ];
-    var color3 = [ 255, 255, 0 ];
-    var color4 = [ 200, 200, 200 ];
+    var color = [255, 0, 0];
+    var color2 = [255, 255, 0];
+    var color3 = [0, 200, 0];
+    var color4 = [0, 0, 100];
 
     // A few circles.
     // Primitives.circleTrig(renderingContext, 105, 315, 100, color);
