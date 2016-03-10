@@ -8,6 +8,7 @@
     // --------------------------------------------
     // ** Animation variables!!! **
     // Feel free to modify these to see what happens in the animation!
+    // Large numbers of sprites may slow down the browser significantly
 
     var startFrame = 0;
     var endFrame = 250;
@@ -16,23 +17,6 @@
     var treeBranchAngleIncrement = Math.PI/20;
 
     // --------------------------------------------
-
-
-    // First, a selection of "drawing functions" from which we
-    // can choose.  Their common trait: they all accept a single
-    // renderingContext argument.
-    // var square = function (renderingContext) {
-    //     renderingContext.fillStyle = "blue";
-    //     renderingContext.fillRect(-20, -20, 40, 40);
-    // };
-
-    // var circle = function (properties) {    
-    //     var renderingContext = properties.context;
-    //     renderingContext.strokeStyle = "red";
-    //     renderingContext.beginPath();
-    //     renderingContext.arc(properties.x, 0, 50, 0, properties.angle);
-    //     renderingContext.stroke();
-    // };
 
     var drawFairy = function (properties) {
         window.SpriteLibrary.fairy({
@@ -171,24 +155,16 @@
                 //     sy: 1,
                 //     // rotate: 30,
                 //     //ease: KeyframeTweener.linear,
-                //     ntinnerRadius: 20,
-                //     ntbeforeRadius: 20,
-                //     ntouterRadius: 50,
+                //     innerRadius: 20,
+                //     outerRadius: 50,
                 //     innerColor: "white",
                 //     outerColor: "rgb(137, 255, 249)",
-                //     glowIncrement: true,
-                //     up: true,
                 //     direction: {forward: true, left: false, right: false },
-                //     wingsInward: true,
-                //     ntbeforeX: outerRadius + 10,
                 //     howOpen: 0,
                 //     flutterSpeed: 4,
                 //     howGlowy: 10,
                 //     glowSpeed: 0,
                 //     edge: "edge"
-                //     // ** add properties that call functions on themselves
-                //     // ** this is probably where non-monotonic tweening
-                //     // ** functions would go
                 // },
 
                 // {
@@ -199,16 +175,11 @@
                 //     sy: 1,
                 //     // rotate: -30,
                 //     // ease: KeyframeTweener.linear,
-                //     ntinnerRadius: 20,
-                //     ntbeforeRadius: 20,
-                //     ntouterRadius: 50,
+                //     innerRadius: 20,
+                //     outerRadius: 50,
                 //     innerColor: "white",
                 //     outerColor: "rgb(137, 255, 249)",
-                //     glowIncrement: true,
-                //     up: true,
                 //     direction: {forward: true, left: false, right: false },
-                //     wingsInward: true,
-                //     ntbeforeX: outerRadius + 10,
                 //     howOpen: 0,
                 //     flutterSpeed: 10,
                 //     howGlowy: 10,
@@ -316,7 +287,6 @@
             howOpen *= -1;
             howGlowy *= -1;
             newRadius = newRadius + howGlowy;
-            console.log(newRadius);
         }
     };
 
@@ -412,20 +382,6 @@
         }
     };
 
-    var rustleLeaves = function (frames, leafRadius, howOpen, rustleSpeed) {
-        var treeKeyframes = sprites[0].keyframes;
-        var frameDelta = rustleSpeed;
-        var currentFrame = frames.firstFrame;
-        var duration = frames.lastFrame - frames.firstFrame;
-        for (var index = 0; index < (duration/frameDelta); index++) {
-            var newRadius =  leafRadius + Math.round((Math.random() * howOpen));
-            var newFrame = addStaticTreeKeyframe(currentFrame);
-            newFrame = modifyProperty(newFrame, "radius", newRadius);
-            treeKeyframes.push(newFrame);
-            currentFrame += frameDelta;
-        }
-    };
-
     var addTree = function (firstFrame, lastFrame, properties) {
         var treeKeyframes = sprites[0].keyframes;
         var negOrPos = Math.pow(-1, Math.round(Math.random()*2));
@@ -439,7 +395,6 @@
         newLastFrame = modifyProperty(newLastFrame, "tx", newFirstFrame.tx);
 
         treeKeyframes.push(newFirstFrame);
-        // rustleLeaves(frames, properties.leafRadius, properties.howOpen, properties.rustleSpeed);
         treeKeyframes.push(newLastFrame);
     };
 
