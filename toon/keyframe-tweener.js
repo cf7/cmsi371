@@ -30,13 +30,6 @@
     // - sx, sy: the scale factor of the sprite (default is 1, 1)
     // - rotate: the rotation angle of the sprite (default is 0)
 
-    // ** courtesy of stackoverflow
-    var keysEqual = function (object1, object2) {
-        var keys1String = Object.keys(object1).sort();
-        var keys2String = Object.keys(object2).sort();
-        return JSON.stringify(keys1String) === JSON.stringify(keys2String);
-    };
-
     var maxFrame = function (sprites) {
         var maxFrame = 0;
         for (var row = 0; row < sprites.length; row++) {
@@ -259,22 +252,22 @@
 
         // distance is the x value
         // percentComplete is the t value
-        fairyComposite: function (currentTime, start, distance, duration) {
-            var percentComplete = currentTime / (duration/4);
-            if (percentComplete < 1) {
-                // console.log("inside 1st: " + percentComplete);
-                return start + (-(distance/4) * percentComplete * (percentComplete - 2));
-            } else if (1 < percentComplete && percentComplete < 2) {
-                // console.log("inside 2nd: " + percentComplete);
-                return start + ((distance/4) * percentComplete);
-            } else if (2 < percentComplete && percentComplete < 3) {
-                // console.log("inside 3rd: " + percentComplete);
-                return start + ((distance/4) * percentComplete * (percentComplete - 1));
-            } else if (percentComplete < 4) {
-                // console.log("inside 4th: " + percentComplete);
-                return start + ((distance/4) * (percentComplete + 3));
-            }
-        },
+        // fairyComposite: function (currentTime, start, distance, duration) {
+        //     var percentComplete = currentTime / (duration/4);
+        //     if (percentComplete < 1) {
+        //         // console.log("inside 1st: " + percentComplete);
+        //         return start + (-(distance/4) * percentComplete * (percentComplete - 2));
+        //     } else if (1 < percentComplete && percentComplete < 2) {
+        //         // console.log("inside 2nd: " + percentComplete);
+        //         return start + ((distance/4) * percentComplete);
+        //     } else if (2 < percentComplete && percentComplete < 3) {
+        //         // console.log("inside 3rd: " + percentComplete);
+        //         return start + ((distance/4) * percentComplete * (percentComplete - 1));
+        //     } else if (percentComplete < 4) {
+        //         // console.log("inside 4th: " + percentComplete);
+        //         return start + ((distance/4) * (percentComplete + 3));
+        //     }
+        // },
 
         // c = endframe - startframe = distance
         // t/d = percentComplete
@@ -283,10 +276,10 @@
 
         // c * (t/d) + b
         // ** add tweening function
-        fairyWave: function (currentTime, start, distance, duration) {
-            var percentComplete = currentTime / duration;
-            return start + (distance * percentComplete);
-        },
+        // fairyWave: function (currentTime, start, distance, duration) {
+        //     var percentComplete = currentTime / duration;
+        //     return start + (distance * Math.pow(percentComplete - 1, 3));
+        // },
 
         initialize: initializeAnimation
     };
