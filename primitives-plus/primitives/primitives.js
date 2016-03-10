@@ -279,7 +279,7 @@ var Primitives = {
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    plotCirclePoints: function (context, xc, yc, x, y, color, color2, color3, color4) {
+    plotCirclePoints: function (context, xc, yc, x, y, color1, color2, color3, color4) {
         // screencast 2/9 1:07:32
         // ** see fillRectFourColors()
         // ** figure out delta to increment colors by
@@ -315,23 +315,69 @@ var Primitives = {
         // **  - wrap the color modification in the while loop
         // **  - draws the eighths while computing the currentColor
 
-        color = color || [255, 255, 255];
+        color1 = color1 || [255, 255, 255];
         color2 = color2 || [255, 255, 255];
         color3 = color3 || [255, 255, 255];
         color4 = color4 || [255, 255, 255];
+        
+        var module = this;
+        var i;
+        var j;
+        var h = y;
+        var w = x;
+        var leftColor = color1 ? [color1[0], color1[1], color1[2]] : color1;
+        var rightColor = color2 ? [color2[0], color2[1], color2[2]] : color2;
+        var leftVDelta;
+        var rightVDelta;
+        var hDelta;
+        var currentColor;
+
+        color4 = color4 || color3;
+
        
+        leftVDelta = [(color3[0] - color1[0]) / h,
+                  (color3[1] - color1[1]) / h,
+                  (color3[2] - color1[2]) / h];
+        rightVDelta = [(color4[0] - color2[0]) / h,
+                  (color4[1] - color2[1]) / h,
+                  (color4[2] - color2[2]) / h];
+        for (i = (yc - x); i < (yc + x); i += 1) {
+                // Move to the next "vertical" color level.
+                currentColor = [leftColor[0], leftColor[1], leftColor[2]];
+                hDelta = [(rightColor[0] - leftColor[0]) / w,
+                          (rightColor[1] - leftColor[1]) / w,
+                          (rightColor[2] - leftColor[2]) / w];
 
-        for (var row = (yc - x); row < (yc + x); row++) {
-            for (var col = (xc - y); col < (xc + y); col++) {
-                this.setPixel(context, col, row, color[0], color[1], color[2]);
-            }
-        }
-        for (var row = (yc - y); row < (yc + y); row++) {
-            for (var col = (xc - x); col < (xc + x); col++) {
-                this.setPixel(context, col, row, color[0], color[1], color[2]);
-            }
-        }
+                for (j = (xc - y); j < (xc + y); j += 1) {
+                    
+                    this.setPixel(context, j, i, currentColor[0], currentColor[1], currentColor[2]);
+                    
+                    // Move to the next color horizontally.
+                    // ** hDelta - "horizontal delta"
+                    currentColor[0] += hDelta[0];
+                    currentColor[1] += hDelta[1];
+                    currentColor[2] += hDelta[2];
+                }
 
+                // The color on each side "grades" at different rates.
+                leftColor[0] += leftVDelta[0];
+                leftColor[1] += leftVDelta[1];
+                leftColor[2] += leftVDelta[2];
+                rightColor[0] += rightVDelta[0];
+                rightColor[1] += rightVDelta[1];
+                rightColor[2] += rightVDelta[2];
+            }
+
+            // for (var row = (yc - x); row < (yc + x); row++) {
+            //     for (var col = (xc - y); col < (xc + y); col++) {
+            //         this.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
+            //     }
+            // }
+            // for (var row = (yc - y); row < (yc + y); row++) {
+            //     for (var col = (xc - x); col < (xc + x); col++) {
+            //         this.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
+            //     }
+            // }
         // while (x > 0 && y > 0) {
 
         //     this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
