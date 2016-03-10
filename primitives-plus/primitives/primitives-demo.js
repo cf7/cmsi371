@@ -23,27 +23,28 @@
     Primitives.lineBres3(renderingContext, 620, 210, 819, 110);
     Primitives.lineBresenham(renderingContext, 825, 210, 1024, 110);
 
-    var color = [255, 0, 0];
-    var color2 = [255, 255, 0];
-    var color3 = [0, 200, 0];
-    var color4 = [0, 0, 100];
+    var color = [0, 0, 0];
+    var color2 = [0, 0, 0];
+    var color3 = [0, 0, 0];
+    var color4 = [0, 0, 0];
 
     // A few circles.
+    // color = [128, 128, 128];
     // Primitives.circleTrig(renderingContext, 105, 315, 100, color);
-    color = [0, 100, 255];
-    Primitives.circleDDA(renderingContext, 310, 315, 100, color);
+    // color = [0, 100, 255];
+    // Primitives.circleDDA(renderingContext, 310, 315, 100, color);
     color = [120, 0, 0];
     color2 = [0, 255, 0];
     Primitives.circleBres1(renderingContext, 515, 315, 100, color, color2);
     color = [0, 0, 200];
     color2 = [0, 255, 0];
     color3 = [190, 140, 0];
-    // Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
-    // color = [255, 0, 0];
-    // color2 = [255, 255, 0];
-    // color3 = [0, 200, 0];
-    // color4 = [0, 0, 100];
-    // Primitives.circleBres3(renderingContext, 925, 315, 100, color, color2, color3, color4);
+    Primitives.circleBres2(renderingContext, 720, 315, 100, color, color2, color3);
+    color = [255, 0, 0];
+    color2 = [255, 255, 0];
+    color3 = [0, 200, 0];
+    color4 = [0, 0, 100];
+    Primitives.circleBres3(renderingContext, 925, 315, 100, color, color2, color3, color4);
 
     // And finally...polygon fills!
     renderingContext.save();

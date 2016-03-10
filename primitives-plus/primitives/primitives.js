@@ -91,7 +91,6 @@ var Primitives = {
                             currentColor[2]);
 
                     // Move to the next color horizontally.
-                    // ** hDelta - "horizontal delta"
                     currentColor[0] += hDelta[0];
                     currentColor[1] += hDelta[1];
                     currentColor[2] += hDelta[2];
@@ -115,9 +114,6 @@ var Primitives = {
             fillRectOneColor();
         } else if (!c3) {
             // For this case, we set up the left vertical deltas.
-            // ** the second color of the whole rectangle minus
-            // ** the first color of the whole rectangle divided by
-            // ** the height of the whole rectangle
             leftVDelta = [(c2[0] - c1[0]) / h,
                       (c2[1] - c1[1]) / h,
                       (c2[2] - c1[2]) / h];
@@ -270,9 +266,6 @@ var Primitives = {
         }
     },
 
-
-    // ** generate rectangle, use circle as cookie cutter, fill one eighth and rotate
-    // ** the eighth
     /*
      * Time for the circles.  First, we observe that it is sufficient
      * to compute one-eighth of a circle: the other seven portions are
@@ -280,43 +273,7 @@ var Primitives = {
      * function that all of the circle implementations will use...
      */
     plotCirclePoints: function (context, xc, yc, x, y, r, color1, color2, color3, color4) {
-        // screencast 2/9 1:07:32
-        // ** see fillRectFourColors()
-        // ** figure out delta to increment colors by
-        // ** to get from first color to second color
-        // ** for 4 colors, there are deltas from left to right
-        // ** and from top to bottom, but just take the two sides
-        // ** delta for . . . color in top left going to color bottom left
-        // ** and detla for . . . color top right going to color bottom right
-        // ** but travel from left to right, and calculate going from current
-        // ** pixel to next pixel (that takes care of gradation going left to right)
-        // ** the colors on the left and right sides will have changed by the time
-        // ** computing current pixel to next pixel going left to right (because
-        // ** up and down deltas change the colors beforehand)
-        // ** (compute the new horizontal deltas on the fly b/w the leftmost
-        // ** and rightmost colors)
-        // ** xc and yc - "center x" and "center y"
-        // ** xc + x, yc + y  - vertices on the perimeter of the circle!
-        // ** just look at right side of addition in xc + x, yc + y
-        // ** there is also xc + y, yc + x (eight-way symmetry)
-        // ** (x, y)
-        // ** (x, -y)
-        // ** (y, x)
-        // ** (y, -x)
-        // ** . . .
-        // ** Idea1:
-        // **  - shrink the radius and redraw
-        // ** Idea2:
-        // **  - draw lines across the circle
-        // ** Idea3:
-        // **  - fill a rectangle first and then deterimine a radius
-        // **  from xc and yc to cut the circle
-        // ** Idea4:
-        // **  - wrap the color modification in the while loop
-        // **  - draws the eighths while computing the currentColor
-
         color1 = color1 || [255, 255, 255];
-        
         var module = this;
 
         var colorPointsOne = function (r, rowStart, rowMax, colStart, colMax) {
@@ -333,7 +290,6 @@ var Primitives = {
             var leftVDelta = [(color2[0] - color1[0]) / h,
                       (color2[1] - color1[1]) / h,
                       (color2[2] - color1[2]) / h];
-            // This modifies the color vertically only.
             for (var row = rowStart; row < rowMax; row++) {
                 for (var col = colStart; col < colMax; col++) {
                     module.setPixel(context, col, row,
@@ -341,7 +297,6 @@ var Primitives = {
                             leftColor[1],
                             leftColor[2]);
                 }
-                // Move to the next level of the gradient.
                 leftColor[0] += leftVDelta[0];
                 leftColor[1] += leftVDelta[1];
                 leftColor[2] += leftVDelta[2];
@@ -418,9 +373,7 @@ var Primitives = {
             circleCutter(context, r);
             context.restore();
         } else {
-
             color4 = color4 || color3;
-
             context.save();
             context.translate(xc - r, yc - r);
             colorPointsFour(2 * r, 0, 2 * r, 0, 2 * r);
@@ -431,45 +384,8 @@ var Primitives = {
             context.restore();
         }
 
-        // context.save();
-        // context.translate(xc, yc);
-        // colorPoints(2 * r, -x, x, -y, y);
-        // colorPoints(2 * r, -y, y, -x, x);
-        // context.restore();
-
-        // color rectangle
-        // draw circle and setPixel to currentColor without changing it
-        // white out perimeter
-            // for (var row = (yc - x); row < (yc + x); row++) {
-            //     for (var col = (xc - y); col < (xc + y); col++) {
-            //         this.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
-            //     }
-            // }
-            // for (var row = (yc - y); row < (yc + y); row++) {
-            //     for (var col = (xc - x); col < (xc + x); col++) {
-            //         this.setPixel(context, col, row, currentColor[0], currentColor[1], currentColor[2]);
-            //     }
-            // }
-        // while (x > 0 && y > 0) {
-
-        //     this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc + y, yc - x, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc - x, yc + y, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
-        //     this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
-
-        //     x -= 0.1;
-        //     y -= 0.1;
-        // }
-        // this.setPixel(context, xc, yc, color[0], color[1], color[2]);
-
     },
 
-    // ** add more parameters to accept four colors to all of these
-    // ** circle functions
     // First, the most naive possible implementation: circle by trigonometry.
     circleTrig: function (context, xc, yc, r, color, color2, color3, color4) {
         var theta = 1 / r;
