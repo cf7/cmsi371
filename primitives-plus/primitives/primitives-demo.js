@@ -30,7 +30,8 @@
 
     // A few circles.
     // Primitives.circleTrig(renderingContext, 105, 315, 100, color);
-    // Primitives.circleDDA(renderingContext, 310, 315, 100, color);
+    color = [0, 100, 255];
+    Primitives.circleDDA(renderingContext, 310, 315, 100, color);
     color = [120, 0, 0];
     color2 = [0, 255, 0];
     Primitives.circleBres1(renderingContext, 515, 315, 100, color, color2);

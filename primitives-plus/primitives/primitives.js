@@ -316,10 +316,16 @@ var Primitives = {
         // **  - draws the eighths while computing the currentColor
 
         color1 = color1 || [255, 255, 255];
-        color2 = color2 || [255, 255, 255];
-        color3 = color3 || [255, 255, 255];
-        color4 = color4 || color3;
+        
         var module = this;
+
+        var colorPointsOne = function (r, rowStart, rowMax, colStart, colMax) {
+            for (var row = rowStart; row < rowMax; row++) {
+                for (var col = colStart; col < colMax; col++) {
+                    module.setPixel(context, col, row, color1[0], color1[1], color1[2]);
+                }
+            }
+        };
 
         var colorPointsTwo = function (r, rowStart, rowMax, colStart, colMax) {
             var h = r;
@@ -392,25 +398,38 @@ var Primitives = {
                 }
             }
         };
+        
+        if (!color2) {
+            context.save();
+            context.translate(xc - r, yc - r);
+            colorPointsOne(2 * r, 0, 2 * r, 0, 2 * r);
+            context.restore();
+            context.save();
+            context.translate(xc, yc);
+            circleCutter(context, r);
+            context.restore();
+        } else if (!color3) {
+            context.save();
+            context.translate(xc - r, yc - r);
+            colorPointsTwo(2 * r, 0, 2 * r, 0, 2 * r);
+            context.restore();
+            context.save();
+            context.translate(xc, yc);
+            circleCutter(context, r);
+            context.restore();
+        } else {
 
-        context.save();
-        context.translate(xc - r, yc - r);
-        colorPointsTwo(2 * r, 0, 2 * r, 0, 2 * r);
-        context.restore();
-        context.save();
-        context.translate(xc, yc);
-        circleCutter(context, r);
-        context.restore();
-        // } else {
-        //     context.save();
-        //     context.translate(xc - r, yc - r);
-        //     colorPointsFour(2 * r, 0, 2 * r, 0, 2 * r);
-        //     context.restore();
-        //     context.save();
-        //     context.translate(xc, yc);
-        //     circleCutter(context, r);
-        //     context.restore();
-        // }
+            color4 = color4 || color3;
+
+            context.save();
+            context.translate(xc - r, yc - r);
+            colorPointsFour(2 * r, 0, 2 * r, 0, 2 * r);
+            context.restore();
+            context.save();
+            context.translate(xc, yc);
+            circleCutter(context, r);
+            context.restore();
+        }
 
         // context.save();
         // context.translate(xc, yc);
@@ -464,7 +483,7 @@ var Primitives = {
         var y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
             x = x * c - y * s;
             y = x * s + y * c;
         }
@@ -477,7 +496,7 @@ var Primitives = {
         var y = 0;
 
         while (x >= y) {
-            this.plotCirclePoints(context, xc, yc, x, y, color);
+            this.plotCirclePoints(context, xc, yc, x, y, r, color);
             x = x - (epsilon * y);
             y = y + (epsilon * x);
         }
