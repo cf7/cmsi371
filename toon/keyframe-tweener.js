@@ -149,13 +149,11 @@
                         tweenProcess(originalStartKeyframe, originalEndKeyframe, 
                                     currentTweenFrame, duration, linearEase);
 
-                        var properties = {
+                        // Draw the sprite.
+                        sprites[i].draw({
                             context: renderingContext,
                             data: originalStartKeyframe
-                        };
-
-                        // Draw the sprite.
-                        sprites[i].draw(properties);
+                        });
 
                         // Clean up.
                         renderingContext.restore();
@@ -172,14 +170,10 @@
         window.requestAnimationFrame(nextFrame);
     };
     
-    var startsWithNT = function (string) {
-        return string.match(/^nt/) === null ? false : true;
-    };
-
     var tweenProcess = function (startKeyframe, endKeyframe, currentTweenFrame, duration, ease) {
         var keys = Object.keys(startKeyframe);
         for (property of keys) {
-            if (!startsWithNT(property) && property !== "frame" && typeof startKeyframe[property] !== "function") {
+            if (property !== "frame" && typeof startKeyframe[property] !== "function") {
                 if (typeof startKeyframe[property] === "object") {
                     tweenProcess(startKeyframe[property], endKeyframe[property], currentTweenFrame, duration, ease);
                 } else if (typeof startKeyframe[property] === "number") {
@@ -215,14 +209,6 @@
             return -distance * percentComplete * (percentComplete - 2) + start;
         },
 
-        // ** divides duration by 2 so that percentComplete will pass 1
-        // ** range of percentComplete is now between 0 and 2
-        // ** also need to divide distance by 2 so it doesn't go too far
-        // ** when percentComplete < 1, it will calculate using quadEaseIn
-        // ** when percentComplete > 1, it will calculate using quadEaseOut
-        // ** in the quadEaseOut section, need to subtract percentComplete by 1
-        // ** in certain calculations because percentComplete will have passed 1
-        // ** by this time
         quadEaseInAndOut: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / (duration / 2);
             return (percentComplete < 1) ?
@@ -237,21 +223,6 @@
             return start + (distance * percentComplete) + (distance * Math.sin(theta));
         },
 
-        // Take the end points and do the in-between point
-        // return the value of where that object would be at
-        // the given moment
-        // almost always should have a percentComplete
-        // How far along will the function be at this time?
-        // identify "landmarks" in the function to deduce a pattern
-        // apply percentComplete to that pattern (like parametric functions,
-        // percentComplete is the t variable)
-        // ** add tweening function
-        // 
-        //          percentComplete
-        // start |------|----------------| start + distance
-
-        // distance is the x value
-        // percentComplete is the t value
         fairyComposite: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / (duration/4);
             if (percentComplete < 1) {
@@ -269,13 +240,6 @@
             }
         },
 
-        // c = endframe - startframe = distance
-        // t/d = percentComplete
-        // d = duration
-        // b = start
-
-        // c * (t/d) + b
-        // ** add tweening function
         fairyWave: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / (duration/4);
             var theta = Math.PI * 2 * (percentComplete);

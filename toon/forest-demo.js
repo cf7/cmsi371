@@ -26,7 +26,6 @@
             context: properties.context,
             //setting: backGround,
             fairyData: properties.data,
-            fairyWings: properties.data.fairyWings
         });
     }
 
