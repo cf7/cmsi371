@@ -226,16 +226,12 @@
         fairyComposite: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / (duration/4);
             if (percentComplete < 1) {
-                // console.log("inside 1st: " + percentComplete);
                 return start + (-(distance/4) * percentComplete * (percentComplete - 2));
             } else if (1 < percentComplete && percentComplete < 2) {
-                // console.log("inside 2nd: " + percentComplete);
                 return start + ((distance/4) * percentComplete);
             } else if (2 < percentComplete && percentComplete < 3) {
-                // console.log("inside 3rd: " + percentComplete);
                 return start + ((distance/4) * percentComplete * (percentComplete - 1));
             } else if (percentComplete < 4) {
-                // console.log("inside 4th: " + percentComplete);
                 return start + ((distance/4) * (percentComplete + 3));
             }
         },
