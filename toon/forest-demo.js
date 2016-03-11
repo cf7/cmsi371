@@ -386,12 +386,11 @@
 
     var addTree = function (firstFrame, lastFrame, properties) {
         var treeKeyframes = sprites[0].keyframes;
-        var negOrPos = Math.pow(-1, Math.round(Math.random()*2));
         var angleVariability = Math.random()*(treeBranchAngleIncrement);
-        var frames = { firstFrame: firstFrame, lastFrame: lastFrame };
         var newFirstFrame = addRandomTreeKeyframe(firstFrame);
         var newLastFrame = modifyProperty(addStaticTreeKeyframe(lastFrame),
                     "layers", newFirstFrame.branches.layers + 2 + Math.round(Math.random() * 3));
+        
         newLastFrame = modifyProperty(newLastFrame, "angles", 
                     newFirstFrame.branches.angles + angleVariability);
         newLastFrame = modifyProperty(newLastFrame, "tx", newFirstFrame.tx);
