@@ -2,16 +2,20 @@
 <html>
   <head>
     <meta charset="UTF-8"/>
-    <title>Hello WebGL</title>
-    <link rel="stylesheet" href="hello-webgl.css" />
+    <title>Hello WebGL (again)</title>
+    <link rel="stylesheet" href="hello-webgl-again.css" />
   </head>
   <body>
-    <h1>Hello WebGL!</h1>
+    <h1>Hello WebGL (again)!</h1>
 
     <p>You’ll need a WebGL-capable web browser to see anything here;
-      instructions can be found in this
-      <a href="http://www.khronos.org/webgl/wiki/Getting_a_WebGL_Implementation">official
-      WebGL wiki page</a>.</p>
+     instructions can be found in this
+     <a href="http://www.khronos.org/webgl/wiki/Getting_a_WebGL_Implementation">official
+     WebGL wiki page</a>.</p>
+
+    <p>This page adds a few more fundamental features, showing how
+      further functionality can be added to the software stack.
+      Click the canvas to see what else is new.</p>
 
     <canvas id="hello-webgl" width="512" height="512">
       Sorry, your web browser does not appear to support
@@ -39,8 +43,13 @@
       precision highp float;
       #endif
       attribute vec3 vertexPosition;
+      // Note this new additional output.
+      attribute vec3 vertexColor;
+      varying vec4 finalVertexColor;
+      uniform mat4 rotationMatrix;
       void main(void) {
-          gl_Position = vec4(vertexPosition, 1.0);
+          gl_Position = rotationMatrix * vec4(vertexPosition, 1.0);
+          finalVertexColor = vec4(vertexColor, 1.0);
       }
     </script>
 
@@ -49,13 +58,16 @@
       #ifdef GL_ES
       precision highp float;
       #endif
-      uniform vec3 color;
+      varying vec4 finalVertexColor;
       void main(void) {
-          gl_FragColor = vec4(color, 1.0);
+          // We vary the color based on the fragment's z coordinate,
+          // which, at this point, ranges from 0 (near) to 1 (far).
+          // Note the ".rgb" subselector.
+          gl_FragColor = vec4((1.0 - gl_FragCoord.z) * finalVertexColor.rgb, 1.0);
       }
     </script>
 
     <!-- This script sets up the specific scene for this page. -->
-    <script src="hello-webgl.js"></script>
+    <script src="hello-webgl-again.js"></script>
   </body>
 </html>

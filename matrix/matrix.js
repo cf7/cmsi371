@@ -11,6 +11,12 @@
  * vectors.  Specific Vector2D and Vector3D implementations can be much
  * more compact, while sacrificing generality.
  */
+
+ 
+
+// ** screencasts 3/15 and 3/17
+
+
 var Vector = (function () {
     // Define the constructor.
     var vector = function () {
