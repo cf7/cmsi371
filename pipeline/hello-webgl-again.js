@@ -124,9 +124,11 @@
             mode: gl.LINE_LOOP
         },
 
+        // ** change shapes and drawing orders here
+
         {
             color: { r: 0.0, g: 0.5, b: 0.0 },
-            vertices: Shape.toRawLineArray(Shape.icosahedron()),
+            vertices: Shape.toRawLineArray(Shape.square()),
             mode: gl.LINES
         }
     ];

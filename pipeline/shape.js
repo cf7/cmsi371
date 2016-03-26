@@ -53,6 +53,22 @@ var Shape = {
         };
     },
 
+    square: function () {
+        return {
+            vertices: [
+                [ 0, 1, 0 ],
+                [ 0, 1, -0.5 ],
+                [ 0, 0, -0.5 ],
+                [ 0, 0, 0 ]
+            ],
+
+            indices: [
+                [ 0, 1, 2, 3 ],
+
+            ]
+        };
+    },
+
     /*
      * Utility function for turning indexed vertices into a "raw" coordinate array
      * arranged as triangles.
