@@ -7,6 +7,8 @@ $(function () {
     test("Creation and Data Access", function () {
         var matrix = new Matrix(3, 3);
 
+        // fillMatrix() function
+
         equal(matrix.dimensions().rows, 3, "Rows");
         equal(matrix.dimensions().cols, 3, "Columns");
         equal(matrix.elements[0][0], 1, "Row 0 Col 0");
@@ -56,37 +58,37 @@ $(function () {
         // equal(v.dimensions(), 0, "Empty vector (boundary case)");
     });
 
-    // test("Addition and Subtraction", function () {
-    //     var v1 = new Vector(4, 5);
-    //     var v2 = new Vector(-10, 4);
-    //     var vresult = v1.add(v2);
+    test("Matrix Multiplication", function () {
+        var matrix1 = new Matrix(4, 5);
+        var matrix2 = new Matrix(10, 4);
+        var matrixResult = matrix1.mult(matrix2);
 
-    //     equal(vresult.dimensions(), 2, "Vector sum size check");
-    //     equal(vresult.x(), -6, "Vector sum first element");
-    //     equal(vresult.y(), 9, "Vector sum second element");
+        equal(matrixResult.dimensions().rows, 4, "Rows");
+        equal(matrixResult.dimensions().cols, 4, "Columns");
 
-    //     v1 = new Vector(0, -2, 3, 5);
-    //     v2 = new Vector(-2, 1, 0, 7);
-    //     vresult = v1.subtract(v2);
-    //     equal(vresult.dimensions(), 4, "Vector difference size check");
-    //     equal(vresult.x(), 2, "Vector difference first element");
-    //     equal(vresult.y(), -3, "Vector difference second element");
-    //     equal(vresult.z(), 3, "Vector difference third element");
-    //     equal(vresult.w(), -2, "Vector difference fourth element");
+        
+        // v1 = new Vector(0, -2, 3, 5);
+        // v2 = new Vector(-2, 1, 0, 7);
+        // matrixResult = v1.subtract(v2);
+        // equal(matrixResult.dimensions(), 4, "Vector difference size check");
+        // equal(matrixResult.x(), 2, "Vector difference first element");
+        // equal(matrixResult.y(), -3, "Vector difference second element");
+        // equal(matrixResult.z(), 3, "Vector difference third element");
+        // equal(matrixResult.w(), -2, "Vector difference fourth element");
 
-    //     // Check for errors.
-    //     v1 = new Vector(5, 8, 10, 2);
-    //     v2 = new Vector(1, 2, 2);
+        // // Check for errors.
+        // v1 = new Vector(5, 8, 10, 2);
+        // v2 = new Vector(1, 2, 2);
 
-    //     // We can actually check for a *specific* exception, but
-    //     // we won't go that far for now.
-    //     throws(
-    //         function () {
-    //             return v1.add(v2);
-    //         },
-    //         "Check for vectors of different sizes"
-    //     );
-    // });
+        // // We can actually check for a *specific* exception, but
+        // // we won't go that far for now.
+        // throws(
+        //     function () {
+        //         return v1.add(v2);
+        //     },
+        //     "Check for vectors of different sizes"
+        // );
+    });
 
     // test("Scalar Multiplication and Division", function () {
     //     var v = new Vector(8, 2, 3);
