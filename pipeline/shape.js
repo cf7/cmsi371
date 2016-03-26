@@ -3,7 +3,43 @@
  * The "shapes" are returned as indexed vertices, with utility functions for
  * converting these into "raw" coordinate arrays.
  */
+
+// ** code methods and convenience functions to generate these meshes
+// ** programmatically generate vertices
+
 var Shape = {
+
+    // ** code from class
+
+    cone: function (faceCount) {
+        var RADIUS = 0.5;
+        var CONE_BASE = -0.5;
+        var vertices = [
+            [ 0, 0.5, 0 ],
+        ];
+        var indices = [];
+        var thetaDelta = 2 * Math.PI / faceCount;
+        var currentTheta = 0.0;
+        for (var index = 0; index < faceCount; index++) {
+            vertices.push([
+                RADIUS * Math.cos(currentTheta), // x
+                CONE_BASE, // y
+                RADIUS * Math.sin(currentTheta) // z
+            ]);
+
+            currentTheta += thetaDelta;
+        }
+
+        for (var index = 0; index < faceCount; index++) {
+            indices.push([ 0, (index + 1) % faceCount, (index + 2) % faceCount ]);
+        }
+
+        return {
+            vertices: vertices,
+            indices: indices
+        };
+    },
+
     /*
      * Returns the vertices for a small icosahedron.
      */
@@ -63,11 +99,15 @@ var Shape = {
             ],
 
             indices: [
-                [ 0, 1, 2, 3 ],
-
+                [ 0, 1, 2, 3 ]
             ]
         };
     },
+
+
+    // ** functions that traverse meshes to produce triangles or lines, because
+    // ** webGL needs a certain format to draw the vertices
+    // ** mesh must be converted to vertex array (of given type) that is needed by the mode
 
     /*
      * Utility function for turning indexed vertices into a "raw" coordinate array

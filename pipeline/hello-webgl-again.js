@@ -126,11 +126,15 @@
 
         // ** change shapes and drawing orders here
 
+        // ** rotation axis found in drawScene function
+
         {
             color: { r: 0.0, g: 0.5, b: 0.0 },
-            vertices: Shape.toRawLineArray(Shape.square()),
-            mode: gl.LINES
+            vertices: Shape.toRawTriangleArray(Shape.cone(20)),
+            mode: gl.TRIANGLES
         }
+
+
     ];
 
     // Pass the vertices to WebGL.
