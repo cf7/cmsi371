@@ -5,6 +5,28 @@ $(function () {
 
     // This suite checks instantiation basics.
     test("Creation and Data Access", function () {
+        
+        var idMatrix = new Matrix(4, 4);
+
+        // equal(idMatrix.dimensions().rows, 4, "Rows");
+        // equal(idMatrix.dimensions().cols, 4, "Columns");
+        equal(idMatrix.elements[0][0], 1, "Row 0 Col 0");
+        equal(idMatrix.elements[0][1], 0, "Row 0 Col 1");
+        equal(idMatrix.elements[0][2], 0, "Row 0 Col 2");
+        equal(idMatrix.elements[0][3], 0, "Row 0 Col 3");
+        equal(idMatrix.elements[1][0], 0, "Row 1 Col 0");
+        equal(idMatrix.elements[1][1], 1, "Row 1 Col 1");
+        equal(idMatrix.elements[1][2], 0, "Row 1 Col 2");
+        equal(idMatrix.elements[1][3], 0, "Row 1 Col 3");
+        equal(idMatrix.elements[2][0], 0, "Row 2 Col 0");
+        equal(idMatrix.elements[2][1], 0, "Row 2 Col 1");
+        equal(idMatrix.elements[2][2], 1, "Row 2 Col 2");
+        equal(idMatrix.elements[2][3], 0, "Row 2 Col 3");
+        equal(idMatrix.elements[3][0], 0, "Row 3 Col 0");
+        equal(idMatrix.elements[3][1], 0, "Row 3 Col 1");
+        equal(idMatrix.elements[3][2], 0, "Row 3 Col 2");
+        equal(idMatrix.elements[3][3], 1, "Row 3 Col 3");
+
         var matrix = new Matrix(3, 3);
 
         // fillMatrix() function
