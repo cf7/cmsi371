@@ -98,25 +98,22 @@ var Matrix = (function () {
     
     // Define the constructor.
     function Matrix (rows, cols, array) {
+        this.elements = [];
         // this.elements = [].slice.call(arguments);
-        // if (!array) {
-            this.elements = [];
+        if (!array) {
             var array = newArray(cols);
             var colIndex = 0;
             for (var index = 0; index < rows; index++) {
                 if (colIndex < cols) {
                     array[colIndex] = 1;
-                    console.log(array);
                     this.elements.push(array);
                     colIndex++;
                     array = newArray(cols);
-                    console.log("colIndex: " + colIndex);
                 }
             } 
-            console.log(this.elements);
-        // } else {
-
-        // }
+        } else {
+            this.elements = array;
+        }
     }
     
     

@@ -27,7 +27,12 @@ $(function () {
         equal(idMatrix.elements[3][2], 0, "Row 3 Col 2");
         equal(idMatrix.elements[3][3], 1, "Row 3 Col 3");
 
-        var matrix = new Matrix(3, 3);
+        var array = [
+            [ 1, 2, 3 ],
+            [ 4, 5, 6 ],
+            [ 7, 8, 9 ]
+        ];
+        var matrix = new Matrix(3, 3, array);
 
         // fillMatrix() function
 
@@ -43,7 +48,13 @@ $(function () {
         equal(matrix.elements[2][1], 8, "Row 2 Col 1");
         equal(matrix.elements[2][2], 9, "Row 2 Col 2");
 
-        matrix = new Matrix(4, 4);
+        array = [
+            [ 1, 2, 3, 4 ],
+            [ 5, 6, 7, 8 ],
+            [ 9, 10, 11, 12 ],
+            [ 13, 14, 15, 16 ]
+        ];
+        matrix = new Matrix(4, 4, array);
 
         equal(matrix.dimensions().rows, 4, "Rows");
         equal(matrix.dimensions().cols, 4, "Columns");
