@@ -135,13 +135,36 @@ var Matrix = (function () {
         }
     };
 
-    Matrix.prototype.mult = function () {
+    // Matrix.prototype.transpose = function (matrix) {
+
+    //     return matrix;
+    // };
+
+    var addAndMult = function (array1, matrix2) {
+        var sum = 0;
+        var result = [];
+        for (var i = 0; i < matrix2.elements[0].length; i++) {
+            for (var j = 0; j < array1.length; j++) {
+                sum += (array1[j] * matrix2.elements[j][i]);
+            }
+            result.push(sum);
+            sum = 0;
+        }
+        return result;
+    };
+
+    Matrix.prototype.mult = function (matrix2) {
         // cols in matrix1 must be equal to rows in matrix2
         // checkDimensions to make sure they are NxM MxN format,
         // M's must match
         // otherwise return error
         // result is NxN (e.g. 4x5 mult. 5x4 result is 4x4)
-
+        this.checkDimensions(matrix2);
+        var result = [];
+        for (var i = 0; i < this.elements.length; i++) {
+            result.push(addAndMult(this.elements[i], matrix2));
+        }
+        return new Matrix(this.dimensions().rows, matrix2.dimensions().cols, result);
     };
 
     return Matrix;
