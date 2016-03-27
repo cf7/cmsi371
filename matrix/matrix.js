@@ -135,6 +135,7 @@ var Matrix = (function () {
         // M's must match
         // otherwise return error
         // result is NxN (e.g. 4x5 mult. 5x4 result is 4x4)
+
     };
 
     return Matrix;
