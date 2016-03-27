@@ -92,14 +92,72 @@ $(function () {
     });
 
     test("Matrix Multiplication", function () {
-        var matrix1 = new Matrix(4, 5);
-        var matrix2 = new Matrix(10, 4);
+        var array = [
+            [ 1, 2, 3, 4, 5 ],
+            [ 6, 7, 8, 9, 10 ],
+            [ 11, 12, 13, 14, 15 ],
+            [ 16, 17, 18, 19, 20 ]
+        ];
+        var array2 = [
+            [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+            [ 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ],
+            [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 ],
+            [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40 ]
+        ];
+        var matrix1 = new Matrix(4, 5, array);
+        var matrix2 = new Matrix(10, 4, array2);
         var matrixResult = matrix1.mult(matrix2);
 
         equal(matrixResult.dimensions().rows, 4, "Rows");
         equal(matrixResult.dimensions().cols, 4, "Columns");
 
-        
+        array = [
+            [ 1, 2, 3, 4, 5 ],
+            [ 6, 7, 8, 9, 10 ],
+            [ 11, 12, 13, 14, 15 ],
+            [ 16, 17, 18, 19, 20 ]
+        ];
+
+        array2 = [
+            [ 20, 19, 18, 17 ],
+            [ 16, 15, 14, 13 ],
+            [ 12, 11, 10, 9 ],
+            [ 8, 7, 6, 5 ],
+            [ 4, 3, 2, 1 ]
+        ];
+
+        matrix1 = new Matrix( 4, 5, array);
+        matrix2 = new Matrix( 5, 4, array2);
+        matrixResult = matrix1.mult(matrix2);
+
+        equal(matrixResult.dimensions().rows, 5, "Rows");
+        equal(matrixResult.dimensions().cols, 5, "Columns");
+        equal(matrix.elements[0][0], 1, "Row 0 Col 0");
+        equal(matrix.elements[0][1], 2, "Row 0 Col 1");
+        equal(matrix.elements[0][2], 3, "Row 0 Col 2");
+        equal(matrix.elements[0][3], 4, "Row 0 Col 3");
+        equal(matrix.elements[0][4], 4, "Row 0 Col 3");
+        equal(matrix.elements[1][0], 5, "Row 1 Col 0");
+        equal(matrix.elements[1][1], 6, "Row 1 Col 1");
+        equal(matrix.elements[1][2], 7, "Row 1 Col 2");
+        equal(matrix.elements[1][3], 8, "Row 1 Col 3");
+        equal(matrix.elements[1][4], 5, "Row 1 Col 0");
+        equal(matrix.elements[2][0], 9, "Row 2 Col 0");
+        equal(matrix.elements[2][1], 10, "Row 2 Col 1");
+        equal(matrix.elements[2][2], 11, "Row 2 Col 2");
+        equal(matrix.elements[2][3], 12, "Row 2 Col 3");
+        equal(matrix.elements[2][4], 5, "Row 1 Col 0");
+        equal(matrix.elements[3][0], 13, "Row 3 Col 0");
+        equal(matrix.elements[3][1], 14, "Row 3 Col 1");
+        equal(matrix.elements[3][2], 15, "Row 3 Col 2");
+        equal(matrix.elements[3][3], 16, "Row 3 Col 3");
+        equal(matrix.elements[3][4], 5, "Row 1 Col 0");
+        equal(matrix.elements[4][0], 13, "Row 3 Col 0");
+        equal(matrix.elements[4][1], 14, "Row 3 Col 1");
+        equal(matrix.elements[4][2], 15, "Row 3 Col 2");
+        equal(matrix.elements[4][3], 16, "Row 3 Col 3");
+        equal(matrix.elements[4][4], 5, "Row 1 Col 0");
+
         // v1 = new Vector(0, -2, 3, 5);
         // v2 = new Vector(-2, 1, 0, 7);
         // matrixResult = v1.subtract(v2);
