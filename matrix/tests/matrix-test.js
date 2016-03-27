@@ -107,15 +107,22 @@ $(function () {
         var matrix1 = new Matrix(4, 5, array);
         var matrix2 = new Matrix(10, 4, array2);
 
-        equal(matrix1.checkDimensions(matrix2), false, "Check that dimensions match");
+        // equal(matrix1.checkDimensions(matrix2), false, "Check that dimensions match");
+
+        throws(
+            function () {
+                return matrix1.checkDimensions(matrix2);
+            },
+            "checkDimensions: Throw error if matrices do not meet specifications"
+        );
 
         throws(
             function () {
                 return matrix1.mult(matrix2);
             },
-            "Throw error if matrices do not meet specifications"
+            "mult: Throw error if matrices do not meet specifications"
         );
-        
+
         array = [
             [ 1, 2, 3, 4, 5 ],
             [ 6, 7, 8, 9, 10 ],
@@ -143,7 +150,7 @@ $(function () {
                 [ 1040, 950, 860, 770 ]
             ]
         */
-        equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
+        // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
         equal(matrixResult.dimensions().rows, 4, "Rows");
         equal(matrixResult.dimensions().cols, 4, "Columns");
         equal(matrix.elements[0][0], 140, "Row 0 Col 0");

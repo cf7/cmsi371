@@ -129,6 +129,12 @@ var Matrix = (function () {
         return { rows: this.elements.length, cols: this.elements[0].length };
     };
 
+    Matrix.prototype.checkDimensions = function(matrix2) {
+        if (this.dimensions().cols !== matrix2.dimensions().rows) {
+            throw "Matrices do not meet specifications for multiplication";
+        }
+    };
+
     Matrix.prototype.mult = function () {
         // cols in matrix1 must be equal to rows in matrix2
         // checkDimensions to make sure they are NxM MxN format,
