@@ -179,6 +179,26 @@ $(function () {
         // equal(matrixResult.elements[4][3], 16, "Row 3 Col 3");
         // equal(matrixResult.elements[4][4], 5, "Row 1 Col 0");
 
+        array = [
+            [ 1, 1, 1 ],
+            [ 2, 2, 2 ]
+        ];
+        array2 = [
+            [ 0, 1 ],
+            [ 1, 0 ],
+            [ 1, 1 ]
+        ];
+
+        matrix1 = new Matrix(2, 3, array);
+        matrix2 = new Matrix(3, 2, array2);
+        matrixResult = matrix1.mult(matrix2);
+
+        equal(matrixResult.elements[0][0], 2, "Row 0 Col 0");
+        equal(matrixResult.elements[0][1], 2, "Row 0 Col 1");
+        equal(matrixResult.elements[1][0], 4, "Row 1 Col 0");
+        equal(matrixResult.elements[1][1], 4, "Row 1 Col 1");
+        
+
         // v1 = new Vector(0, -2, 3, 5);
         // v2 = new Vector(-2, 1, 0, 7);
         // matrixResult = v1.subtract(v2);
