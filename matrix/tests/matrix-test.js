@@ -130,33 +130,41 @@ $(function () {
         matrix2 = new Matrix( 5, 4, array2);
         matrixResult = matrix1.mult(matrix2);
 
-        equal(matrixResult.dimensions().rows, 5, "Rows");
-        equal(matrixResult.dimensions().cols, 5, "Columns");
-        equal(matrix.elements[0][0], 1, "Row 0 Col 0");
-        equal(matrix.elements[0][1], 2, "Row 0 Col 1");
-        equal(matrix.elements[0][2], 3, "Row 0 Col 2");
-        equal(matrix.elements[0][3], 4, "Row 0 Col 3");
-        equal(matrix.elements[0][4], 4, "Row 0 Col 3");
-        equal(matrix.elements[1][0], 5, "Row 1 Col 0");
-        equal(matrix.elements[1][1], 6, "Row 1 Col 1");
-        equal(matrix.elements[1][2], 7, "Row 1 Col 2");
-        equal(matrix.elements[1][3], 8, "Row 1 Col 3");
-        equal(matrix.elements[1][4], 5, "Row 1 Col 0");
-        equal(matrix.elements[2][0], 9, "Row 2 Col 0");
-        equal(matrix.elements[2][1], 10, "Row 2 Col 1");
-        equal(matrix.elements[2][2], 11, "Row 2 Col 2");
-        equal(matrix.elements[2][3], 12, "Row 2 Col 3");
-        equal(matrix.elements[2][4], 5, "Row 1 Col 0");
-        equal(matrix.elements[3][0], 13, "Row 3 Col 0");
-        equal(matrix.elements[3][1], 14, "Row 3 Col 1");
-        equal(matrix.elements[3][2], 15, "Row 3 Col 2");
-        equal(matrix.elements[3][3], 16, "Row 3 Col 3");
-        equal(matrix.elements[3][4], 5, "Row 1 Col 0");
-        equal(matrix.elements[4][0], 13, "Row 3 Col 0");
-        equal(matrix.elements[4][1], 14, "Row 3 Col 1");
-        equal(matrix.elements[4][2], 15, "Row 3 Col 2");
-        equal(matrix.elements[4][3], 16, "Row 3 Col 3");
-        equal(matrix.elements[4][4], 5, "Row 1 Col 0");
+        /**
+            result: [
+                [ 140, 125, 110, 95 ],
+                [ 440, 400, 360, 320 ],
+                [ 740, 675, 610, 545 ],
+                [ 1040, 950, 860, 770 ]
+            ]
+        */
+        equal(matrixResult.dimensions().rows, 4, "Rows");
+        equal(matrixResult.dimensions().cols, 4, "Columns");
+        equal(matrix.elements[0][0], 140, "Row 0 Col 0");
+        equal(matrix.elements[0][1], 125, "Row 0 Col 1");
+        equal(matrix.elements[0][2], 110, "Row 0 Col 2");
+        equal(matrix.elements[0][3], 95, "Row 0 Col 3");
+        // equal(matrix.elements[0][4], 4, "Row 0 Col 3");
+        equal(matrix.elements[1][0], 440, "Row 1 Col 0");
+        equal(matrix.elements[1][1], 400, "Row 1 Col 1");
+        equal(matrix.elements[1][2], 360, "Row 1 Col 2");
+        equal(matrix.elements[1][3], 320, "Row 1 Col 3");
+        // equal(matrix.elements[1][4], 5, "Row 1 Col 0");
+        equal(matrix.elements[2][0], 740, "Row 2 Col 0");
+        equal(matrix.elements[2][1], 675, "Row 2 Col 1");
+        equal(matrix.elements[2][2], 610, "Row 2 Col 2");
+        equal(matrix.elements[2][3], 545, "Row 2 Col 3");
+        // equal(matrix.elements[2][4], 5, "Row 1 Col 0");
+        equal(matrix.elements[3][0], 1040, "Row 3 Col 0");
+        equal(matrix.elements[3][1], 950, "Row 3 Col 1");
+        equal(matrix.elements[3][2], 860, "Row 3 Col 2");
+        equal(matrix.elements[3][3], 770, "Row 3 Col 3");
+        // equal(matrix.elements[3][4], 5, "Row 1 Col 0");
+        // equal(matrix.elements[4][0], 13, "Row 3 Col 0");
+        // equal(matrix.elements[4][1], 14, "Row 3 Col 1");
+        // equal(matrix.elements[4][2], 15, "Row 3 Col 2");
+        // equal(matrix.elements[4][3], 16, "Row 3 Col 3");
+        // equal(matrix.elements[4][4], 5, "Row 1 Col 0");
 
         // v1 = new Vector(0, -2, 3, 5);
         // v2 = new Vector(-2, 1, 0, 7);

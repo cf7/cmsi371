@@ -132,7 +132,9 @@ var Matrix = (function () {
     Matrix.prototype.mult = function () {
         // cols in matrix1 must be equal to rows in matrix2
         // checkDimensions to make sure they are NxM MxN format,
+        // M's must match
         // otherwise return error
+        // result is NxN (e.g. 4x5 mult. 5x4 result is 4x4)
     };
 
     return Matrix;
