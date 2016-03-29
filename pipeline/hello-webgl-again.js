@@ -29,10 +29,6 @@
     }
 
     var getTranslationMatrix = function (x, y, z) {
-        // ** add extra row to vertex
-        // ** pass vertex into mult function as a new Matrix object
-        // ** apply the newly generated translate matrix to 
-        // ** each coordinate (each array in vertices)
         var data = { tx: x, ty: y, tz: z };
         return glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements);
     }
@@ -143,7 +139,7 @@
                 [ 0.0, 1.0, 0.0 ],
                 [ 0.0, 0.0, 1.0 ]
             ),
-            mode: gl.TRIANGLES
+            mode: gl.TRIANGLES            
         },
 
         {
@@ -190,7 +186,9 @@
         {
             color: { r: 0.0, g: 0.5, b: 0.5 },
             vertices: shape2.toRawTriangleArray({ vertices: shape2.vertices, indices: shape2.indices }),
-            mode: gl.TRIANGLES
+            mode: gl.TRIANGLES,
+            translate: { tx: 0.5, ty: -0.75, tz: 0.5 },
+            scale: { sx: 0.5, sy: 0.5, sz: 0.5 }
         }
 
     ];
@@ -266,6 +264,22 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
+        // ** modifies the matrices in these variables in the html gl code
+        // ** modifications are reflected instantly
+        // ** add code to check for translate, scale, rotate per object,
+        // ** otherwise, identity matrix
+        // ** remember to pass Matrix object elements, not just the Matrix object
+        // ** remember GL format
+        gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(object.translate ?
+            getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz) :  
+            glFormat(new Matrix(4, 4).elements)
+            ));
+        gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
+            getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
+            glFormat(new Matrix(4, 4).elements)
+            ));
+        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
@@ -280,27 +294,6 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        /**
-            uniformMatrix4fv(location, count, transpose, value)
-
-             location
-           Specifies the location of the uniform value to be modified.
-
-            count
-           Specifies the number of matrices that are to be modified. This should be 1 if the targeted
-           uniform variable is not an array of matrices, and 1 or more if it is an array of matrices.
-
-            transpose
-           Specifies whether to transpose the matrix as the values are loaded into the uniform variable.
-
-            value
-           Specifies a pointer to an array of count values that will be used to update the specified uniform
-           variable.
-        */
-        // ** modifies the matrices in these variables in the html gl code
-        // ** modifications are reflected instantly
-        gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0.5, -0.75, 0.5)));
-        gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(0.5, 0.5, 0.5)));
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
 
         // Display the objects.
