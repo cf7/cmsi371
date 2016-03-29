@@ -4,13 +4,42 @@
  */
 (function (canvas) {
 
+    var glFormat = function (matrix) {
+        return [
+            matrix[0][0],
+            matrix[1][0],
+            matrix[2][0],
+            matrix[3][0],
+
+            matrix[0][1],
+            matrix[1][1],
+            matrix[2][1],
+            matrix[3][1],
+
+            matrix[0][2],
+            matrix[1][2],
+            matrix[2][2],
+            matrix[3][2],
+
+            matrix[0][3],
+            matrix[1][3],
+            matrix[2][3],
+            matrix[3][3]
+        ];
+    }
+
     var getTranslationMatrix = function (x, y, z) {
         // ** add extra row to vertex
         // ** pass vertex into mult function as a new Matrix object
         // ** apply the newly generated translate matrix to 
         // ** each coordinate (each array in vertices)
         var data = { tx: x, ty: y, tz: z };
-        return new Matrix(4, 4).getTranslateMatrix(4, 4, data);
+        return glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements);
+    }
+
+    var getScaleMatrix = function (x, y, z) {
+        var data = { sx: x, sy: y, sz: z };
+        return glFromat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
     }
 
     /*
@@ -225,6 +254,10 @@
     gl.enableVertexAttribArray(vertexColor);
     var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
 
+    // ** added code
+    var translationMatrix = gl.getUniformLocation(shaderProgram, "translationMatrix");
+    var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
+
     /*
      * Displays an individual object.
      */
@@ -247,8 +280,25 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getTranslationMatrix( 0.25, -0.75, 0.25 )));//getRotationMatrix(currentRotation, 0, 1, 0)));
+        /**
+            uniformMatrix4fv(location, count, transpose, value)
 
+             location
+           Specifies the location of the uniform value to be modified.
+
+            count
+           Specifies the number of matrices that are to be modified. This should be 1 if the targeted
+           uniform variable is not an array of matrices, and 1 or more if it is an array of matrices.
+
+            transpose
+           Specifies whether to transpose the matrix as the values are loaded into the uniform variable.
+
+            value
+           Specifies a pointer to an array of count values that will be used to update the specified uniform
+           variable.
+        */
+        gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0.5, -0.75, 0.5)));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);

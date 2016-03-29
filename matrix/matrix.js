@@ -189,30 +189,7 @@ var Matrix = (function () {
     // ** convenience functions that produce translation, scale, and rotation matrices
     // ** "need a translate matrix by this much that can be used to mult with this other matrix"
 
-    var glFormat = function (matrix) {
-        return [
-            matrix[0][0],
-            matrix[1][0],
-            matrix[2][0],
-            matrix[3][0],
-
-            matrix[0][1],
-            matrix[1][1],
-            matrix[2][1],
-            matrix[3][1],
-
-            matrix[0][2],
-            matrix[1][2],
-            matrix[2][2],
-            matrix[3][2],
-
-            matrix[0][3],
-            matrix[1][3],
-            matrix[2][3],
-            matrix[3][3]
-        ];
-    }
-
+    
     Matrix.prototype.getTranslateMatrix = function(rows, cols, translateData) {
         var tx = translateData.tx;
         var ty = translateData.ty;
@@ -223,7 +200,7 @@ var Matrix = (function () {
         this.elements[2][this.dimensions().cols - 1] = tz || 0;
         this.elements[3][this.dimensions().cols - 1] = 1;
 
-        return glFormat(this.elements);
+        return this;
     };
 
     Matrix.prototype.getScaleMatrix = function(rows, cols, scaleData) {
