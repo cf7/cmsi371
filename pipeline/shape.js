@@ -17,15 +17,17 @@
 // ** when finished with matrices, use translate, rotate, and scale
 // ** to make composite shapes and groups
 
+// ** for transforms, can use concat() to append extra dimension to vertex arrays
+
+// ** will need to go to vertexShader in html code to apply transforms
+
 var Shape = (function () { 
 
-    function Shape () {
-        this.children = [];
-    }
-
     function Shape (vertices, indices) {
-        this.vertices = vertices;
-        this.indices = indices;
+        if (vertices && indices) {
+            this.vertices = vertices;
+            this.indices = indices;
+        }
         this.children = [];
     }
 
@@ -33,6 +35,12 @@ var Shape = (function () {
         this.children.push(Shape);
     }
 
+    var addDimension = function (vertices) {
+        for (var index = 0; index < vertices.length; index++) {
+            vertices[index] = vertices[index].concat([1]);
+        }
+    }
+    
     // ** code from class
     Shape.prototype.cone = function (faceCount) {
         var RADIUS = 0.5;

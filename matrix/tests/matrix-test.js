@@ -363,6 +363,7 @@ $(function () {
         // equal(matrixResult.elements[4][4], 5, "Row 1 Col 0");
 
     });
+
     // test("Dot Product", function () {
     //     var v1 = new Vector(-5, -2);
     //     var v2 = new Vector(-3, 4);

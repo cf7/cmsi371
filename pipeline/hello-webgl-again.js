@@ -3,6 +3,16 @@
  * takes the canvas that it will need.
  */
 (function (canvas) {
+
+    var getTranslationMatrix = function (x, y, z) {
+        // ** add extra row to vertex
+        // ** pass vertex into mult function as a new Matrix object
+        // ** apply the newly generated translate matrix to 
+        // ** each coordinate (each array in vertices)
+        var data = { tx: x, ty: y, tz: z };
+        return new Matrix(4, 4).getTranslateMatrix(4, 4, data);
+    }
+
     /*
      * This code does not really belong here: it should live
      * in a separate library of matrix and transformation
@@ -90,7 +100,6 @@
     ];
     var shape = new Shape();
     var shape2 = new Shape(vertices, indices);
-
 
     // Build the objects to display.
     var objectsToDraw = [
@@ -238,7 +247,7 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getTranslationMatrix( 0.25, -0.75, 0.25 )));//getRotationMatrix(currentRotation, 0, 1, 0)));
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

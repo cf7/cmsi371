@@ -5,8 +5,12 @@ $(function () {
 
     // This suite checks instantiation basics.
     test("Creation and Data Access", function () {
+        var shape = new Shape();
+
+        shape.translate(1, 2, 3);
+        
         var faceCount = 20;
-        var coneData = Shape.cone(faceCount);
+        var coneData = shape.cone(faceCount);
 
         equal(coneData.vertices[0].length, 3, "x, y, and z coordinates");
         equal(coneData.indices.length, faceCount, "arrangement for each face");
@@ -16,7 +20,7 @@ $(function () {
         // equal(coneData.y(), 6, "Second element by coordinate");
         // equal(coneData.z(), 3, "Third element by coordinate");
 
-        var squareData = Shape.square();
+        var squareData = shape.square();
 
         equal(squareData.vertices.length, 4, "four corners");
         equal(squareData.indices.length, 1, "one arrangement");
