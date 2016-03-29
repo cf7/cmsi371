@@ -1,3 +1,4 @@
+
 /*
  * Unit tests for our vector object.
  */
@@ -6,26 +7,32 @@ $(function () {
     // This suite checks instantiation basics.
     test("Creation and Data Access", function () {
         
-        var idMatrix = new Matrix(4, 4);
+        var idMat = new Matrix(4, 4);
 
-        // equal(idMatrix.dimensions().rows, 4, "Rows");
-        // equal(idMatrix.dimensions().cols, 4, "Columns");
-        equal(idMatrix.elements[0][0], 1, "Row 0 Col 0");
-        equal(idMatrix.elements[0][1], 0, "Row 0 Col 1");
-        equal(idMatrix.elements[0][2], 0, "Row 0 Col 2");
-        equal(idMatrix.elements[0][3], 0, "Row 0 Col 3");
-        equal(idMatrix.elements[1][0], 0, "Row 1 Col 0");
-        equal(idMatrix.elements[1][1], 1, "Row 1 Col 1");
-        equal(idMatrix.elements[1][2], 0, "Row 1 Col 2");
-        equal(idMatrix.elements[1][3], 0, "Row 1 Col 3");
-        equal(idMatrix.elements[2][0], 0, "Row 2 Col 0");
-        equal(idMatrix.elements[2][1], 0, "Row 2 Col 1");
-        equal(idMatrix.elements[2][2], 1, "Row 2 Col 2");
-        equal(idMatrix.elements[2][3], 0, "Row 2 Col 3");
-        equal(idMatrix.elements[3][0], 0, "Row 3 Col 0");
-        equal(idMatrix.elements[3][1], 0, "Row 3 Col 1");
-        equal(idMatrix.elements[3][2], 0, "Row 3 Col 2");
-        equal(idMatrix.elements[3][3], 1, "Row 3 Col 3");
+        equal(idMat.dimensions().rows, 4, "Rows");
+        equal(idMat.dimensions().cols, 4, "Columns");
+        equal(idMat.elements[0][0], 1, "Row 0 Col 0");
+        equal(idMat.elements[0][1], 0, "Row 0 Col 1");
+        equal(idMat.elements[0][2], 0, "Row 0 Col 2");
+        equal(idMat.elements[0][3], 0, "Row 0 Col 3");
+        equal(idMat.elements[1][0], 0, "Row 1 Col 0");
+        equal(idMat.elements[1][1], 1, "Row 1 Col 1");
+        equal(idMat.elements[1][2], 0, "Row 1 Col 2");
+        equal(idMat.elements[1][3], 0, "Row 1 Col 3");
+        equal(idMat.elements[2][0], 0, "Row 2 Col 0");
+        equal(idMat.elements[2][1], 0, "Row 2 Col 1");
+        equal(idMat.elements[2][2], 1, "Row 2 Col 2");
+        equal(idMat.elements[2][3], 0, "Row 2 Col 3");
+        equal(idMat.elements[3][0], 0, "Row 3 Col 0");
+        equal(idMat.elements[3][1], 0, "Row 3 Col 1");
+        equal(idMat.elements[3][2], 0, "Row 3 Col 2");
+        equal(idMat.elements[3][3], 1, "Row 3 Col 3");
+
+        idMat = new Matrix(2, 2);
+        equal(idMat.elements[0][0], 1, "Row 0 Col 0");
+        equal(idMat.elements[0][1], 0, "Row 0 Col 1");
+        equal(idMat.elements[1][0], 0, "Row 1 Col 0");
+        equal(idMat.elements[1][1], 1, "Row 1 Col 1");
 
         var array = [
             [ 1, 2, 3 ],
@@ -222,19 +229,40 @@ $(function () {
         // );
     });
 
-    // test("Scalar Multiplication and Division", function () {
-    //     var v = new Vector(8, 2, 3);
-    //     var vresult = v.multiply(2);
+    // test("3D Translation Matrices", function () {
+       
+    //     var data = { tx: 5, ty: 2, tz: 4 };
+    //     var translateMatrix = Matrix.translate(4, 4, data);
 
-    //     equal(vresult.x(), 16, "Vector scalar multiplication first element");
-    //     equal(vresult.y(), 4, "Vector scalar multiplication second element");
-    //     equal(vresult.z(), 6, "Vector scalar multiplication third element");
+    //     // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
+    //     // equal(translateMatrix.dimensions().rows, 4, "Rows");
+    //     // equal(translateMatrix.dimensions().cols, 4, "Columns");
+    //     equal(translateMatrix.elements[0][0], 1, "Row 0 Col 0");
+    //     equal(translateMatrix.elements[0][1], 0, "Row 0 Col 1");
+    //     equal(translateMatrix.elements[0][2], 0, "Row 0 Col 2");
+    //     equal(translateMatrix.elements[0][3], data.tx, "Row 0 Col 3");
+    //     // equal(translateMatrix.elements[0][4], 4, "Row 0 Col 3");
+    //     equal(translateMatrix.elements[1][0], 0, "Row 1 Col 0");
+    //     equal(translateMatrix.elements[1][1], 1, "Row 1 Col 1");
+    //     equal(translateMatrix.elements[1][2], 0, "Row 1 Col 2");
+    //     equal(translateMatrix.elements[1][3], data.ty, "Row 1 Col 3");
+    //     // equal(translateMatrix.elements[1][4], 5, "Row 1 Col 0");
+    //     equal(translateMatrix.elements[2][0], 0, "Row 2 Col 0");
+    //     equal(translateMatrix.elements[2][1], 0, "Row 2 Col 1");
+    //     equal(translateMatrix.elements[2][2], 1, "Row 2 Col 2");
+    //     equal(translateMatrix.elements[2][3], data.tz, "Row 2 Col 3");
+    //     // equal(translateMatrix.elements[2][4], 5, "Row 1 Col 0");
+    //     equal(translateMatrix.elements[3][0], 0, "Row 3 Col 0");
+    //     equal(translateMatrix.elements[3][1], 0, "Row 3 Col 1");
+    //     equal(translateMatrix.elements[3][2], 0, "Row 3 Col 2");
+    //     equal(translateMatrix.elements[3][3], 1, "Row 3 Col 3");
+    //     // equal(translateMatrix.elements[3][4], 5, "Row 1 Col 0");
+    //     // equal(translateMatrix.elements[4][0], 13, "Row 3 Col 0");
+    //     // equal(translateMatrix.elements[4][1], 14, "Row 3 Col 1");
+    //     // equal(translateMatrix.elements[4][2], 15, "Row 3 Col 2");
+    //     // equal(translateMatrix.elements[4][3], 16, "Row 3 Col 3");
+    //     // equal(translateMatrix.elements[4][4], 5, "Row 1 Col 0");
 
-    //     vresult = vresult.divide(4);
-
-    //     equal(vresult.x(), 4, "Vector scalar division first element");
-    //     equal(vresult.y(), 1, "Vector scalar division second element");
-    //     equal(vresult.z(), 1.5, "Vector scalar division third element");
     // });
 
     // test("Dot Product", function () {

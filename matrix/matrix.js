@@ -85,14 +85,12 @@ eventually, when returning matrices to WebGL
 -column first, need a convenience function that will turn array into linear array with col first
 -float32array
 
+
+translation followed by a scale followed by a rotation is multiplied out as RST. 
+i.e., R(S(T(vertex)))
+
 */
-var newArray = function (cols) {
-        var newArray = [];
-        for (var index = 0; index < cols; index++) {
-            newArray.push(0);
-        }
-        return newArray;
-    }
+
 
 var Matrix = (function () {
     
@@ -116,7 +114,14 @@ var Matrix = (function () {
         }
     }
     
-    
+    var newArray = function (cols) {
+        var newArray = [];
+        for (var index = 0; index < cols; index++) {
+            newArray.push(0);
+        }
+        return newArray;
+    }
+
     // A private method for checking dimensions,
     // throwing an exception when different.
     // var checkDimensions = function (m1, m2) {
@@ -166,6 +171,38 @@ var Matrix = (function () {
         }
         return new Matrix(this.dimensions().rows, matrix2.dimensions().cols, result);
     };
+
+
+    // ** convenience functions that produce translation, scale, and rotation matrices
+    // ** "need a translate matrix by this much that can be used to mult with this other matrix"
+
+    Matrix.prototype.translate = function(rows, cols, translateData) {
+
+        var tx = translateData.tx;
+        var ty = translateData.ty;
+        var tz = translateData.tz;
+
+        var translateMatrix = new Matrix(rows, cols);
+        var array = [];
+        if (tx) {
+            if (ty) {
+                if (tz) {
+                    translateMatrix.elements[0][translateMatrix.dimensions.cols - 1] = tx;
+                    translateMatrix.elements[1][translateMatrix.dimensions.cols - 1] = ty;
+                    translateMatrix.elements[2][translateMatrix.dimensions.cols - 1] = tz;
+                } else {
+
+                }
+            } else {
+
+            }
+        } else {
+
+        }
+
+        return translateMatrix;
+    };
+
 
     return Matrix;
 
@@ -259,3 +296,5 @@ var Matrix = (function () {
 
     // return vector;
 })();
+
+module.exports = Matrix;
