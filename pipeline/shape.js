@@ -9,8 +9,16 @@
 
 var Shape = (function () { 
 
-    // ** code from class
+    function Shape () {
 
+    }
+    
+    function Shape (vertices, indices) {
+        this.vertices = vertices;
+        this.indices = indices;
+    }
+
+    // ** code from class
     Shape.prototype.cone = function (faceCount) {
         var RADIUS = 0.5;
         var CONE_BASE = -0.5;

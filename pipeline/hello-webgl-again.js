@@ -77,6 +77,18 @@
     gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
+
+    var vertices = [
+        [ 0.0, 0.0, 1.0 ],
+        [ 1.0, 0.0, 0.0 ],
+        [ 0.0, 1.0, 0.0 ]
+    ];
+    var indices = [
+        [ 0, 1, 2 ]
+    ];
+    var shape = new Shape();
+    var shape2 = new Shape(vertices, indices);
+
     // Build the objects to display.
     var objectsToDraw = [
         {
@@ -130,10 +142,15 @@
 
         {
             color: { r: 0.0, g: 0.5, b: 0.0 },
-            vertices: Shape.toRawTriangleArray(Shape.cone(20)),
+            vertices: shape.toRawTriangleArray(shape.cone(20)),
+            mode: gl.TRIANGLES
+        },
+
+        {
+            color: { r: 0.0, g: 0.5, b: 0.5 },
+            vertices: shape2.toRawTriangleArray({ vertices: shape2.vertices, indices: shape2.indices }),
             mode: gl.TRIANGLES
         }
-
 
     ];
 
