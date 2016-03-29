@@ -55,7 +55,7 @@
       uniform mat4 rotationMatrix;
 
       void main(void) {
-          gl_Position = rotationMatrix * translationMatrix * vec4(vertexPosition, 1.0);
+          gl_Position = rotationMatrix * scaleMatrix * translationMatrix * vec4(vertexPosition, 1.0);
           finalVertexColor = vec4(vertexColor, 1.0);
       }
     </script>

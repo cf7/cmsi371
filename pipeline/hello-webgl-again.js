@@ -39,7 +39,7 @@
 
     var getScaleMatrix = function (x, y, z) {
         var data = { sx: x, sy: y, sz: z };
-        return glFromat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
+        return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
     }
 
     /*
@@ -252,9 +252,9 @@
     gl.enableVertexAttribArray(vertexPosition);
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
-    var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
 
-    // ** added code
+    // ** retrieves the location of these variables from the html GL code
+    var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     var translationMatrix = gl.getUniformLocation(shaderProgram, "translationMatrix");
     var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
 
@@ -297,8 +297,12 @@
            Specifies a pointer to an array of count values that will be used to update the specified uniform
            variable.
         */
+        // ** modifies the matrices in these variables in the html gl code
+        // ** modifications are reflected instantly
         gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0.5, -0.75, 0.5)));
+        gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(0.5, 0.5, 0.5)));
         gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);
