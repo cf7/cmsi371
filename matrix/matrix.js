@@ -182,14 +182,13 @@ var Matrix = (function () {
         var ty = translateData.ty;
         var tz = translateData.tz;
 
-        var translateMatrix = new Matrix(rows, cols);
         var array = [];
         if (tx) {
             if (ty) {
                 if (tz) {
-                    translateMatrix.elements[0][translateMatrix.dimensions.cols - 1] = tx;
-                    translateMatrix.elements[1][translateMatrix.dimensions.cols - 1] = ty;
-                    translateMatrix.elements[2][translateMatrix.dimensions.cols - 1] = tz;
+                    this.elements[0][this.dimensions().cols - 1] = tx;
+                    this.elements[1][this.dimensions().cols - 1] = ty;
+                    this.elements[2][this.dimensions().cols - 1] = tz;
                 } else {
 
                 }
@@ -200,7 +199,7 @@ var Matrix = (function () {
 
         }
 
-        return translateMatrix;
+        return this;
     };
 
 

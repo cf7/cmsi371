@@ -229,41 +229,41 @@ $(function () {
         // );
     });
 
-    // test("3D Translation Matrices", function () {
+    test("3D Translation Matrices", function () {
        
-    //     var data = { tx: 5, ty: 2, tz: 4 };
-    //     var translateMatrix = Matrix.translate(4, 4, data);
+        var data = { tx: 5, ty: 2, tz: 4 };
+        var translateMatrix = new Matrix(4, 4).translate(4, 4, data);
+        console.log(translateMatrix);
+        // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
+        // equal(translateMatrix.dimensions().rows, 4, "Rows");
+        // equal(translateMatrix.dimensions().cols, 4, "Columns");
+        equal(translateMatrix.elements[0][0], 1, "Row 0 Col 0");
+        equal(translateMatrix.elements[0][1], 0, "Row 0 Col 1");
+        equal(translateMatrix.elements[0][2], 0, "Row 0 Col 2");
+        equal(translateMatrix.elements[0][3], data.tx, "Row 0 Col 3");
+        // equal(translateMatrix.elements[0][4], 4, "Row 0 Col 3");
+        equal(translateMatrix.elements[1][0], 0, "Row 1 Col 0");
+        equal(translateMatrix.elements[1][1], 1, "Row 1 Col 1");
+        equal(translateMatrix.elements[1][2], 0, "Row 1 Col 2");
+        equal(translateMatrix.elements[1][3], data.ty, "Row 1 Col 3");
+        // equal(translateMatrix.elements[1][4], 5, "Row 1 Col 0");
+        equal(translateMatrix.elements[2][0], 0, "Row 2 Col 0");
+        equal(translateMatrix.elements[2][1], 0, "Row 2 Col 1");
+        equal(translateMatrix.elements[2][2], 1, "Row 2 Col 2");
+        equal(translateMatrix.elements[2][3], data.tz, "Row 2 Col 3");
+        // equal(translateMatrix.elements[2][4], 5, "Row 1 Col 0");
+        equal(translateMatrix.elements[3][0], 0, "Row 3 Col 0");
+        equal(translateMatrix.elements[3][1], 0, "Row 3 Col 1");
+        equal(translateMatrix.elements[3][2], 0, "Row 3 Col 2");
+        equal(translateMatrix.elements[3][3], 1, "Row 3 Col 3");
+        // equal(translateMatrix.elements[3][4], 5, "Row 1 Col 0");
+        // equal(translateMatrix.elements[4][0], 13, "Row 3 Col 0");
+        // equal(translateMatrix.elements[4][1], 14, "Row 3 Col 1");
+        // equal(translateMatrix.elements[4][2], 15, "Row 3 Col 2");
+        // equal(translateMatrix.elements[4][3], 16, "Row 3 Col 3");
+        // equal(translateMatrix.elements[4][4], 5, "Row 1 Col 0");
 
-    //     // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
-    //     // equal(translateMatrix.dimensions().rows, 4, "Rows");
-    //     // equal(translateMatrix.dimensions().cols, 4, "Columns");
-    //     equal(translateMatrix.elements[0][0], 1, "Row 0 Col 0");
-    //     equal(translateMatrix.elements[0][1], 0, "Row 0 Col 1");
-    //     equal(translateMatrix.elements[0][2], 0, "Row 0 Col 2");
-    //     equal(translateMatrix.elements[0][3], data.tx, "Row 0 Col 3");
-    //     // equal(translateMatrix.elements[0][4], 4, "Row 0 Col 3");
-    //     equal(translateMatrix.elements[1][0], 0, "Row 1 Col 0");
-    //     equal(translateMatrix.elements[1][1], 1, "Row 1 Col 1");
-    //     equal(translateMatrix.elements[1][2], 0, "Row 1 Col 2");
-    //     equal(translateMatrix.elements[1][3], data.ty, "Row 1 Col 3");
-    //     // equal(translateMatrix.elements[1][4], 5, "Row 1 Col 0");
-    //     equal(translateMatrix.elements[2][0], 0, "Row 2 Col 0");
-    //     equal(translateMatrix.elements[2][1], 0, "Row 2 Col 1");
-    //     equal(translateMatrix.elements[2][2], 1, "Row 2 Col 2");
-    //     equal(translateMatrix.elements[2][3], data.tz, "Row 2 Col 3");
-    //     // equal(translateMatrix.elements[2][4], 5, "Row 1 Col 0");
-    //     equal(translateMatrix.elements[3][0], 0, "Row 3 Col 0");
-    //     equal(translateMatrix.elements[3][1], 0, "Row 3 Col 1");
-    //     equal(translateMatrix.elements[3][2], 0, "Row 3 Col 2");
-    //     equal(translateMatrix.elements[3][3], 1, "Row 3 Col 3");
-    //     // equal(translateMatrix.elements[3][4], 5, "Row 1 Col 0");
-    //     // equal(translateMatrix.elements[4][0], 13, "Row 3 Col 0");
-    //     // equal(translateMatrix.elements[4][1], 14, "Row 3 Col 1");
-    //     // equal(translateMatrix.elements[4][2], 15, "Row 3 Col 2");
-    //     // equal(translateMatrix.elements[4][3], 16, "Row 3 Col 3");
-    //     // equal(translateMatrix.elements[4][4], 5, "Row 1 Col 0");
-
-    // });
+    });
 
     // test("Dot Product", function () {
     //     var v1 = new Vector(-5, -2);
