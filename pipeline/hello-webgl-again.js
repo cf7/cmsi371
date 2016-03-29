@@ -78,6 +78,8 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
 
 
+    // ** add preprocessing code here
+
     var vertices = [
         [ 0.0, 0.0, 1.0 ],
         [ 1.0, 0.0, 0.0 ],
@@ -88,6 +90,7 @@
     ];
     var shape = new Shape();
     var shape2 = new Shape(vertices, indices);
+
 
     // Build the objects to display.
     var objectsToDraw = [

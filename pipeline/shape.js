@@ -7,6 +7,16 @@
 // ** code methods and convenience functions to generate these meshes
 // ** programmatically generate vertices
 
+// ** design the interaction between shape.js and hello-webgl-again.js
+// ** similar to how we coded the interaction between
+// ** keyframe-tweener.js and keyframe-tweening-demo.js
+
+// ** make all shapes centered around the origin
+
+// ** make basic shapes
+// ** when finished with matrices, use translate, rotate, and scale
+// ** to make composite shapes and groups
+
 var Shape = (function () { 
 
     function Shape () {

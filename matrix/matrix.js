@@ -98,7 +98,7 @@ var Matrix = (function () {
     function Matrix (rows, cols, array) {
         this.elements = [];
         // this.elements = [].slice.call(arguments);
-        if (!array) {
+        if (!array && rows === cols) {
             var array = newArray(cols);
             var colIndex = 0;
             for (var index = 0; index < rows; index++) {
@@ -172,38 +172,156 @@ var Matrix = (function () {
         return new Matrix(this.dimensions().rows, matrix2.dimensions().cols, result);
     };
 
+    // ** Givens
+
+    // ** code for 4x4 matrices for now
+    // ** arbitrary dimensions are optional
+
+    // ** the transform matrix should be the one multiplying the given matrix
+    // ** so   TranslateMatrix x [ coordinates ] = result
+    // ** as opposed to [ coordinates ] x TranslateMatrix = result
+    
+    // ** getRotationMatrix code is given in hello-webgl-again.js
+    // ** format for returning matrix to webGL is in getRotationMatrix sample code
+
+    //** orthographic projection given in matrices-webgl sample code
 
     // ** convenience functions that produce translation, scale, and rotation matrices
     // ** "need a translate matrix by this much that can be used to mult with this other matrix"
 
-    Matrix.prototype.translate = function(rows, cols, translateData) {
-
+    Matrix.prototype.getTranslateMatrix = function(rows, cols, translateData) {
         var tx = translateData.tx;
         var ty = translateData.ty;
         var tz = translateData.tz;
 
-        var array = [];
-        if (tx) {
-            if (ty) {
-                if (tz) {
-                    this.elements[0][this.dimensions().cols - 1] = tx;
-                    this.elements[1][this.dimensions().cols - 1] = ty;
-                    this.elements[2][this.dimensions().cols - 1] = tz;
-                } else {
+        this.elements[0][this.dimensions().cols - 1] = tx || 0;
+        this.elements[1][this.dimensions().cols - 1] = ty || 0;
+        this.elements[2][this.dimensions().cols - 1] = tz || 0;
+        this.elements[3][this.dimensions().cols - 1] = 1;
 
-                }
-            } else {
+        return this;
+    };
 
-            }
-        } else {
+    Matrix.prototype.getScaleMatrix = function(rows, cols, scaleData) {
+        var sx = scaleData.sx;
+        var sy = scaleData.sy;
+        var sz = scaleData.sz;
 
+        this.elements[0][0] = sx || 1;
+        this.elements[1][1] = sy || 1;
+        this.elements[2][2] = sz || 1;
+        this.elements[3][3] = 1;
+
+        return this;
+    };
+
+    Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
+        var theta = rotationData.angle * (Math.PI / 180);
+        var x = rotationData.x;
+        var y = rotationData.y;
+        var z = rotationData.z;
+
+        if (x) {
+            this.elements[0][0] = 1;
+            this.elements[1][1] = Math.cos(theta);
+            this.elements[1][2] = -(Math.sin(theta));
+            this.elements[2][1] = Math.sin(theta);
+            this.elements[2][2] = Math.cos(theta);
+            this.elements[3][3] = 1;
+        } else if (y) {
+            this.elements[0][0] = Math.cos(theta);
+            this.elements[0][2] = Math.sin(theta);
+            this.elements[1][1] = 1
+            this.elements[2][0] = -(Math.sin(theta));
+            this.elements[2][2] = Math.cos(theta);
+            this.elements[3][3] = 1;
+        } else if (z) {
+            this.elements[0][0] = Math.cos(theta);
+            this.elements[0][1] = -(Math.sin(theta));
+            this.elements[1][0] = Math.sin(theta);
+            this.elements[1][1] = Math.cos(theta);
         }
 
         return this;
     };
 
+    // Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
+    //      // In production code, this function should be associated
+    //     // with a matrix object with associated functions.
+    //     var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
+    //     var s = Math.sin(angle * Math.PI / 180.0);
+    //     var c = Math.cos(angle * Math.PI / 180.0);
+    //     var oneMinusC = 1.0 - c;
+
+    //     // Normalize the axis vector of rotation.
+    //     x /= axisLength;
+    //     y /= axisLength;
+    //     z /= axisLength;
+
+    //     // Now we can calculate the other terms.
+    //     // "2" for "squared."
+    //     var x2 = x * x;
+    //     var y2 = y * y;
+    //     var z2 = z * z;
+    //     var xy = x * y;
+    //     var yz = y * z;
+    //     var xz = x * z;
+    //     var xs = x * s;
+    //     var ys = y * s;
+    //     var zs = z * s;
+
+    //     // GL expects its matrices in column major order.
+    //     return [
+    //         (x2 * oneMinusC) + c,
+    //         (xy * oneMinusC) + zs,
+    //         (xz * oneMinusC) - ys,
+    //         0.0,
+
+    //         (xy * oneMinusC) - zs,
+    //         (y2 * oneMinusC) + c,
+    //         (yz * oneMinusC) + xs,
+    //         0.0,
+
+    //         (xz * oneMinusC) + ys,
+    //         (yz * oneMinusC) - xs,
+    //         (z2 * oneMinusC) + c,
+    //         0.0,
+
+    //         0.0,
+    //         0.0,
+    //         0.0,
+    //         1.0
+    //     ];
+    // };
 
     return Matrix;
+
+    /** 
+        WebGL return format
+        // GL expects its matrices in column major order.
+        return [
+            (x2 * oneMinusC) + c,   // col 1
+            (xy * oneMinusC) + zs,
+            (xz * oneMinusC) - ys,
+            0.0,
+
+            (xy * oneMinusC) - zs, // col 1
+            (y2 * oneMinusC) + c,
+            (yz * oneMinusC) + xs,
+            0.0,
+
+            (xz * oneMinusC) + ys, // col 1
+            (yz * oneMinusC) - xs,
+            (z2 * oneMinusC) + c,
+            0.0,
+
+            0.0,                  // col 1
+            0.0,
+            0.0,
+            1.0
+        ];
+    */
+
 
     // vector.prototype.add = function (v) {
     //     var result = new Vector();
