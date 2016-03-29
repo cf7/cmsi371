@@ -10,12 +10,17 @@
 var Shape = (function () { 
 
     function Shape () {
-
+        this.children = [];
     }
-    
+
     function Shape (vertices, indices) {
         this.vertices = vertices;
         this.indices = indices;
+        this.children = [];
+    }
+
+    Shape.prototype.addChild = function (Shape) {
+        this.children.push(Shape);
     }
 
     // ** code from class
