@@ -295,5 +295,3 @@ var Matrix = (function () {
 
     // return vector;
 })();
-
-module.exports = Matrix;

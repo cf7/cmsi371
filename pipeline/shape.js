@@ -7,11 +7,11 @@
 // ** code methods and convenience functions to generate these meshes
 // ** programmatically generate vertices
 
-var Shape = {
+var Shape = (function () { 
 
     // ** code from class
 
-    cone: function (faceCount) {
+    Shape.prototype.cone = function (faceCount) {
         var RADIUS = 0.5;
         var CONE_BASE = -0.5;
         var vertices = [
@@ -38,12 +38,12 @@ var Shape = {
             vertices: vertices,
             indices: indices
         };
-    },
+    };
 
     /*
      * Returns the vertices for a small icosahedron.
      */
-    icosahedron: function () {
+    Shape.prototype.icosahedron = function () {
         // These variables are actually "constants" for icosahedron coordinates.
         var X = 0.525731112119133606;
         var Z = 0.850650808352039932;
@@ -87,9 +87,9 @@ var Shape = {
                 [ 11, 2, 7 ]
             ]
         };
-    },
+    };
 
-    square: function () {
+    Shape.prototype.square = function () {
         return {
             vertices: [
                 [ 0, 1, 0 ],
@@ -102,7 +102,7 @@ var Shape = {
                 [ 0, 1, 2, 3 ]
             ]
         };
-    },
+    };
 
 
     // ** functions that traverse meshes to produce triangles or lines, because
@@ -113,7 +113,7 @@ var Shape = {
      * Utility function for turning indexed vertices into a "raw" coordinate array
      * arranged as triangles.
      */
-    toRawTriangleArray: function (indexedVertices) {
+    Shape.prototype.toRawTriangleArray = function (indexedVertices) {
         var result = [];
 
         for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
@@ -127,13 +127,13 @@ var Shape = {
         }
 
         return result;
-    },
+    };
 
     /*
      * Utility function for turning indexed vertices into a "raw" coordinate array
      * arranged as line segments.
      */
-    toRawLineArray: function (indexedVertices) {
+    Shape.prototype.toRawLineArray = function (indexedVertices) {
         var result = [];
 
         for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
@@ -151,6 +151,7 @@ var Shape = {
         }
 
         return result;
-    }
+    };
 
-};
+    return Shape;
+})();
