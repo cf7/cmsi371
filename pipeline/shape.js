@@ -44,13 +44,10 @@ var Shape = (function () {
     // y axis is the one that goes up and down
 
     var drawCircle
-    Shape.prototype.sphere = function(radius, longit, lat) {
-        var RADIUS = 0.75;
-        var faceCount = 30;
-        var BASE = 0.0;
+    Shape.prototype.sphere = function(radius, longit, lat) {  
 
         //** WebGL expects an equal number of vertices and indices
-        var vertices = [[0, 0, 0]];
+        var vertices = [];
         var indices = [];
 
         var thetaDelta = 2 * Math.PI / longit;
@@ -62,120 +59,28 @@ var Shape = (function () {
         var y = 0;
         var z = 0;
 
+        // spherical coordinate system!
+        // for other patterns, swap the sines and cosines, 
+        // changing the indices, or dividing the angles
         for (var i = 0; i < longit; i++) {
-            x = RADIUS * Math.cos(currentTheta);
-            y = RADIUS * Math.sin(currentTheta);
-            for (var j = 0; j < lat; j++) {
+            x = radius * Math.cos(currentPhi);
+            y = radius * Math.sin(currentPhi);
+            for (var j = 0; j < lat; j++) { // plotting 20 latitude points at each longitude
                 vertices.push([
-                    x * Math.sin(currentPhi),
-                    y * Math.sin(currentPhi),
-                    RADIUS * Math.cos(currentPhi)
+                    x * Math.sin(currentTheta),
+                    y * Math.sin(currentTheta),
+                    radius * Math.cos(currentTheta)
                 ]);
-                currentPhi += phiDelta;
+                currentTheta += thetaDelta;
             }
-            currentTheta += thetaDelta;
+            currentPhi += phiDelta;
         }
-        // for (var i = 0; i < longit; i++) { 
-        //     vertices.push([
-        //         RADIUS * Math.sin(currentTheta) * Math.cos(currentPhi),
-        //         RADIUS * Math.sin(currentTheta) * Math.sin(currentPhi),
-        //         RADIUS * Math.cos(currentTheta)
-        //     ]);
-        //     currentTheta += thetaDelta;
-        //     currentPhi += phiDelta;
-        // }
 
-        // var newVertices = vertices.slice();
-        // currentTheta = 0.0;
-
-        // for (var i = 0; i < newVertices.length; i++) {
-        //     newVertices[0] = vertices[0] * Math.cos(currentTheta) - vertices[2] * Math.sin(currentTheta);
-        //     newVertices[2] = vertices[0] * Math.sin(currentTheta) + vertices[2] * Math.cos(currentTheta);
-        //     currentTheta += thetaDelta;
-        // }
-
-        // console.log(vertices.length);
-        // vertices = vertices.concat(newVertices);
-        // for (var i = 0; i < longit; i++) {
-        //     vertices.push([
-        //         RADIUS * Math.sin(currentTheta) * Math.cos(currentPhi),
-        //         RADIUS * Math.sin(currentTheta) * Math.sin(currentPhi),
-        //         RADIUS * Math.cos(currentTheta)
-        //     ]);
-        //     currentTheta += thetaDelta;
-        //     //currentPhi += phiDelta;
-        // }
         console.log(vertices.length);
         for (var i = 0; i < vertices.length; i++) {
-            indices.push([ 0, (i + 1) % vertices.length, (i + 2) % vertices.length]);
+            indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
         }
         //indices.push([ 0, (vertices.length - 1), 1]);
-
-
-        // vertices.push([0, 0.0, 0]);
-        // currentTheta = 0.0;
-        // for (var i = 0; i < longit; i++) {
-        //     vertices.push([
-        //         RADIUS * Math.cos(currentTheta),
-        //         RADIUS * Math.sin(currentTheta),
-        //         0.0
-        //     ]);
-        //     currentTheta += thetaDelta;
-        // }
-        // console.log(vertices.length);
-        // for (var i = longit + 1; i < longit * 2; i++) {
-        //     indices.push([ longit + 1, (i + 1), (i + 2) ]);
-        // }
-        // indices.push([ longit + 1, (vertices.length - 1), longit + 2]);
-
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
-        // currentTheta += thetaDelta;
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
-        // currentTheta += thetaDelta;
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
-        // currentTheta += thetaDelta;
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
-        // currentTheta += thetaDelta;
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
-        // currentTheta += thetaDelta;
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
-
-        // indices.push([ 0, 1, 2]);
-        // indices.push([ 0, 2, 3]);
-        // indices.push([ 0, 3, 4]);
-        // indices.push([ 0, 4, 5]);
-        // indices.push([ 0, 5, 6]);
-
-        // for (var i = 0; i < longit; i++) {
-        //     vertices.push([
-        //         RADIUS * Math.cos(currentTheta),
-        //         RADIUS * Math.sin(currentTheta),
-        //         BASE
-        //     ]);
-        //     currentTheta += thetaDelta;
-        // }
-
-        // for (var i = 0; i < longit; i++) {
-        //     indices.push([0, (i + 1), (i + 2)]);
-        // }
-        // for (var i = 0; i < longit; i++) {
-        //     for (var j = 0; j < lat; j++) {
-
-        //     }
-        // }
-        // for (var index = 0; index < faceCount; index++) {
-        //     vertices.push([
-        //         RADIUS * Math.cos(currentTheta), // x
-        //         CONE_BASE, // y
-        //         RADIUS * Math.sin(currentTheta) // z
-        //     ]);
-
-        //     currentTheta += thetaDelta;
-        // }
-
-        // for (var index = 0; index < faceCount; index++) {
-        //     indices.push([ 0, (index + 1) % faceCount, (index + 2) % faceCount ]);
-        // }
 
         return {
             vertices: vertices,
