@@ -67,8 +67,25 @@ var Shape = (function () {
         for (var i = 0; i < longit - 1; i++) {
             indices.push([ 0, (i + 1), (i + 2) ]);
         }
-        console.log(vertices.length);
         indices.push([ 0, (vertices.length - 1), 1]);
+
+
+        vertices.push([0, 0.0, 0]);
+        currentTheta = 0.0;
+        for (var i = 0; i < longit; i++) {
+            vertices.push([
+                RADIUS * Math.cos(currentTheta),
+                RADIUS * Math.sin(currentTheta),
+                0.0
+            ]);
+            currentTheta += thetaDelta;
+        }
+        console.log(vertices.length);
+        for (var i = longit + 1; i < longit * 2; i++) {
+            indices.push([ longit + 1, (i + 1), (i + 2) ]);
+        }
+        indices.push([ longit + 1, (vertices.length - 1), longit + 2]);
+
         // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
         // currentTheta += thetaDelta;
         // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
