@@ -178,11 +178,11 @@
 
         // ** rotation axis found in drawScene function
 
-        {
-            color: { r: 0.0, g: 0.5, b: 0.0 },
-            vertices: shape.toRawTriangleArray(shape.cone(20)),
-            mode: gl.TRIANGLES
-        },
+        // {
+        //     color: { r: 0.0, g: 0.5, b: 0.0 },
+        //     vertices: shape.toRawTriangleArray(shape.cone(20)),
+        //     mode: gl.TRIANGLES
+        // },
 
         {
             color: { r: 0.0, g: 0.5, b: 0.5 },
@@ -195,8 +195,8 @@
 
         {
             color: { r: 0.0, g: 0.5, b: 0.25 },
-            vertices: shape3.toRawTriangleArray(shape.sphere(20, 20, 20)),
-            mode: gl.TRIANGLES
+            vertices: shape3.toRawLineArray(shape3.sphere(20, 10, 10)),
+            mode: gl.LINES
         }
 
     ];

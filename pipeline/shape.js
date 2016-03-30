@@ -41,16 +41,42 @@ var Shape = (function () {
         }
     }
     
-    Shape.prototype.sphere = function(radius, long, lat) {
-        var RADIUS = radius;
-        var thetaDelta = 2 * Math.PI / 10;
+    // y axis is the one that goes up and down
+
+    Shape.prototype.sphere = function(radius, longit, lat) {
+        var RADIUS = 0.25;
+        var faceCount = 30;
+        var BASE = 0.0;
+        var vertices = [0, 0, 0];
+        var indices = [];
+        var thetaDelta = Math.PI / 12;
         var currentTheta = 0.0;
-        // var vertices = [
-        //     [ 0, 0.5, 0 ],
-        // ];
-        // var indices = [];
-        // var thetaDelta = 2 * Math.PI / faceCount;
-        // var currentTheta = 0.0;
+ 
+        vertices.push([ 0.25, -0.5, 0.75]);
+        vertices.push([ 0.75, 0, 0.25]);
+
+        // vertices.push([ RADIUS * Math.cos(currentTheta), -0.5, RADIUS * Math.sin(currentTheta)]);
+        // currentTheta += thetaDelta;
+        // vertices.push([ RADIUS * Math.cos(currentTheta), 0, RADIUS * Math.sin(currentTheta)]);
+
+        indices.push([ 0, 1, 2]);
+        // for (var i = 0; i < longit; i++) {
+        //     vertices.push([
+        //         RADIUS * Math.cos(currentTheta),
+        //         RADIUS * Math.sin(currentTheta),
+        //         BASE
+        //     ]);
+        //     currentTheta += thetaDelta;
+        // }
+
+        // for (var i = 0; i < longit; i++) {
+        //     indices.push([0, (i + 1), (i + 2)]);
+        // }
+        // for (var i = 0; i < longit; i++) {
+        //     for (var j = 0; j < lat; j++) {
+
+        //     }
+        // }
         // for (var index = 0; index < faceCount; index++) {
         //     vertices.push([
         //         RADIUS * Math.cos(currentTheta), // x
@@ -66,16 +92,11 @@ var Shape = (function () {
         // }
 
         return {
-            vertices: [
-                [0.5, 0.5, 0.5],
-                [0.25, 0.25, 0.25],
-                [0.75, 0.75, 0.75]
-            ],
-            indices: [
-                [0, 1, 2]
-            ]
+            vertices: vertices,
+            indices: indices
         };
     };
+
     Shape.prototype.square = function () {
         return {
             vertices: [
