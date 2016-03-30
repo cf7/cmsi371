@@ -125,6 +125,7 @@
     ];
     var shape = new Shape();
     var shape2 = new Shape(vertices, indices);
+    var shape3 = new Shape();
 
     // Build the objects to display.
     var objectsToDraw = [
@@ -188,7 +189,14 @@
             vertices: shape2.toRawTriangleArray({ vertices: shape2.vertices, indices: shape2.indices }),
             mode: gl.TRIANGLES,
             translate: { tx: 0.5, ty: -0.75, tz: 0.5 },
-            scale: { sx: 0.5, sy: 0.5, sz: 0.5 }
+            scale: { sx: 0.5, sy: 0.5, sz: 0.5 },
+            rotate: { angle: 60, x: 0, y: 1, z: 0 }
+        },
+
+        {
+            color: { r: 0.0, g: 0.5, b: 0.25 },
+            vertices: shape3.toRawTriangleArray(shape.sphere(20, 20, 20)),
+            mode: gl.TRIANGLES
         }
 
     ];
@@ -278,7 +286,10 @@
             getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
             glFormat(new Matrix(4, 4).elements)
             ));
-        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
+        //     getRotationMatrix(object.rotate.angle, object.rotate.x, object.rotate.y, object.rotate.z) :
+        //     glFormat(new Matrix(4, 4).elements)
+        //     ));
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);

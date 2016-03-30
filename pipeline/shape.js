@@ -41,6 +41,56 @@ var Shape = (function () {
         }
     }
     
+    Shape.prototype.sphere = function(radius, long, lat) {
+        var RADIUS = radius;
+        var thetaDelta = 2 * Math.PI / 10;
+        var currentTheta = 0.0;
+        // var vertices = [
+        //     [ 0, 0.5, 0 ],
+        // ];
+        // var indices = [];
+        // var thetaDelta = 2 * Math.PI / faceCount;
+        // var currentTheta = 0.0;
+        // for (var index = 0; index < faceCount; index++) {
+        //     vertices.push([
+        //         RADIUS * Math.cos(currentTheta), // x
+        //         CONE_BASE, // y
+        //         RADIUS * Math.sin(currentTheta) // z
+        //     ]);
+
+        //     currentTheta += thetaDelta;
+        // }
+
+        // for (var index = 0; index < faceCount; index++) {
+        //     indices.push([ 0, (index + 1) % faceCount, (index + 2) % faceCount ]);
+        // }
+
+        return {
+            vertices: [
+                [0.5, 0.5, 0.5],
+                [0.25, 0.25, 0.25],
+                [0.75, 0.75, 0.75]
+            ],
+            indices: [
+                [0, 1, 2]
+            ]
+        };
+    };
+    Shape.prototype.square = function () {
+        return {
+            vertices: [
+                [ 0, 1, 0 ],
+                [ 0, 1, -0.5 ],
+                [ 0, 0, -0.5 ],
+                [ 0, 0, 0 ]
+            ],
+
+            indices: [
+                [ 0, 1, 2, 3 ]
+            ]
+        };
+    };
+
     // ** code from class
     Shape.prototype.cone = function (faceCount) {
         var RADIUS = 0.5;
@@ -116,21 +166,6 @@ var Shape = (function () {
                 [ 2, 11, 9 ],
                 [ 5, 2, 9 ],
                 [ 11, 2, 7 ]
-            ]
-        };
-    };
-
-    Shape.prototype.square = function () {
-        return {
-            vertices: [
-                [ 0, 1, 0 ],
-                [ 0, 1, -0.5 ],
-                [ 0, 0, -0.5 ],
-                [ 0, 0, 0 ]
-            ],
-
-            indices: [
-                [ 0, 1, 2, 3 ]
             ]
         };
     };
