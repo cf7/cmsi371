@@ -43,6 +43,7 @@ var Shape = (function () {
     
     // y axis is the one that goes up and down
 
+    var drawCircle
     Shape.prototype.sphere = function(radius, longit, lat) {
         var RADIUS = 0.75;
         var faceCount = 30;
@@ -53,38 +54,79 @@ var Shape = (function () {
         var indices = [];
 
         var thetaDelta = 2 * Math.PI / longit;
+        var phiDelta = 2 * Math.PI / lat;
         var currentTheta = 0.0;
-    
+        var currentPhi = 0.0;
+
+        var x = 0;
+        var y = 0;
+        var z = 0;
+
         for (var i = 0; i < longit; i++) {
-            vertices.push([
-                RADIUS * Math.cos(currentTheta),
-                0.0,
-                RADIUS * Math.sin(currentTheta)
-            ]);
+            x = RADIUS * Math.cos(currentTheta);
+            y = RADIUS * Math.sin(currentTheta);
+            for (var j = 0; j < lat; j++) {
+                vertices.push([
+                    x * Math.sin(currentPhi),
+                    y * Math.sin(currentPhi),
+                    RADIUS * Math.cos(currentPhi)
+                ]);
+                currentPhi += phiDelta;
+            }
             currentTheta += thetaDelta;
         }
+        // for (var i = 0; i < longit; i++) { 
+        //     vertices.push([
+        //         RADIUS * Math.sin(currentTheta) * Math.cos(currentPhi),
+        //         RADIUS * Math.sin(currentTheta) * Math.sin(currentPhi),
+        //         RADIUS * Math.cos(currentTheta)
+        //     ]);
+        //     currentTheta += thetaDelta;
+        //     currentPhi += phiDelta;
+        // }
 
-        for (var i = 0; i < longit - 1; i++) {
-            indices.push([ 0, (i + 1), (i + 2) ]);
-        }
-        indices.push([ 0, (vertices.length - 1), 1]);
+        // var newVertices = vertices.slice();
+        // currentTheta = 0.0;
 
+        // for (var i = 0; i < newVertices.length; i++) {
+        //     newVertices[0] = vertices[0] * Math.cos(currentTheta) - vertices[2] * Math.sin(currentTheta);
+        //     newVertices[2] = vertices[0] * Math.sin(currentTheta) + vertices[2] * Math.cos(currentTheta);
+        //     currentTheta += thetaDelta;
+        // }
 
-        vertices.push([0, 0.0, 0]);
-        currentTheta = 0.0;
-        for (var i = 0; i < longit; i++) {
-            vertices.push([
-                RADIUS * Math.cos(currentTheta),
-                RADIUS * Math.sin(currentTheta),
-                0.0
-            ]);
-            currentTheta += thetaDelta;
-        }
+        // console.log(vertices.length);
+        // vertices = vertices.concat(newVertices);
+        // for (var i = 0; i < longit; i++) {
+        //     vertices.push([
+        //         RADIUS * Math.sin(currentTheta) * Math.cos(currentPhi),
+        //         RADIUS * Math.sin(currentTheta) * Math.sin(currentPhi),
+        //         RADIUS * Math.cos(currentTheta)
+        //     ]);
+        //     currentTheta += thetaDelta;
+        //     //currentPhi += phiDelta;
+        // }
         console.log(vertices.length);
-        for (var i = longit + 1; i < longit * 2; i++) {
-            indices.push([ longit + 1, (i + 1), (i + 2) ]);
+        for (var i = 0; i < vertices.length; i++) {
+            indices.push([ 0, (i + 1) % vertices.length, (i + 2) % vertices.length]);
         }
-        indices.push([ longit + 1, (vertices.length - 1), longit + 2]);
+        //indices.push([ 0, (vertices.length - 1), 1]);
+
+
+        // vertices.push([0, 0.0, 0]);
+        // currentTheta = 0.0;
+        // for (var i = 0; i < longit; i++) {
+        //     vertices.push([
+        //         RADIUS * Math.cos(currentTheta),
+        //         RADIUS * Math.sin(currentTheta),
+        //         0.0
+        //     ]);
+        //     currentTheta += thetaDelta;
+        // }
+        // console.log(vertices.length);
+        // for (var i = longit + 1; i < longit * 2; i++) {
+        //     indices.push([ longit + 1, (i + 1), (i + 2) ]);
+        // }
+        // indices.push([ longit + 1, (vertices.length - 1), longit + 2]);
 
         // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
         // currentTheta += thetaDelta;
