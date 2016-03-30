@@ -41,9 +41,6 @@ var Shape = (function () {
         }
     }
     
-    // y axis is the one that goes up and down
-
-    var drawCircle
     Shape.prototype.sphere = function(radius, longit, lat) {  
 
         //** WebGL expects an equal number of vertices and indices
@@ -64,12 +61,12 @@ var Shape = (function () {
         // changing the indices, or dividing the angles
         for (var i = 0; i < longit; i++) {
             x = radius * Math.cos(currentPhi);
-            y = radius * Math.sin(currentPhi);
+            z = radius * Math.sin(currentPhi); // WebGL has y axis going up and down
             for (var j = 0; j < lat; j++) { // plotting 20 latitude points at each longitude
                 vertices.push([
                     x * Math.sin(currentTheta),
-                    y * Math.sin(currentTheta),
-                    radius * Math.cos(currentTheta)
+                    radius * Math.cos(currentTheta),
+                    z * Math.sin(currentTheta)
                 ]);
                 currentTheta += thetaDelta;
             }
@@ -79,7 +76,9 @@ var Shape = (function () {
         console.log(vertices.length);
         for (var i = 0; i < vertices.length; i++) {
             indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
+            indices.push([ i, (i + longit - 1) % vertices.length, (i + longit) % vertices.length ]);
         }
+
         //indices.push([ 0, (vertices.length - 1), 1]);
 
         return {

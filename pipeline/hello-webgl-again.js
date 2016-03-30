@@ -194,9 +194,9 @@
         },
 
         {
-            color: { r: 0.0, g: 0.5, b: 0.25 },
-            vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
-            mode: gl.LINES
+            color: { r: 0.0, g: 0.75, b: 0.75 },
+            vertices: shape3.toRawTriangleArray(shape3.sphere(0.75, 20, 20)),
+            mode: gl.TRIANGLES
         }
 
     ];
