@@ -47,8 +47,11 @@ var Shape = (function () {
         var RADIUS = 0.75;
         var faceCount = 30;
         var BASE = 0.0;
+
+        //** WebGL expects an equal number of vertices and indices
         var vertices = [[0, 0, 0]];
         var indices = [];
+
         var thetaDelta = 2 * Math.PI / longit;
         var currentTheta = 0.0;
     
@@ -61,11 +64,11 @@ var Shape = (function () {
             currentTheta += thetaDelta;
         }
 
-        for (var i = 0; i < longit; i++) {
+        for (var i = 0; i < longit - 1; i++) {
             indices.push([ 0, (i + 1), (i + 2) ]);
         }
-        //indices.push([ 0, (indices.length - 1), 1]);
-        
+        console.log(vertices.length);
+        indices.push([ 0, (vertices.length - 1), 1]);
         // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
         // currentTheta += thetaDelta;
         // vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
