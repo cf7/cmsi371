@@ -44,22 +44,32 @@ var Shape = (function () {
     // y axis is the one that goes up and down
 
     Shape.prototype.sphere = function(radius, longit, lat) {
-        var RADIUS = 0.25;
+        var RADIUS = 0.75;
         var faceCount = 30;
         var BASE = 0.0;
-        var vertices = [0, 0, 0];
+        var vertices = [[0.25, 0.25, 0.25]];
         var indices = [];
         var thetaDelta = Math.PI / 12;
         var currentTheta = 0.0;
  
-        vertices.push([ 0.25, -0.5, 0.75]);
-        vertices.push([ 0.75, 0, 0.25]);
-
-        // vertices.push([ RADIUS * Math.cos(currentTheta), -0.5, RADIUS * Math.sin(currentTheta)]);
-        // currentTheta += thetaDelta;
-        // vertices.push([ RADIUS * Math.cos(currentTheta), 0, RADIUS * Math.sin(currentTheta)]);
+        vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
+        currentTheta += thetaDelta;
+        vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
+        currentTheta += thetaDelta;
+        vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
+        currentTheta += thetaDelta;
+        vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
+        currentTheta += thetaDelta;
+        vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
+        currentTheta += thetaDelta;
+        vertices.push([ RADIUS * Math.cos(currentTheta), 0.0, RADIUS * Math.sin(currentTheta)]);
 
         indices.push([ 0, 1, 2]);
+        indices.push([ 2, 3, 4]);
+        indices.push([ 4, 5, 6]);
+        indices.push([ 6, 0, 1]);
+        indices.push([ 1, 2, 3]);
+        indices.push([ 6, 3, 2]);
         // for (var i = 0; i < longit; i++) {
         //     vertices.push([
         //         RADIUS * Math.cos(currentTheta),
