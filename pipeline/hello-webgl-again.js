@@ -28,12 +28,20 @@
         ];
     }
 
+    var transformationMatrix = new Matrix(4, 4);
+    var savedMatrices = [];
 
-    // ** saves the current transformation matrix
-    // ** have one transformation matrix variable
-    var save = function (gl) {
-        gl.getUniformLocation()
+    var save = function () {
+        savedMatrices.push(transformationMatrix.elements);
     }
+
+    var restore = function () {
+        if (savedMatrices.length > 0) {
+            transformationMatrix.elements = savedMatrices.pop().slice();
+        } else {
+            return;
+        }
+    }   
 
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
         // console.log("frustum");
@@ -64,63 +72,6 @@
         return new Matrix(4, 4).getRotationMatrix(4, 4, data);
     }
 
-    /*
-     * This code does not really belong here: it should live
-     * in a separate library of matrix and transformation
-     * functions.  It is here only to show you how matrices
-     * can be used with GLSL.
-     *
-     * Based on the original glRotate reference:
-     *     http://www.opengl.org/sdk/docs/man/xhtml/glRotate.xml
-     */
-    // var getRotationMatrix = function (angle, x, y, z) {
-    //     // In production code, this function should be associated
-    //     // with a matrix object with associated functions.
-    //     var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
-    //     var s = Math.sin(angle * Math.PI / 180.0);
-    //     var c = Math.cos(angle * Math.PI / 180.0);
-    //     var oneMinusC = 1.0 - c;
-
-    //     // Normalize the axis vector of rotation.
-    //     x /= axisLength;
-    //     y /= axisLength;
-    //     z /= axisLength;
-
-    //     // Now we can calculate the other terms.
-    //     // "2" for "squared."
-    //     var x2 = x * x;
-    //     var y2 = y * y;
-    //     var z2 = z * z;
-    //     var xy = x * y;
-    //     var yz = y * z;
-    //     var xz = x * z;
-    //     var xs = x * s;
-    //     var ys = y * s;
-    //     var zs = z * s;
-
-    //     // GL expects its matrices in column major order.
-    //     return [
-    //         (x2 * oneMinusC) + c,
-    //         (xy * oneMinusC) + zs,
-    //         (xz * oneMinusC) - ys,
-    //         0.0,
-
-    //         (xy * oneMinusC) - zs,
-    //         (y2 * oneMinusC) + c,
-    //         (yz * oneMinusC) + xs,
-    //         0.0,
-
-    //         (xz * oneMinusC) + ys,
-    //         (yz * oneMinusC) - xs,
-    //         (z2 * oneMinusC) + c,
-    //         0.0,
-
-    //         0.0,
-    //         0.0,
-    //         0.0,
-    //         1.0
-    //     ];
-    // };
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
@@ -322,9 +273,14 @@
         // be converted back to identity matrices
         // *****
 
-        var transformationMatrix = new Matrix(4, 4);
+        // ****
+        // Add recursive child-drawing code here
+        // ****
 
+        save();
+        console.log("inside");
         if (object.translate) {
+                                        // ** exteranlize these into a single translate() function
             transformationMatrix = getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz).mult(transformationMatrix);
         }
         if (object.scale) {
@@ -335,6 +291,7 @@
         }
 
         gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
+        restore();
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);

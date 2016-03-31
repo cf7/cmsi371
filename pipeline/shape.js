@@ -35,11 +35,21 @@ var Shape = (function () {
         this.children.push(Shape);
     }
 
+    Shape.prototype.getChildren = function() {
+        return this.children;
+    };
+
     // ** pass in the webGL context!!!! (gl is the context)
     Shape.prototype.translate = function(gl, x, y, z) {
         // ** now that we have the context, we can use the same functions found
         // ** in hello-webgl-again.js
         gl.uniformMatrix4fv();
+
+        // ** add recursive code here
+        // ** getChild().translate()
+        for (var index = 0; index < this.children.length; index++) {
+            this.children[index].translate(gl, x, y, z);
+        }
     };
     
     Shape.prototype.sphere = function(radius, longit, lat) {  
