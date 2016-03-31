@@ -272,9 +272,9 @@
     var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
     var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
     var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
-    // var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
-    // var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
-    // var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
+    var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
+    var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
+    var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
 
     /*
      * Displays an individual object.
@@ -290,18 +290,18 @@
         // be converted back to identity matrices
         // *****
 
-        // gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(object.translate ?
-        //     getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz) :  
-        //     glFormat(new Matrix(4, 4).elements)
-        //     ));
-        // // gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
-        // //     getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
-        // //     glFormat(new Matrix(4, 4).elements)
-        // //     ));
-        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
-        //     getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz) :
-        //     glFormat(new Matrix(4, 4).elements)
-        //     ));
+        gl.uniformMatrix4fv(translateMatrix, gl.FALSE, new Float32Array(object.translate ?
+            getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz) :  
+            glFormat(new Matrix(4, 4).elements)
+            ));
+        gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
+            getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
+            glFormat(new Matrix(4, 4).elements)
+            ));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
+            getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz) :
+            glFormat(new Matrix(4, 4).elements)
+            ));
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
