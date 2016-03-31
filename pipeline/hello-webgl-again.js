@@ -72,6 +72,17 @@
         return new Matrix(4, 4).getRotationMatrix(4, 4, data);
     }
 
+    var translate = function (x, y, z) {
+        transformationMatrix = getTranslationMatrix(x, y, z).mult(transformationMatrix);
+    }
+
+    var scale = function (x, y, z) {
+        transformationMatrix = getScaleMatrix(x, y, z).mult(transformationMatrix);
+    }
+
+    var rotate = function (angle, x, y, z) {
+        transformationMatrix = getRotationMatrix(angle * (Math.PI/180), x, y, z).mult(transformationMatrix);
+    }
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
@@ -278,16 +289,14 @@
         // ****
 
         save();
-        console.log("inside");
         if (object.translate) {
-                                        // ** exteranlize these into a single translate() function
-            transformationMatrix = getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz).mult(transformationMatrix);
+            translate(object.translate.tx, object.translate.ty, object.translate.tz);
         }
         if (object.scale) {
-            transformationMatrix = getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz).mult(transformationMatrix);
+            scale(object.scale.sx, object.scale.sy, object.scale.sz);
         }
         if (object.rotate) {
-            transformationMatrix = getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz).mult(transformationMatrix);
+            rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
         }
 
         gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
