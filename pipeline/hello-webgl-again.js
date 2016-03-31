@@ -28,7 +28,13 @@
         ];
     }
 
-    var getProjectionMatrix = function (left, right, bottom, top, zNear, zFar) {
+    var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
+        console.log("frustum");
+        console.log(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar));
+        return new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar);
+    }
+
+    var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
         return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar);
     }
 
@@ -285,8 +291,8 @@
     var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
     var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
     var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
-    var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
-
+    var globalOrthoMatrix = gl.getUniformLocation(shaderProgram, "globalOrthoMatrix");
+    var globalFrustumMatrix = gl.getUniformLocation(shaderProgram, "globalFrustumMarix");
     var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
     var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
@@ -332,17 +338,31 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
+
         gl.uniformMatrix4fv(globalRotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
         gl.uniformMatrix4fv(globalScaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(1, 1, 1)));
         gl.uniformMatrix4fv(globalTranslateMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0, 0, 0)));
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getProjectionMatrix(
-            -2 * (canvas.width / canvas.height),
+        // ** if objects are at the origin, camera is also at the origin, don't put frustum at origin
+        // ** need to push objects back by -z
+        // ** use a save and restore to translate farther out before applying perspective
+        // ** do not implement until coding save() and restore() functions
+        // gl.uniformMatrix4fv(globalFrustumMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     2 * (canvas.width / canvas.height),
+        //     -2,
+        //     2,              
+        //     -10, // viewing volume, near plane
+        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
+        gl.uniformMatrix4fv(globalOrthoMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
             2 * (canvas.width / canvas.height),
             -2,
-            2,
-            -10,
-            10
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
         )));
+        // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);

@@ -297,6 +297,36 @@ var Matrix = (function () {
         ];
     };
 
+    // ** frustum matrix from class
+    Matrix.prototype.getFrustumMatrix = function(right, left, bottom, top, zNear, zFar) {
+        var width = right - left;
+        var height = top - bottom;
+        var depth = zFar - zNear;
+
+        return [
+            2.0 * zNear / width,
+            0.0,
+            0.0,
+            0.0,
+
+            0.0,
+            2.0 * zNear / height,
+            0.0,
+            0.0,
+
+            (right + left) / width,
+            (top + bottom) / height,
+            -(zFar + zNear) / depth,
+            -1,
+
+            0,
+            0,
+            -2 * zNear * zFar / depth,
+            0
+        ];
+    };
+
+    
     return Matrix;
 
     /** 

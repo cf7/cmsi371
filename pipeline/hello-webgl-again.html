@@ -46,20 +46,21 @@
       #ifdef GL_ES
       precision highp float;
       #endif
-      attribute vec3 vertexPosition;
+      attribute vec3 vertexPosition; // this is actually vertexPosition.x, vertexPosition.y, vertexPosition.z
       // Note this new additional output.
       attribute vec3 vertexColor;
       varying vec4 finalVertexColor;
       uniform mat4 globalRotationMatrix;
       uniform mat4 globalScaleMatrix;
       uniform mat4 globalTranslateMatrix;
-      uniform mat4 globalProjectionMatrix;
+      uniform mat4 globalOrthoMatrix;
+      uniform mat4 globalFrustumMatrix;
       uniform mat4 translateMatrix;  // ** make sure these are named the same throughout all files
       uniform mat4 scaleMatrix;
       uniform mat4 rotationMatrix;
 
       void main(void) { // ** everything after projection matrix is modelView matrix
-          gl_Position = globalProjectionMatrix * globalRotationMatrix * globalScaleMatrix * globalTranslateMatrix * rotationMatrix * scaleMatrix * translateMatrix * vec4(vertexPosition, 1.0);
+          gl_Position = globalOrthoMatrix * globalRotationMatrix * globalScaleMatrix * globalTranslateMatrix * rotationMatrix * scaleMatrix * translateMatrix * vec4(vertexPosition, 1.0);
           finalVertexColor = vec4(vertexColor, 1.0);
       }
     </script>
