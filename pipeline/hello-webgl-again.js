@@ -126,7 +126,7 @@
 
     var shape = new Shape(context);
 
-    // ** custom shape
+    // ** take in data for custom shapes
     var shape2 = new Shape(context, { vertices: vertices, indices: indices });
 
     var shape3 = new Shape(context);
@@ -137,52 +137,54 @@
     shape4.addChild(new Shape(context));
     shape4.getChildren()[0].addChild(new Shape(context));
 
+    var shape5 = new Shape(context);
+
     // Build the objects to display.
     var preObjectsToDraw = [
-        {
-            vertices: [].concat(
-                [ 0.0, 0.0, 0.0 ],
-                [ 0.5, 0.0, -0.75 ],
-                [ 0.0, 0.5, 0.0 ]
-            ),
-            colors: [].concat(
-                [ 1.0, 0.0, 0.0 ],
-                [ 0.0, 1.0, 0.0 ],
-                [ 0.0, 0.0, 1.0 ]
-            ),
-            mode: gl.TRIANGLES            
-        },
+        // {
+        //     vertices: [].concat(
+        //         [ 0.0, 0.0, 0.0 ],
+        //         [ 0.5, 0.0, -0.75 ],
+        //         [ 0.0, 0.5, 0.0 ]
+        //     ),
+        //     colors: [].concat(
+        //         [ 1.0, 0.0, 0.0 ],
+        //         [ 0.0, 1.0, 0.0 ],
+        //         [ 0.0, 0.0, 1.0 ]
+        //     ),
+        //     mode: gl.TRIANGLES            
+        // },
 
-        {
-            color: { r: 0.0, g: 1.0, b: 0 },
-            vertices: [].concat(
-                [ 0.25, 0.0, -0.5 ],
-                [ 0.75, 0.0, -0.5 ],
-                [ 0.25, 0.5, -0.5 ]
-            ),
-            mode: gl.TRIANGLES
-        },
+        // {
+        //     color: { r: 0.0, g: 1.0, b: 0 },
+        //     vertices: [].concat(
+        //         [ 0.25, 0.0, -0.5 ],
+        //         [ 0.75, 0.0, -0.5 ],
+        //         [ 0.25, 0.5, -0.5 ]
+        //     ),
+        //     mode: gl.TRIANGLES
+        // },
 
-        {
-            color: { r: 0.0, g: 0.0, b: 1.0 },
-            vertices: [].concat(
-                [ -0.25, 0.0, 0.5 ],
-                [ 0.5, 0.0, 0.5 ],
-                [ -0.25, 0.5, 0.5 ]
-            ),
-            mode: gl.TRIANGLES
-        },
+        // {
+        //     color: { r: 0.0, g: 0.0, b: 1.0 },
+        //     vertices: [].concat(
+        //         [ -0.25, 0.0, 0.5 ],
+        //         [ 0.5, 0.0, 0.5 ],
+        //         [ -0.25, 0.5, 0.5 ]
+        //     ),
+        //     mode: gl.TRIANGLES
+        // },
 
-        {
-            color: { r: 0.0, g: 0.0, b: 1.0 },
-            vertices: [].concat(
-                [ -1.0, -1.0, 0.75 ],
-                [ -1.0, -0.1, -1.0 ],
-                [ -0.1, -0.1, -1.0 ],
-                [ -0.1, -1.0, 0.75 ]
-            ),
-            mode: gl.LINE_LOOP
-        },
+        // {
+        //     color: { r: 0.0, g: 0.0, b: 1.0 },
+        //     vertices: [].concat(
+        //         [ -1.0, -1.0, 0.75 ],
+        //         [ -1.0, -0.1, -1.0 ],
+        //         [ -0.1, -0.1, -1.0 ],
+        //         [ -0.1, -1.0, 0.75 ]
+        //     ),
+        //     mode: gl.LINE_LOOP
+        // },
 
         // ** change shapes and drawing orders here
 
@@ -212,11 +214,11 @@
             rotate: { angle: 60, rx: 1, ry: 1, rz: 1 }
         },
 
-        {
-            color: { r: 0.0, g: 0.75, b: 0.75 },
-            vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
-            mode: gl.LINES,
-        },
+        // {
+        //     color: { r: 0.0, g: 0.75, b: 0.75 },
+        //     vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
+        //     mode: gl.LINES,
+        // },
 
         // ** anywhere objectToDraw is called, needs to be able to access children
         // ** because more attributes are being added past this point such as buffers
@@ -226,6 +228,15 @@
             vertices: shape4.toRawLineArray(shape4.cube()),
             mode: gl.LINES,
             translate: { tx: 1, ty: -0.5, tz: -1 },
+            scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
+        },
+
+        {
+            shape: shape5,
+            color: { r: 0.0, g: 0.75, b: 0.75 },
+            vertices: shape5.toRawTriangleArray(shape5.cylinder(0.25, 1, 15)),
+            mode: gl.TRIANGLES,
+            translate: {tx: 0, ty: 0, tz: 0 },
             scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
         }
 
@@ -261,7 +272,6 @@
         objectsToDraw.push(preObjectsToDraw[i]);
         if (preObjectsToDraw[i].shape) {
             objectsToDraw = objectsToDraw.concat(add(preObjectsToDraw[i]));
-            console.log(objectsToDraw);
         }
     }
     
@@ -326,15 +336,10 @@
     gl.enableVertexAttribArray(vertexColor);
 
     // ** retrieves the location of these variables from the html GL code
-    // var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
-    // var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
-    // var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
+   
     var globalOrthoMatrix = gl.getUniformLocation(shaderProgram, "globalOrthoMatrix");
     var globalFrustumMatrix = gl.getUniformLocation(shaderProgram, "globalFrustumMarix");
-    // var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
-    // var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
-    // var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
-
+   
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
     var matrix = gl.getUniformLocation(shaderProgram, "matrix");
 
@@ -388,12 +393,15 @@
         // Set up the rotation matrix.
 
         var transMatrix = new Matrix(4, 4);
-        
-        transMatrix = getTranslationMatrix(0, 0, 0).mult(transMatrix);
-        transMatrix = getScaleMatrix(1, 1, 1).mult(transMatrix);
-        transMatrix = getRotationMatrix(currentRotation, 0, 1, 0).mult(transMatrix);
 
-        gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(transMatrix.elements)));
+        save();
+
+        translate(0, 0, 0);
+        scale(1, 1, 1);
+        rotate(currentRotation, 1, 1, 0);
+        
+        gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+
         // ** if objects are at the origin, camera is also at the origin, don't put frustum at origin
         // ** need to push objects back by -z
         // ** use a save and restore to translate farther out before applying perspective
@@ -414,6 +422,9 @@
             -10, // viewing volume, near plane
             10 // viewing volume, far plane, only what's inside viewing volume can be seen
         )));
+
+        restore();
+
         // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

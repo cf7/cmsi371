@@ -26,7 +26,7 @@ var Shape = (function () {
     // ** pass in the webGL context!!!! (gl is the context)
 
     function Shape (context, data) {
-        this.context = context || {};
+        this.cxt = context || {};
         this.vertices = data ? data.vertices : [];
         this.indices = data ? data.indices : [];
         this.children = [];
@@ -40,6 +40,71 @@ var Shape = (function () {
         return this.children;
     };    
     
+    Shape.prototype.circle = function(radius, height, points) {
+        var vertices = [];
+        var indices = [];
+        var RADIUS = radius;
+
+        vertices.push([ 0, height, 0 ]);
+
+        var currentTheta = 0.0;
+        var thetaDelta = 2 * Math.PI / points;
+
+        for (var i = 0; i < points; i++) {
+            vertices.push([
+                RADIUS * Math.cos(currentTheta),
+                height,
+                RADIUS * Math.sin(currentTheta)
+            ]);
+            currentTheta += thetaDelta;
+        }
+
+        for (var i = 0; i < vertices.length; i++) {
+            indices.push([ 0, (i + 1) % vertices.length, (i + 2) % vertices.length ]);
+        }
+        indices.push([ 0, (vertices.length - 1), 1 ]);
+
+        return {
+            vertices: vertices,
+            indices: indices
+        }
+
+    };
+
+    Shape.prototype.cylinder = function(radius, height, points) {
+        var vertices = [];
+        var indices = [];
+        var RADIUS = radius;
+        vertices = vertices.concat(this.circle(radius, 0.0, points).vertices);
+        indices = indices.concat(this.circle(radius, 0.0, points).indices);
+
+        vertices = vertices.concat(this.circle(radius, 0.25, points).vertices);
+        var length = vertices.length;
+
+        indices.push([ 0, length/2, (length/2 + 1) % length ]);
+        // indices.push([ 0, length/2, length/2 + 2, 2 ]);
+        // indices.push([ 0, length/2, length/2 + 3, 3 ]);
+        for (var i = 1; i < vertices.length/2; i++) {
+            indices.push([ length/2, (length/2 + i) % length, (length/2 + i + 1) % length ]);
+        }
+        indices.push([ length/2, (length - 1) % length, (length/2 + 1) % length ]);
+
+        indices.push([ 1, (length/2 + 1) % length, (length/2 + 2) % length ]);
+        indices.push([ 1, 2, (length/2 + 2) % length ]);
+        for (var i = 1; i < vertices.length/2; i++) {
+            indices.push([ i, (length/2 + i) % length, (length/2 + i + 1) % length ]);
+            indices.push([ i, (i + 1) % length, (length/2 + i + 1) % length ]);
+        }
+        indices.push([ (length/2 - 1), (length - 1) % length, (length/2 + 1) % length ]);
+        indices.push([ (length/2 - 1), (length/2 + 1) % length, 1 ]);
+
+        return {
+            vertices: vertices,
+            indices: indices
+        }
+    };
+
+
     Shape.prototype.sphere = function(radius, longit, lat) {  
 
         //** WebGL expects an equal number of vertices and indices
