@@ -58,7 +58,7 @@
       uniform mat4 scaleMatrix;
       uniform mat4 rotationMatrix;
 
-      void main(void) { // everything after projection matrix is modelView matrix
+      void main(void) { // ** everything after projection matrix is modelView matrix
           gl_Position = globalProjectionMatrix * globalRotationMatrix * globalScaleMatrix * globalTranslateMatrix * rotationMatrix * scaleMatrix * translateMatrix * vec4(vertexPosition, 1.0);
           finalVertexColor = vec4(vertexColor, 1.0);
       }
