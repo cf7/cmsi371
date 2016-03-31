@@ -30,14 +30,23 @@
 
     var transformationMatrix = new Matrix(4, 4);
     var savedMatrices = [];
+    var context = {
+        save: save,
+        restore: restore,
+        translate: translate,
+        scale: scale,
+        rotate: rotate,
+        savedMatrices: savedMatrices,
+        currentTransform: transformationMatrix
+    }
 
     var save = function () {
-        savedMatrices.push(transformationMatrix.elements);
+        context.savedMatrices.push(context.currentTransform.elements);
     }
 
     var restore = function () {
-        if (savedMatrices.length > 0) {
-            transformationMatrix.elements = savedMatrices.pop().slice();
+        if (context.savedMatrices.length > 0) {
+            context.currentTransform.elements = context.savedMatrices.pop().slice();
         } else {
             return;
         }
@@ -73,16 +82,18 @@
     }
 
     var translate = function (x, y, z) {
-        transformationMatrix = getTranslationMatrix(x, y, z).mult(transformationMatrix);
+        context.currentTransform = getTranslationMatrix(x, y, z).mult(context.currentTransform);
     }
 
     var scale = function (x, y, z) {
-        transformationMatrix = getScaleMatrix(x, y, z).mult(transformationMatrix);
+        context.currentTransform = getScaleMatrix(x, y, z).mult(context.currentTransform);
     }
 
+    // ** angle converted to radians in matrix.js
     var rotate = function (angle, x, y, z) {
-        transformationMatrix = getRotationMatrix(angle * (Math.PI/180), x, y, z).mult(transformationMatrix);
+        context.currentTransform = getRotationMatrix(angle, x, y, z).mult(context.currentTransform);
     }
+
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
@@ -113,7 +124,7 @@
         [ 0, 1, 2 ]
     ];
     var shape = new Shape();
-    var shape2 = new Shape(vertices, indices);
+    var shape2 = new Shape(context, vertices, indices);
     var shape3 = new Shape();
 
     // Build the objects to display.
@@ -299,7 +310,7 @@
             rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
         }
 
-        gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
+        gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
         restore();
 
         // Set the varying vertex coordinates.

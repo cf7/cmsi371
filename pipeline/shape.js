@@ -23,11 +23,10 @@
 
 var Shape = (function () { 
 
-    function Shape (vertices, indices) {
-        if (vertices && indices) {
-            this.vertices = vertices;
-            this.indices = indices;
-        }
+    function Shape (context, vertices, indices) {
+        this.context = context || {};
+        this.vertices = vertices || [];
+        this.indices = indices || [];
         this.children = [];
     }
 
@@ -40,11 +39,11 @@ var Shape = (function () {
     };
 
     // ** pass in the webGL context!!!! (gl is the context)
-    Shape.prototype.translate = function(gl, x, y, z) {
+    Shape.prototype.translate = function(x, y, z) {
         // ** now that we have the context, we can use the same functions found
         // ** in hello-webgl-again.js
-        gl.uniformMatrix4fv();
-
+        // gl.uniformMatrix4fv();
+        console.log(this.context);
         // ** add recursive code here
         // ** getChild().translate()
         for (var index = 0; index < this.children.length; index++) {
