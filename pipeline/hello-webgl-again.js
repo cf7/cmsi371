@@ -307,7 +307,6 @@
 
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
     var matrix = gl.getUniformLocation(shaderProgram, "matrix");
-    var transformationMatrix = new Matrix(4, 4);
 
     /*
      * Displays an individual object.
@@ -323,15 +322,17 @@
         // be converted back to identity matrices
         // *****
 
-        // if (object.translate) {
-        //     transformationMatrix = transformMatrix.mult(getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz));
-        // }
-        // if (object.scale) {
-        //     transformationMatrix = getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz).mult(transformationMatrix);
-        // }
-        // if (object.rotate) {
-        //     transformationMatrix = getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz).mult(transformationMatrix);
-        // }
+        var transformationMatrix = new Matrix(4, 4);
+
+        if (object.translate) {
+            transformationMatrix = getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz).mult(transformationMatrix);
+        }
+        if (object.scale) {
+            transformationMatrix = getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz).mult(transformationMatrix);
+        }
+        if (object.rotate) {
+            transformationMatrix = getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz).mult(transformationMatrix);
+        }
 
         gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
 
@@ -369,14 +370,14 @@
         //     -10, // viewing volume, near plane
         //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
-        // gl.uniformMatrix4fv(globalOrthoMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     2 * (canvas.width / canvas.height),
-        //     -2,
-        //     2,              
-        //     -10, // viewing volume, near plane
-        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalOrthoMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
         // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
