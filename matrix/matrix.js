@@ -200,20 +200,20 @@ var Matrix = (function () {
         this.elements[2][this.dimensions().cols - 1] = tz || 0;
         this.elements[3][this.dimensions().cols - 1] = 1;
 
-        return this.elements;
+        return this;
     };
 
     Matrix.prototype.getScaleMatrix = function(rows, cols, scaleData) {
         var sx = scaleData.sx;
         var sy = scaleData.sy;
         var sz = scaleData.sz;
-        console.log("inside");
+
         this.elements[0][0] = sx || 1;
         this.elements[1][1] = sy || 1;
         this.elements[2][2] = sz || 1;
         this.elements[3][3] = 1;
-        console.log("elements: " + this.elements);
-        return this.elements;
+
+        return this;
     };
 
     Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
@@ -245,28 +245,28 @@ var Matrix = (function () {
         var ys = y * s;
         var zs = z * s;
 
+        this.elements[0][0] = (x2 * oneMinusC) + c;   // row 0
+        this.elements[1][0] = (xy * oneMinusC) + zs;  // row 1
+        this.elements[2][0] = (xz * oneMinusC) - ys;
+        this.elements[3][0] = 0.0;
+
+        this.elements[0][1] = (xy * oneMinusC) - zs;  // row 0
+        this.elements[1][1] = (y2 * oneMinusC) + c;   // row 1
+        this.elements[2][1] = (yz * oneMinusC) + xs;
+        this.elements[3][1] = 0.0;
+
+        this.elements[0][2] = (xz * oneMinusC) + ys; // row 0
+        this.elements[1][2] = (yz * oneMinusC) - xs; // row 1
+        this.elements[2][2] = (z2 * oneMinusC) + c;
+        this.elements[3][2] = 0.0;
+
+        this.elements[0][3] = 0.0;                   // row 0
+        this.elements[1][3] = 0.0;                   // row 1
+        this.elements[2][3] = 0.0;
+        this.elements[3][3] = 1.0;
+        
         // GL expects its matrices in column major order.
-        return [
-            (x2 * oneMinusC) + c,    // row 0
-            (xy * oneMinusC) + zs,   // row 1
-            (xz * oneMinusC) - ys,
-            0.0,
-
-            (xy * oneMinusC) - zs,  // row 0
-            (y2 * oneMinusC) + c,   // row 1
-            (yz * oneMinusC) + xs,
-            0.0,
-
-            (xz * oneMinusC) + ys, // row 0
-            (yz * oneMinusC) - xs, // row 1
-            (z2 * oneMinusC) + c,
-            0.0,
-
-            0.0,                   // row 0
-            0.0,                   // row 1
-            0.0,
-            1.0
-        ];
+        return this;
     };
 
     Matrix.prototype.getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
@@ -274,27 +274,27 @@ var Matrix = (function () {
         var height = top - bottom;
         var depth = zFar - zNear;
 
-        return [
-            2.0 / width,
-            0.0,
-            0.0,
-            0.0,
+            this.elements[0][0] = 2.0 / width;
+            this.elements[1][0] = 0.0;
+            this.elements[2][0] = 0.0;
+            this.elements[3][0] = 0.0;
 
-            0.0,
-            2.0 / height,
-            0.0,
-            0.0,
+            this.elements[0][1] = 0.0;
+            this.elements[1][1] = 2.0 / height;
+            this.elements[2][1] = 0.0;
+            this.elements[3][1] = 0.0;
 
-            0.0,
-            0.0,
-            -2.0 / depth,
-            0.0,
+            this.elements[0][2] = 0.0;
+            this.elements[1][2] = 0.0;
+            this.elements[2][2] = -2.0 / depth;
+            this.elements[3][2] = 0.0;
 
-            -(right + left) / width,
-            -(top + bottom) / height,
-            -(zFar + zNear) / depth,
-            1.0
-        ];
+            this.elements[0][3] = -(right + left) / width;
+            this.elements[1][3] = -(top + bottom) / height;
+            this.elements[2][3] = -(zFar + zNear) / depth;
+            this.elements[3][3] = 1.0;
+
+        return this;
     };
 
     // ** frustum matrix from class
@@ -303,27 +303,27 @@ var Matrix = (function () {
         var height = top - bottom;
         var depth = zFar - zNear;
 
-        return [
-            2.0 * zNear / width,
-            0.0,
-            0.0,
-            0.0,
+        this.elements[0][0] = 2.0 * zNear / width;
+        this.elements[1][0] = 0.0;
+        this.elements[2][0] = 0.0;
+        this.elements[3][0] = 0.0;
 
-            0.0,
-            2.0 * zNear / height,
-            0.0,
-            0.0,
+        this.elements[0][1] = 0.0;
+        this.elements[1][1] = 2.0 * zNear / height;
+        this.elements[2][1] = 0.0;
+        this.elements[3][1] = 0.0;
 
-            (right + left) / width,
-            (top + bottom) / height,
-            -(zFar + zNear) / depth,
-            -1,
+        this.elements[0][2] = (right + left) / width;
+        this.elements[1][2] = (top + bottom) / height;
+        this.elements[2][2] = -(zFar + zNear) / depth;
+        this.elements[3][2] = -1;
 
-            0,
-            0,
-            -2 * zNear * zFar / depth,
-            0
-        ];
+        this.elements[0][3] = 0;
+        this.elements[1][3] = 0;
+        this.elements[2][3] = -2 * zNear * zFar / depth;
+        this.elements[3][3] = 0;
+
+        return this;
     };
 
     

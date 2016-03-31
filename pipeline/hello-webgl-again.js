@@ -28,33 +28,40 @@
         ];
     }
 
+
+    // ** saves the current transformation matrix
+    // ** have one transformation matrix variable
+    var save = function (gl) {
+        gl.getUniformLocation()
+    }
+
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
-        console.log("frustum");
-        console.log(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar));
-        return new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar);
+        // console.log("frustum");
+        // console.log(glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements));
+        return glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements);
     }
 
     var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
-        return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar);
+        return glFormat(new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).elements);
     }
 
     var getTranslationMatrix = function (x, y, z) {
         var data = { tx: x, ty: y, tz: z };
-        console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data)));
-        return glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data));
+        // console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements));
+        return new Matrix(4, 4).getTranslateMatrix(4, 4, data);
     }
 
     var getScaleMatrix = function (x, y, z) {
         var data = { sx: x, sy: y, sz: z };
-        console.log(glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data)));
-        return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data));
+        // console.log(glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements));
+        return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
     }
 
     var getRotationMatrix = function (angle, x, y, z) {
         var data = { angle: angle, rx: x, ry: y, rz: z };
-        console.log(data);
-        console.log(new Matrix(4, 4).getRotationMatrix(4, 4, data));
-        return new Matrix(4, 4).getRotationMatrix(4, 4, data);
+        // console.log(data);
+        // console.log(glFormat(new Matrix(4, 4).getRotationMatrix(4, 4, data).elements));
+        return glFormat(new Matrix(4, 4).getRotationMatrix(4, 4, data).elements);
     }
 
     /*
@@ -117,6 +124,7 @@
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
+    console.log(gl);
     if (!gl) {
         alert("No WebGL context found...sorry.");
 
@@ -297,6 +305,8 @@
     var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
     var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
 
+    var transformationMatrix = new Matrix(4, 4);
+
     /*
      * Displays an individual object.
      */
@@ -311,10 +321,12 @@
         // be converted back to identity matrices
         // *****
 
-        gl.uniformMatrix4fv(translateMatrix, gl.FALSE, new Float32Array(object.translate ?
-            getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz) :  
-            glFormat(new Matrix(4, 4).elements)
-            ));
+        if (object.translate) {
+            getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz).mult(transformationMatrix);
+        }
+
+        gl.uniformMatrix4fv(translateMatrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
+
         gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
             getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
             glFormat(new Matrix(4, 4).elements)
@@ -339,9 +351,14 @@
 
         // Set up the rotation matrix.
 
+        var transMatrix = new Matrix(4, 4);
+        
+        getTranslationMatrix(0, 0, 0).mult(transMatrix);
+        
+
         gl.uniformMatrix4fv(globalRotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
         gl.uniformMatrix4fv(globalScaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(1, 1, 1)));
-        gl.uniformMatrix4fv(globalTranslateMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0, 0, 0)));
+        gl.uniformMatrix4fv(globalTranslateMatrix, gl.FALSE, new Float32Array(glFormat(transMatrix.elements)));
         // ** if objects are at the origin, camera is also at the origin, don't put frustum at origin
         // ** need to push objects back by -z
         // ** use a save and restore to translate farther out before applying perspective

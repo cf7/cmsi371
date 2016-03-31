@@ -35,11 +35,12 @@ var Shape = (function () {
         this.children.push(Shape);
     }
 
-    var addDimension = function (vertices) {
-        for (var index = 0; index < vertices.length; index++) {
-            vertices[index] = vertices[index].concat([1]);
-        }
-    }
+    // ** pass in the webGL context!!!! (gl is the context)
+    Shape.prototype.translate = function(gl, x, y, z) {
+        // ** now that we have the context, we can use the same functions found
+        // ** in hello-webgl-again.js
+        gl.uniformMatrix4fv();
+    };
     
     Shape.prototype.sphere = function(radius, longit, lat) {  
 
@@ -184,6 +185,10 @@ var Shape = (function () {
     // ** functions that traverse meshes to produce triangles or lines, because
     // ** webGL needs a certain format to draw the vertices
     // ** mesh must be converted to vertex array (of given type) that is needed by the mode
+
+    // *****
+    // mode specific arrays
+    // *****
 
     /*
      * Utility function for turning indexed vertices into a "raw" coordinate array
