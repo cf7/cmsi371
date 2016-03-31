@@ -134,6 +134,8 @@
     var shape4 = new Shape(context);    
 
     shape4.addChild(new Shape(context));
+    shape4.addChild(new Shape(context));
+    shape4.getChildren()[0].addChild(new Shape(context));
 
     // Build the objects to display.
     var preObjectsToDraw = [
@@ -213,7 +215,7 @@
         {
             color: { r: 0.0, g: 0.75, b: 0.75 },
             vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
-            mode: gl.LINES
+            mode: gl.LINES,
         },
 
         // ** anywhere objectToDraw is called, needs to be able to access children
@@ -230,26 +232,40 @@
     ];
 
     var objectsToDraw = [];
-    var child;
-    var newObject = {};
-    // ** function for pushing children into array
-    // ** need to be able to transform to make relative to origin
-    for (var i = 0, maxi = preObjectsToDraw.length; i < maxi; i += 1) {
-        objectsToDraw.push(preObjectsToDraw[i]);
-        if (preObjectsToDraw[i].shape) {
-            if (preObjectsToDraw[i].shape.getChildren().length > 0) {
-                child = preObjectsToDraw[i].shape.getChildren()[0];
-                newObject =  {
+
+    var add = function (object) {
+        var child;
+        var newObject = {};
+        var array = [];
+        // ** function for pushing children into array
+        // ** need to be able to transform to make relative to origin
+
+        if (object.shape.getChildren().length > 0) {
+            for (var i = 0; i < object.shape.getChildren().length; i += 1) {
+                child = object.shape.getChildren()[i];
+                newObject = {
+                    shape: child,
                     color: { r: 0.0, g: 0.75, b: 0.75 },
                     vertices: child.toRawLineArray(child.cube()),
                     mode: gl.LINES,
-                    translate: { tx: 1, ty: 0.5, tz: 0 },
-                    scale: { sx: 1.25, sy: 1.25, sz: 1.25 }
+                    translate: { tx: object.translate.tx + 0.15, ty: object.translate.ty + 0.15, tz: object.translate.tz }
                 }
-                objectsToDraw.push(newObject);
+                array.push(newObject);
+                array = array.concat(add(newObject));
             }
         }
+        return array;
     }
+
+    for (var i = 0, maxi = preObjectsToDraw.length; i < maxi; i += 1) {
+        objectsToDraw.push(preObjectsToDraw[i]);
+        if (preObjectsToDraw[i].shape) {
+            objectsToDraw = objectsToDraw.concat(add(preObjectsToDraw[i]));
+            console.log(objectsToDraw);
+        }
+    }
+    
+
 
     // Pass the vertices to WebGL.
     for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
@@ -341,6 +357,7 @@
         // ****
 
         save();
+
         if (object.translate) {
             translate(object.translate.tx, object.translate.ty, object.translate.tz);
         }
@@ -352,6 +369,7 @@
         }
 
         gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+
         restore();
 
         // Set the varying vertex coordinates.
