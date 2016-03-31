@@ -23,10 +23,12 @@
 
 var Shape = (function () { 
 
-    function Shape (context, vertices, indices) {
+    // ** pass in the webGL context!!!! (gl is the context)
+
+    function Shape (context, data) {
         this.context = context || {};
-        this.vertices = vertices || [];
-        this.indices = indices || [];
+        this.vertices = data ? data.vertices : [];
+        this.indices = data ? data.indices : [];
         this.children = [];
     }
 
@@ -36,20 +38,7 @@ var Shape = (function () {
 
     Shape.prototype.getChildren = function() {
         return this.children;
-    };
-
-    // ** pass in the webGL context!!!! (gl is the context)
-    Shape.prototype.translate = function(x, y, z) {
-        // ** now that we have the context, we can use the same functions found
-        // ** in hello-webgl-again.js
-        // gl.uniformMatrix4fv();
-        console.log(this.context);
-        // ** add recursive code here
-        // ** getChild().translate()
-        for (var index = 0; index < this.children.length; index++) {
-            this.children[index].translate(gl, x, y, z);
-        }
-    };
+    };    
     
     Shape.prototype.sphere = function(radius, longit, lat) {  
 
@@ -111,6 +100,36 @@ var Shape = (function () {
         };
     };
 
+    Shape.prototype.cube = function() {
+        return {
+            vertices: [
+                [ 0.5, 0.5, 0.5 ],
+                [ 0.5, 0.5, -0.5 ],
+                [ -0.5, 0.5, -0.5 ],
+                [ -0.5, 0.5, 0.5 ],
+                [ 0.5, -0.5, 0.5 ],
+                [ 0.5, -0.5, -0.5 ],
+                [ -0.5, -0.5, -0.5 ],
+                [ -0.5, -0.5, 0.5 ]
+            ],
+
+            indices: [
+                [ 0, 1, 3 ],
+                [ 2, 3, 1 ],
+                [ 0, 3, 4 ],
+                [ 7, 4, 3 ],
+                [ 0, 4, 1 ],
+                [ 5, 1, 4 ],
+                [ 1, 5, 6 ],
+                [ 2, 1, 6 ],
+                [ 2, 7, 3 ],
+                [ 6, 7, 2 ],
+                [ 4, 7, 6 ],
+                [ 5, 4, 6 ]
+            ]
+        };
+    };
+    
     // ** code from class
     Shape.prototype.cone = function (faceCount) {
         var RADIUS = 0.5;

@@ -123,12 +123,20 @@
     var indices = [
         [ 0, 1, 2 ]
     ];
-    var shape = new Shape();
-    var shape2 = new Shape(context, vertices, indices);
-    var shape3 = new Shape();
+
+    var shape = new Shape(context);
+
+    // ** custom shape
+    var shape2 = new Shape(context, { vertices: vertices, indices: indices });
+
+    var shape3 = new Shape(context);
+
+    var shape4 = new Shape(context);    
+
+    shape4.addChild(new Shape(context));
 
     // Build the objects to display.
-    var objectsToDraw = [
+    var preObjectsToDraw = [
         {
             vertices: [].concat(
                 [ 0.0, 0.0, 0.0 ],
@@ -206,9 +214,42 @@
             color: { r: 0.0, g: 0.75, b: 0.75 },
             vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
             mode: gl.LINES
+        },
+
+        // ** anywhere objectToDraw is called, needs to be able to access children
+        // ** because more attributes are being added past this point such as buffers
+        {
+            shape: shape4,
+            color: { r: 0.0, g: 0.75, b: 0.75 },
+            vertices: shape4.toRawLineArray(shape4.cube()),
+            mode: gl.LINES,
+            translate: { tx: 1, ty: -0.5, tz: -1 },
+            scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
         }
 
     ];
+
+    var objectsToDraw = [];
+    var child;
+    var newObject = {};
+    // ** function for pushing children into array
+    // ** need to be able to transform to make relative to origin
+    for (var i = 0, maxi = preObjectsToDraw.length; i < maxi; i += 1) {
+        objectsToDraw.push(preObjectsToDraw[i]);
+        if (preObjectsToDraw[i].shape) {
+            if (preObjectsToDraw[i].shape.getChildren().length > 0) {
+                child = preObjectsToDraw[i].shape.getChildren()[0];
+                newObject =  {
+                    color: { r: 0.0, g: 0.75, b: 0.75 },
+                    vertices: child.toRawLineArray(child.cube()),
+                    mode: gl.LINES,
+                    translate: { tx: 1, ty: 0.5, tz: 0 },
+                    scale: { sx: 1.25, sy: 1.25, sz: 1.25 }
+                }
+                objectsToDraw.push(newObject);
+            }
+        }
+    }
 
     // Pass the vertices to WebGL.
     for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
