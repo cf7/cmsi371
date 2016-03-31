@@ -30,16 +30,20 @@
 
     var getTranslationMatrix = function (x, y, z) {
         var data = { tx: x, ty: y, tz: z };
-        return glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements);
+        console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data)));
+        return glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data));
     }
 
     var getScaleMatrix = function (x, y, z) {
         var data = { sx: x, sy: y, sz: z };
-        return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
+        console.log(glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data)));
+        return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data));
     }
 
     var getRotationMatrix = function (angle, x, y, z) {
         var data = { angle: angle, rx: x, ry: y, rz: z };
+        console.log(data);
+        console.log(new Matrix(4, 4).getRotationMatrix(4, 4, data));
         return new Matrix(4, 4).getRotationMatrix(4, 4, data);
     }
 
@@ -265,9 +269,12 @@
     gl.enableVertexAttribArray(vertexColor);
 
     // ** retrieves the location of these variables from the html GL code
-    var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
-    var translationMatrix = gl.getUniformLocation(shaderProgram, "translationMatrix");
-    var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
+    var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
+    var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
+    var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
+    // var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
+    // var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
+    // var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
 
     /*
      * Displays an individual object.
@@ -277,24 +284,24 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-        // ** modifies the matrices in these variables in the html gl code
-        // ** modifications are reflected instantly
-        // ** add code to check for translate, scale, rotate per object,
-        // ** otherwise, identity matrix
-        // ** remember to pass Matrix object elements, not just the Matrix object
-        // ** remember GL format
-        gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(object.translate ?
-            getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz) :  
-            glFormat(new Matrix(4, 4).elements)
-            ));
-        gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
-            getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
-            glFormat(new Matrix(4, 4).elements)
-            ));
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
-            getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz) :
-            glFormat(new Matrix(4, 4).elements)
-            ));
+        // *****
+        // Need save and restore functions for the matrices!!!!
+        // They keep the identity matrices so that any transforms can
+        // be converted back to identity matrices
+        // *****
+
+        // gl.uniformMatrix4fv(translationMatrix, gl.FALSE, new Float32Array(object.translate ?
+        //     getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz) :  
+        //     glFormat(new Matrix(4, 4).elements)
+        //     ));
+        // // gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
+        // //     getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
+        // //     glFormat(new Matrix(4, 4).elements)
+        // //     ));
+        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
+        //     getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz) :
+        //     glFormat(new Matrix(4, 4).elements)
+        //     ));
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -310,8 +317,9 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
-
+        gl.uniformMatrix4fv(globalRotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+        gl.uniformMatrix4fv(globalScaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(1, 1, 1)));
+        gl.uniformMatrix4fv(globalTranslateMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0, 0, 0)));
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);

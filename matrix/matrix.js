@@ -200,59 +200,22 @@ var Matrix = (function () {
         this.elements[2][this.dimensions().cols - 1] = tz || 0;
         this.elements[3][this.dimensions().cols - 1] = 1;
 
-        return this;
+        return this.elements;
     };
 
     Matrix.prototype.getScaleMatrix = function(rows, cols, scaleData) {
         var sx = scaleData.sx;
         var sy = scaleData.sy;
         var sz = scaleData.sz;
-
+        console.log("inside");
         this.elements[0][0] = sx || 1;
         this.elements[1][1] = sy || 1;
         this.elements[2][2] = sz || 1;
         this.elements[3][3] = 1;
-
-        return this;
+        console.log("elements: " + this.elements);
+        return this.elements;
     };
 
-    // Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
-    //     var theta = rotationData.angle * (Math.PI / 180);
-    //     var x = rotationData.rx;
-    //     var y = rotationData.ry;
-    //     var z = rotationData.rz;
-
-    //     if (x) {
-    //         this.elements[0][0] = 1;
-    //         this.elements[1][1] = Math.cos(theta);
-    //         this.elements[1][2] = -(Math.sin(theta));
-    //         this.elements[2][1] = Math.sin(theta);
-    //         this.elements[2][2] = Math.cos(theta);
-    //         this.elements[3][3] = 1;
-    //     }
-    //     if (y) {
-    //         this.elements[0][0] = Math.cos(theta);
-    //         this.elements[0][2] = Math.sin(theta);
-    //         this.elements[1][1] = 1
-    //         this.elements[2][0] = -(Math.sin(theta));
-    //         this.elements[2][2] = Math.cos(theta);
-    //         this.elements[3][3] = 1;
-    //     }
-    //     if (z) {
-    //         this.elements[0][0] = Math.cos(theta);
-    //         this.elements[0][1] = -(Math.sin(theta));
-    //         this.elements[1][0] = Math.sin(theta);
-    //         this.elements[1][1] = Math.cos(theta);
-    //     }
-
-    //     return this;
-    // };
-
-    Matrix.prototype.getProjectionMatrix = function(right, left, top, bottom, far, near) {
-        return [
-
-        ];
-    };
     Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
         var angle = rotationData.angle;
         var x = rotationData.rx;
@@ -303,6 +266,12 @@ var Matrix = (function () {
             0.0,
             0.0,
             1.0
+        ];
+    };
+
+    Matrix.prototype.getProjectionMatrix = function(right, left, top, bottom, far, near) {
+        return [
+
         ];
     };
 
