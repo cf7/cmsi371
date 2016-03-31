@@ -314,7 +314,7 @@ $(function () {
 
     test("3D Rotation Matrices", function () {
        
-        var data = { angle: 60, x: 1, y: 0, z: 0 };
+        var data = { angle: 60, rx: 1, ry: 0, rz: 0 };
         var rotationMatrix = new Matrix(4, 4).getRotationMatrix(4, 4, data);
         console.log(rotationMatrix);
 

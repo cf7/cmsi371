@@ -38,6 +38,11 @@
         return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
     }
 
+    var getRotationMatrix = function (angle, x, y, z) {
+        var data = { angle: angle, rx: x, ry: y, rz: z };
+        return new Matrix(4, 4).getRotationMatrix(4, 4, data);
+    }
+
     /*
      * This code does not really belong here: it should live
      * in a separate library of matrix and transformation
@@ -47,54 +52,54 @@
      * Based on the original glRotate reference:
      *     http://www.opengl.org/sdk/docs/man/xhtml/glRotate.xml
      */
-    var getRotationMatrix = function (angle, x, y, z) {
-        // In production code, this function should be associated
-        // with a matrix object with associated functions.
-        var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
-        var s = Math.sin(angle * Math.PI / 180.0);
-        var c = Math.cos(angle * Math.PI / 180.0);
-        var oneMinusC = 1.0 - c;
+    // var getRotationMatrix = function (angle, x, y, z) {
+    //     // In production code, this function should be associated
+    //     // with a matrix object with associated functions.
+    //     var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
+    //     var s = Math.sin(angle * Math.PI / 180.0);
+    //     var c = Math.cos(angle * Math.PI / 180.0);
+    //     var oneMinusC = 1.0 - c;
 
-        // Normalize the axis vector of rotation.
-        x /= axisLength;
-        y /= axisLength;
-        z /= axisLength;
+    //     // Normalize the axis vector of rotation.
+    //     x /= axisLength;
+    //     y /= axisLength;
+    //     z /= axisLength;
 
-        // Now we can calculate the other terms.
-        // "2" for "squared."
-        var x2 = x * x;
-        var y2 = y * y;
-        var z2 = z * z;
-        var xy = x * y;
-        var yz = y * z;
-        var xz = x * z;
-        var xs = x * s;
-        var ys = y * s;
-        var zs = z * s;
+    //     // Now we can calculate the other terms.
+    //     // "2" for "squared."
+    //     var x2 = x * x;
+    //     var y2 = y * y;
+    //     var z2 = z * z;
+    //     var xy = x * y;
+    //     var yz = y * z;
+    //     var xz = x * z;
+    //     var xs = x * s;
+    //     var ys = y * s;
+    //     var zs = z * s;
 
-        // GL expects its matrices in column major order.
-        return [
-            (x2 * oneMinusC) + c,
-            (xy * oneMinusC) + zs,
-            (xz * oneMinusC) - ys,
-            0.0,
+    //     // GL expects its matrices in column major order.
+    //     return [
+    //         (x2 * oneMinusC) + c,
+    //         (xy * oneMinusC) + zs,
+    //         (xz * oneMinusC) - ys,
+    //         0.0,
 
-            (xy * oneMinusC) - zs,
-            (y2 * oneMinusC) + c,
-            (yz * oneMinusC) + xs,
-            0.0,
+    //         (xy * oneMinusC) - zs,
+    //         (y2 * oneMinusC) + c,
+    //         (yz * oneMinusC) + xs,
+    //         0.0,
 
-            (xz * oneMinusC) + ys,
-            (yz * oneMinusC) - xs,
-            (z2 * oneMinusC) + c,
-            0.0,
+    //         (xz * oneMinusC) + ys,
+    //         (yz * oneMinusC) - xs,
+    //         (z2 * oneMinusC) + c,
+    //         0.0,
 
-            0.0,
-            0.0,
-            0.0,
-            1.0
-        ];
-    };
+    //         0.0,
+    //         0.0,
+    //         0.0,
+    //         1.0
+    //     ];
+    // };
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
@@ -190,13 +195,13 @@
             mode: gl.TRIANGLES,
             translate: { tx: 0.5, ty: -0.75, tz: 0.5 },
             scale: { sx: 0.5, sy: 0.5, sz: 0.5 },
-            rotate: { angle: 60, x: 0, y: 1, z: 0 }
+            rotate: { angle: 60, rx: 1, ry: 1, rz: 1 }
         },
 
         {
             color: { r: 0.0, g: 0.75, b: 0.75 },
-            vertices: shape3.toRawTriangleArray(shape3.sphere(0.75, 20, 20)),
-            mode: gl.TRIANGLES
+            vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
+            mode: gl.LINES
         }
 
     ];
@@ -286,10 +291,10 @@
             getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
             glFormat(new Matrix(4, 4).elements)
             ));
-        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
-        //     getRotationMatrix(object.rotate.angle, object.rotate.x, object.rotate.y, object.rotate.z) :
-        //     glFormat(new Matrix(4, 4).elements)
-        //     ));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
+            getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz) :
+            glFormat(new Matrix(4, 4).elements)
+            ));
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -305,7 +310,7 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 0)));
+        // gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

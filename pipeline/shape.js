@@ -73,7 +73,6 @@ var Shape = (function () {
             currentPhi += phiDelta;
         }
 
-        console.log(vertices.length);
         for (var i = 0; i < vertices.length; i++) {
             indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
             indices.push([ i, (i + longit - 1) % vertices.length, (i + longit) % vertices.length ]);

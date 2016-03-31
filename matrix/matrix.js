@@ -216,84 +216,95 @@ var Matrix = (function () {
         return this;
     };
 
-    Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
-        var theta = rotationData.angle * (Math.PI / 180);
-        var x = rotationData.x;
-        var y = rotationData.y;
-        var z = rotationData.z;
-
-        if (x) {
-            this.elements[0][0] = 1;
-            this.elements[1][1] = Math.cos(theta);
-            this.elements[1][2] = -(Math.sin(theta));
-            this.elements[2][1] = Math.sin(theta);
-            this.elements[2][2] = Math.cos(theta);
-            this.elements[3][3] = 1;
-        } else if (y) {
-            this.elements[0][0] = Math.cos(theta);
-            this.elements[0][2] = Math.sin(theta);
-            this.elements[1][1] = 1
-            this.elements[2][0] = -(Math.sin(theta));
-            this.elements[2][2] = Math.cos(theta);
-            this.elements[3][3] = 1;
-        } else if (z) {
-            this.elements[0][0] = Math.cos(theta);
-            this.elements[0][1] = -(Math.sin(theta));
-            this.elements[1][0] = Math.sin(theta);
-            this.elements[1][1] = Math.cos(theta);
-        }
-
-        return this;
-    };
-
     // Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
-    //      // In production code, this function should be associated
-    //     // with a matrix object with associated functions.
-    //     var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
-    //     var s = Math.sin(angle * Math.PI / 180.0);
-    //     var c = Math.cos(angle * Math.PI / 180.0);
-    //     var oneMinusC = 1.0 - c;
+    //     var theta = rotationData.angle * (Math.PI / 180);
+    //     var x = rotationData.rx;
+    //     var y = rotationData.ry;
+    //     var z = rotationData.rz;
 
-    //     // Normalize the axis vector of rotation.
-    //     x /= axisLength;
-    //     y /= axisLength;
-    //     z /= axisLength;
+    //     if (x) {
+    //         this.elements[0][0] = 1;
+    //         this.elements[1][1] = Math.cos(theta);
+    //         this.elements[1][2] = -(Math.sin(theta));
+    //         this.elements[2][1] = Math.sin(theta);
+    //         this.elements[2][2] = Math.cos(theta);
+    //         this.elements[3][3] = 1;
+    //     }
+    //     if (y) {
+    //         this.elements[0][0] = Math.cos(theta);
+    //         this.elements[0][2] = Math.sin(theta);
+    //         this.elements[1][1] = 1
+    //         this.elements[2][0] = -(Math.sin(theta));
+    //         this.elements[2][2] = Math.cos(theta);
+    //         this.elements[3][3] = 1;
+    //     }
+    //     if (z) {
+    //         this.elements[0][0] = Math.cos(theta);
+    //         this.elements[0][1] = -(Math.sin(theta));
+    //         this.elements[1][0] = Math.sin(theta);
+    //         this.elements[1][1] = Math.cos(theta);
+    //     }
 
-    //     // Now we can calculate the other terms.
-    //     // "2" for "squared."
-    //     var x2 = x * x;
-    //     var y2 = y * y;
-    //     var z2 = z * z;
-    //     var xy = x * y;
-    //     var yz = y * z;
-    //     var xz = x * z;
-    //     var xs = x * s;
-    //     var ys = y * s;
-    //     var zs = z * s;
-
-    //     // GL expects its matrices in column major order.
-    //     return [
-    //         (x2 * oneMinusC) + c,
-    //         (xy * oneMinusC) + zs,
-    //         (xz * oneMinusC) - ys,
-    //         0.0,
-
-    //         (xy * oneMinusC) - zs,
-    //         (y2 * oneMinusC) + c,
-    //         (yz * oneMinusC) + xs,
-    //         0.0,
-
-    //         (xz * oneMinusC) + ys,
-    //         (yz * oneMinusC) - xs,
-    //         (z2 * oneMinusC) + c,
-    //         0.0,
-
-    //         0.0,
-    //         0.0,
-    //         0.0,
-    //         1.0
-    //     ];
+    //     return this;
     // };
+
+    Matrix.prototype.getProjectionMatrix = function(right, left, top, bottom, far, near) {
+        return [
+
+        ];
+    };
+    Matrix.prototype.getRotationMatrix = function(rows, cols, rotationData) {
+        var angle = rotationData.angle;
+        var x = rotationData.rx;
+        var y = rotationData.ry;
+        var z = rotationData.rz;
+         // In production code, this function should be associated
+        // with a matrix object with associated functions.
+        var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
+        var s = Math.sin(angle * Math.PI / 180.0);
+        var c = Math.cos(angle * Math.PI / 180.0);
+        var oneMinusC = 1.0 - c;
+
+        // Normalize the axis vector of rotation.
+        x /= axisLength;
+        y /= axisLength;
+        z /= axisLength;
+
+        // Now we can calculate the other terms.
+        // "2" for "squared."
+        var x2 = x * x;
+        var y2 = y * y;
+        var z2 = z * z;
+        var xy = x * y;
+        var yz = y * z;
+        var xz = x * z;
+        var xs = x * s;
+        var ys = y * s;
+        var zs = z * s;
+
+        // GL expects its matrices in column major order.
+        return [
+            (x2 * oneMinusC) + c,
+            (xy * oneMinusC) + zs,
+            (xz * oneMinusC) - ys,
+            0.0,
+
+            (xy * oneMinusC) - zs,
+            (y2 * oneMinusC) + c,
+            (yz * oneMinusC) + xs,
+            0.0,
+
+            (xz * oneMinusC) + ys,
+            (yz * oneMinusC) - xs,
+            (z2 * oneMinusC) + c,
+            0.0,
+
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ];
+    };
 
     return Matrix;
 
