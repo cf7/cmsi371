@@ -53,12 +53,13 @@
       uniform mat4 globalRotationMatrix;
       uniform mat4 globalScaleMatrix;
       uniform mat4 globalTranslateMatrix;
+      uniform mat4 globalProjectionMatrix;
       uniform mat4 translateMatrix;  // ** make sure these are named the same throughout all files
       uniform mat4 scaleMatrix;
       uniform mat4 rotationMatrix;
 
-      void main(void) {
-          gl_Position = globalRotationMatrix * globalScaleMatrix * globalTranslateMatrix * rotationMatrix * scaleMatrix * translateMatrix * vec4(vertexPosition, 1.0);
+      void main(void) { // everything after projection matrix is modelView matrix
+          gl_Position = globalProjectionMatrix * globalRotationMatrix * globalScaleMatrix * globalTranslateMatrix * rotationMatrix * scaleMatrix * translateMatrix * vec4(vertexPosition, 1.0);
           finalVertexColor = vec4(vertexColor, 1.0);
       }
     </script>

@@ -28,6 +28,10 @@
         ];
     }
 
+    var getProjectionMatrix = function (left, right, bottom, top, zNear, zFar) {
+        return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar);
+    }
+
     var getTranslationMatrix = function (x, y, z) {
         var data = { tx: x, ty: y, tz: z };
         console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data)));
@@ -187,6 +191,15 @@
 
         // ** rotation axis found in drawScene function
 
+
+        // **********
+        // ** can create buffer matrices on which to perform transforms
+        // ** only if the object contains a tag
+        // ** (i.e. objects that have "axis" attribute will be rotated via 
+        // ** the buffer matrix, otherwise, if "axis" not found, return identity
+        // ** matrix to uniformMatrix4fv)
+        // **********
+
         // {
         //     color: { r: 0.0, g: 0.5, b: 0.0 },
         //     vertices: shape.toRawTriangleArray(shape.cone(20)),
@@ -272,6 +285,8 @@
     var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
     var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
     var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
+    var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
+
     var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
     var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
     var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
@@ -320,6 +335,14 @@
         gl.uniformMatrix4fv(globalRotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
         gl.uniformMatrix4fv(globalScaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(1, 1, 1)));
         gl.uniformMatrix4fv(globalTranslateMatrix, gl.FALSE, new Float32Array(getTranslationMatrix(0, 0, 0)));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getProjectionMatrix(
+            -2 * (canvas.width / canvas.height),
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,
+            -10,
+            10
+        )));
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);

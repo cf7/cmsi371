@@ -247,31 +247,53 @@ var Matrix = (function () {
 
         // GL expects its matrices in column major order.
         return [
-            (x2 * oneMinusC) + c,
-            (xy * oneMinusC) + zs,
+            (x2 * oneMinusC) + c,    // row 0
+            (xy * oneMinusC) + zs,   // row 1
             (xz * oneMinusC) - ys,
             0.0,
 
-            (xy * oneMinusC) - zs,
-            (y2 * oneMinusC) + c,
+            (xy * oneMinusC) - zs,  // row 0
+            (y2 * oneMinusC) + c,   // row 1
             (yz * oneMinusC) + xs,
             0.0,
 
-            (xz * oneMinusC) + ys,
-            (yz * oneMinusC) - xs,
+            (xz * oneMinusC) + ys, // row 0
+            (yz * oneMinusC) - xs, // row 1
             (z2 * oneMinusC) + c,
             0.0,
 
-            0.0,
-            0.0,
+            0.0,                   // row 0
+            0.0,                   // row 1
             0.0,
             1.0
         ];
     };
 
-    Matrix.prototype.getProjectionMatrix = function(right, left, top, bottom, far, near) {
-        return [
+    Matrix.prototype.getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
+        var width = right - left;
+        var height = top - bottom;
+        var depth = zFar - zNear;
 
+        return [
+            2.0 / width,
+            0.0,
+            0.0,
+            0.0,
+
+            0.0,
+            2.0 / height,
+            0.0,
+            0.0,
+
+            0.0,
+            0.0,
+            -2.0 / depth,
+            0.0,
+
+            -(right + left) / width,
+            -(top + bottom) / height,
+            -(zFar + zNear) / depth,
+            1.0
         ];
     };
 
