@@ -54,14 +54,14 @@
     var getScaleMatrix = function (x, y, z) {
         var data = { sx: x, sy: y, sz: z };
         // console.log(glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements));
-        return glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements);
+        return new Matrix(4, 4).getScaleMatrix(4, 4, data);
     }
 
     var getRotationMatrix = function (angle, x, y, z) {
         var data = { angle: angle, rx: x, ry: y, rz: z };
         // console.log(data);
         // console.log(glFormat(new Matrix(4, 4).getRotationMatrix(4, 4, data).elements));
-        return glFormat(new Matrix(4, 4).getRotationMatrix(4, 4, data).elements);
+        return new Matrix(4, 4).getRotationMatrix(4, 4, data);
     }
 
     /*
@@ -124,7 +124,7 @@
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
-    console.log(gl);
+
     if (!gl) {
         alert("No WebGL context found...sorry.");
 
@@ -296,15 +296,17 @@
     gl.enableVertexAttribArray(vertexColor);
 
     // ** retrieves the location of these variables from the html GL code
-    var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
-    var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
-    var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
+    // var globalRotationMatrix = gl.getUniformLocation(shaderProgram, "globalRotationMatrix");
+    // var globalScaleMatrix = gl.getUniformLocation(shaderProgram, "globalScaleMatrix");
+    // var globalTranslateMatrix = gl.getUniformLocation(shaderProgram, "globalTranslateMatrix");
     var globalOrthoMatrix = gl.getUniformLocation(shaderProgram, "globalOrthoMatrix");
     var globalFrustumMatrix = gl.getUniformLocation(shaderProgram, "globalFrustumMarix");
-    var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
-    var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
-    var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
+    // var rotationMatrix = gl.getUniformLocation(shaderProgram, "rotationMatrix");
+    // var translateMatrix = gl.getUniformLocation(shaderProgram, "translateMatrix");
+    // var scaleMatrix = gl.getUniformLocation(shaderProgram, "scaleMatrix");
 
+    var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
+    var matrix = gl.getUniformLocation(shaderProgram, "matrix");
     var transformationMatrix = new Matrix(4, 4);
 
     /*
@@ -321,20 +323,17 @@
         // be converted back to identity matrices
         // *****
 
-        if (object.translate) {
-            getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz).mult(transformationMatrix);
-        }
+        // if (object.translate) {
+        //     transformationMatrix = transformMatrix.mult(getTranslationMatrix(object.translate.tx, object.translate.ty, object.translate.tz));
+        // }
+        // if (object.scale) {
+        //     transformationMatrix = getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz).mult(transformationMatrix);
+        // }
+        // if (object.rotate) {
+        //     transformationMatrix = getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz).mult(transformationMatrix);
+        // }
 
-        gl.uniformMatrix4fv(translateMatrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
-
-        gl.uniformMatrix4fv(scaleMatrix, gl.FALSE, new Float32Array(object.scale ?
-            getScaleMatrix(object.scale.sx, object.scale.sy, object.scale.sz) :
-            glFormat(new Matrix(4, 4).elements)
-            ));
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(object.rotate ?
-            getRotationMatrix(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz) :
-            glFormat(new Matrix(4, 4).elements)
-            ));
+        gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(transformationMatrix.elements)));
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -353,12 +352,11 @@
 
         var transMatrix = new Matrix(4, 4);
         
-        getTranslationMatrix(0, 0, 0).mult(transMatrix);
-        
+        transMatrix = getTranslationMatrix(0, 0, 0).mult(transMatrix);
+        transMatrix = getScaleMatrix(1, 1, 1).mult(transMatrix);
+        transMatrix = getRotationMatrix(currentRotation, 0, 1, 0).mult(transMatrix);
 
-        gl.uniformMatrix4fv(globalRotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
-        gl.uniformMatrix4fv(globalScaleMatrix, gl.FALSE, new Float32Array(getScaleMatrix(1, 1, 1)));
-        gl.uniformMatrix4fv(globalTranslateMatrix, gl.FALSE, new Float32Array(glFormat(transMatrix.elements)));
+        gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(transMatrix.elements)));
         // ** if objects are at the origin, camera is also at the origin, don't put frustum at origin
         // ** need to push objects back by -z
         // ** use a save and restore to translate farther out before applying perspective
@@ -371,14 +369,14 @@
         //     -10, // viewing volume, near plane
         //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
-        gl.uniformMatrix4fv(globalOrthoMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalOrthoMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     2 * (canvas.width / canvas.height),
+        //     -2,
+        //     2,              
+        //     -10, // viewing volume, near plane
+        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
         // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
