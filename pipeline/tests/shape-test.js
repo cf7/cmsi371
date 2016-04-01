@@ -28,7 +28,7 @@ $(function () {
         equal(shape2.getTranslate().tz, 0, "tz");
         equal(shape2.getScale().sx, 1, "sx");
         equal(shape2.getScale().sy, 1, "sy");
-        equal(shape2.getScale().rz, 1, "sz");
+        equal(shape2.getScale().sz, 1, "sz");
 
     });
 
@@ -49,9 +49,26 @@ $(function () {
         shape3.rotateShape(180, 1, 1, 0);
 
         equal(shape3.getRotate().angle, 180, "angle");
-        equal(shape3.getScale().rx, 0.25, "rx");
-        equal(shape3.getScale().ry, 1, "ry");
-        equal(shape3.getScale().rz, 0.15, "rz");
+        equal(shape3.getRotate().rx, 1, "rx");
+        equal(shape3.getRotate().ry, 1, "ry");
+        equal(shape3.getRotate().rz, 0, "rz");
 
     });
+
+    test("Testing child arrays", function () {
+        var shape4 = new Shape();
+
+        for (var index = 0; index < 10; index++) {
+            shape4.addChild(new Shape());
+        }
+        shape4.getChildren()[4].addChild(new Shape());
+        shape4.getChildren()[5].addChild(new Shape());
+
+        equal(shape4.getChildren().length, 10, "10 elements in children array");
+        equal(shape4.getChildren()[4].getChildren().length, 1, "two levels down");
+        equal(shape4.getChildren()[5].getChildren().length, 1, "two levels down again");
+
+        equal(shape4.getChildren()[3].parent.getChildren().length, 10, "up and down the tree");
+    });
+
 });

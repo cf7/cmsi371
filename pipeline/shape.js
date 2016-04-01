@@ -1,29 +1,6 @@
-/*
- * This module defines/generates vertex arrays for certain predefined shapes.
- * The "shapes" are returned as indexed vertices, with utility functions for
- * converting these into "raw" coordinate arrays.
- */
 
-// ** code methods and convenience functions to generate these meshes
-// ** programmatically generate vertices
-
-// ** design the interaction between shape.js and hello-webgl-again.js
-// ** similar to how we coded the interaction between
-// ** keyframe-tweener.js and keyframe-tweening-demo.js
-
-// ** make all shapes centered around the origin
-
-// ** make basic shapes
-// ** when finished with matrices, use translate, rotate, and scale
-// ** to make composite shapes and groups
-
-// ** for transforms, can use concat() to append extra dimension to vertex arrays
-
-// ** will need to go to vertexShader in html code to apply transforms
 
 var Shape = (function () { 
-
-    // ** pass in the webGL context!!!! (gl is the context)
 
     function Shape (gl, data) {
         if (data) {
@@ -43,7 +20,7 @@ var Shape = (function () {
             this.gl = gl || {};
             this.vertices = data ? data.vertices : [];
             this.indices = data ? data.indices : [];
-            this.parent = {}; // ** maximum call stack size exceeded
+            this.parent = {};
             this.children = [];
             this.translate = { tx: 0, ty: 0, tz: 0 };
             this.scale = { sx: 1, sy: 1, sz: 1 };
@@ -199,8 +176,7 @@ var Shape = (function () {
         var length = vertices.length;
 
         indices.push([ 0, length/2, (length/2 + 1) % length ]);
-        // indices.push([ 0, length/2, length/2 + 2, 2 ]);
-        // indices.push([ 0, length/2, length/2 + 3, 3 ]);
+
         for (var i = 1; i < vertices.length/2; i++) {
             indices.push([ length/2, (length/2 + i) % length, (length/2 + i + 1) % length ]);
         }
@@ -223,8 +199,6 @@ var Shape = (function () {
 
 
     Shape.prototype.sphere = function(radius, longit, lat) {  
-
-        //** WebGL expects an equal number of vertices and indices
         var vertices = [];
         var indices = [];
 
@@ -242,8 +216,8 @@ var Shape = (function () {
         // changing the indices, or dividing the angles
         for (var i = 0; i < longit; i++) {
             x = radius * Math.cos(currentPhi);
-            z = radius * Math.sin(currentPhi); // WebGL has y axis going up and down
-            for (var j = 0; j < lat; j++) { // plotting 20 latitude points at each longitude
+            z = radius * Math.sin(currentPhi);
+            for (var j = 0; j < lat; j++) {
                 vertices.push([
                     x * Math.sin(currentTheta),
                     radius * Math.cos(currentTheta),
