@@ -375,12 +375,16 @@
         
         gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
+
+
+        // ** only activate one of the projection matrices at a time
+
         // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
         //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
         //     2 * (canvas.width / canvas.height),
         //     -2,
         //     2,              
-        //     -10, // viewing volume, near plane
+        //     0.5, // viewing volume, near plane
         //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
         gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(

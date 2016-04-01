@@ -290,38 +290,4 @@ $(function () {
 
     });
     
-     test("3D Ortho Matrices", function () {
-       
-        var data = { sx: 2, sy: 2, sz: 2 };
-        var scaleMatrix = new Matrix(4, 4).getScaleMatrix(4, 4, data);
-        console.log(scaleMatrix);
-        equal(scaleMatrix.elements[0][0], data.sx, "Row 0 Col 0");
-        equal(scaleMatrix.elements[0][1], 0, "Row 0 Col 1");
-        equal(scaleMatrix.elements[0][2], 0, "Row 0 Col 2");
-        equal(scaleMatrix.elements[0][3], 0, "Row 0 Col 3");
-        // equal(scaleMatrix.elements[0][4], 4, "Row 0 Col 3");
-        equal(scaleMatrix.elements[1][0], 0, "Row 1 Col 0");
-        equal(scaleMatrix.elements[1][1], data.sy, "Row 1 Col 1");
-        equal(scaleMatrix.elements[1][2], 0, "Row 1 Col 2");
-        equal(scaleMatrix.elements[1][3], 0, "Row 1 Col 3");
-        // equal(scaleMatrix.elements[1][4], 5, "Row 1 Col 0");
-        equal(scaleMatrix.elements[2][0], 0, "Row 2 Col 0");
-        equal(scaleMatrix.elements[2][1], 0, "Row 2 Col 1");
-        equal(scaleMatrix.elements[2][2], data.sz, "Row 2 Col 2");
-        equal(scaleMatrix.elements[2][3], 0, "Row 2 Col 3");
-        // equal(scaleMatrix.elements[2][4], 5, "Row 1 Col 0");
-        equal(scaleMatrix.elements[3][0], 0, "Row 3 Col 0");
-        equal(scaleMatrix.elements[3][1], 0, "Row 3 Col 1");
-        equal(scaleMatrix.elements[3][2], 0, "Row 3 Col 2");
-        equal(scaleMatrix.elements[3][3], 1, "Row 3 Col 3");
-        // equal(scaleMatrix.elements[3][4], 5, "Row 1 Col 0");
-        // equal(scaleMatrix.elements[4][0], 13, "Row 3 Col 0");
-        // equal(scaleMatrix.elements[4][1], 14, "Row 3 Col 1");
-        // equal(scaleMatrix.elements[4][2], 15, "Row 3 Col 2");
-        // equal(scaleMatrix.elements[4][3], 16, "Row 3 Col 3");
-        // equal(scaleMatrix.elements[4][4], 5, "Row 1 Col 0");
-
-        // ** add a multiplication test case
-    });
-
 });
