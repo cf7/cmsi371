@@ -130,20 +130,20 @@
         [ 0, 1, 2 ]
     ];
 
-    var shape = new Shape(context);
+    var shape = new Shape(gl);
 
     // ** take in data for custom shapes
-    var shape2 = new Shape(context, { vertices: vertices, indices: indices });
+    var shape2 = new Shape(gl, { vertices: vertices, indices: indices });
 
-    var shape3 = new Shape(context);
+    var shape3 = new Shape(gl);
 
-    var shape4 = new Shape(context);    
+    var shape4 = new Shape(gl);    
 
     shape4.translateShape(1, -0.5, -1);
-    console.log(shape4.getTranslate());
-    shape4.addChild(new Shape(context));
-    shape4.addChild(new Shape(context));
-    shape4.getChildren()[0].addChild(new Shape(context));
+    shape4.scaleShape(1.5, 1.5, 1.5);
+    shape4.addChild(new Shape(gl));
+    shape4.addChild(new Shape(gl));
+    shape4.getChildren()[0].addChild(new Shape(gl));
 
     shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
@@ -151,7 +151,7 @@
     shape4.getChildren()[0].getChildren()[0].rotateShape(60, 1, 1, 0);
     shape4.getChildren()[0].getChildren()[0].scaleShape(0.5, 0.5, 0.5);
 
-    var shape5 = new Shape(context);
+    var shape5 = new Shape(gl);
 
     // Build the objects to display.
     var preObjectsToDraw = [
@@ -236,14 +236,14 @@
 
         // ** anywhere objectToDraw is called, needs to be able to access children
         // ** because more attributes are being added past this point such as buffers
-        {
-            shape: shape4,
-            color: { r: 0.0, g: 0.75, b: 0.75 },
-            vertices: shape4.toRawLineArray(shape4.cube()),
-            mode: gl.LINES,
-            translate: shape4.getTranslate(),
-            scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
-        },
+        // {
+        //     shape: shape4,
+        //     color: { r: 0.0, g: 0.75, b: 0.75 },
+        //     vertices: shape4.toRawTriangleArray(shape4.cube()),
+        //     mode: gl.TRIANGLES,
+        //     translate: shape4.getTranslate(),
+        //     scale: shape4.getScale()
+        // },
 
         {
             shape: shape5,
@@ -254,15 +254,13 @@
         }
 
     ];
-
+    preObjectsToDraw.push(shape4.getData());
     var objectsToDraw = [];
 
     var add = function (object) {
         var child;
         var newObject = {};
         var array = [];
-        // ** function for pushing children into array
-        // ** need to be able to transform to make relative to origin
 
         if (object.shape.getChildren().length > 0) {
             for (var i = 0; i < object.shape.getChildren().length; i += 1) {

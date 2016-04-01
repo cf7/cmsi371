@@ -25,8 +25,7 @@ var Shape = (function () {
 
     // ** pass in the webGL context!!!! (gl is the context)
 
-    function Shape (context, data) {
-        this.cxt = context || {};
+    function Shape (gl, data) {
         this.vertices = data ? data.vertices : [];
         this.indices = data ? data.indices : [];
         this.parent = {}; // ** maximum call stack size exceeded
@@ -34,8 +33,58 @@ var Shape = (function () {
         this.translate = { tx: 0, ty: 0, tz: 0 };
         this.scale = { sx: 1, sy: 1, sz: 1 };
         this.rotate = { angle: 0, rx: 0, ry: 0, rz: 0 };
-        console.log(this.ctx);
+        this.color = { r: 0, g: 0.75, b: 0.75 };
+        this.indexedVertices = this.sphere(0.5, 10, 10);
+        this.arrayType = this.toRawLineArray(this.indexedVertices);
+        this.mode = gl.LINES;
     }
+
+    Shape.prototype.setVertices = function(data) {
+        this.indexedVertices = { vertices: data.vertices, indices: data.indices };
+    };
+
+    Shape.prototype.setArrayType = function(name) {
+        if (name === "lines") {
+            this.arrayType = this.toRawLineArray(this.indexedVertices);
+        } else if (name === "triangles") {
+            this.arrayType = this.toRawTriangleArray(this.indexedVertices);
+        } else {
+           this.arrayType = this.toRawLineArray(this.indexedVertices);
+        }
+    };
+
+    Shape.prototype.getArrayType = function() {
+        return this.arrayType;
+    };
+
+    Shape.prototype.setMode = function(name) {
+        if (name === "lines") {
+            this.mode = gl.LINES;
+        } else if (name === "triangles") {
+            this.mode = gl.TRIANGLES;
+        } else {
+            this.mode = gl.LINES;
+        }
+    };
+
+    Shape.prototype.getMode = function(first_argument) {
+        return this.mode;
+    };
+
+    Shape.prototype.getData = function() {
+        return {
+            shape: this,
+            color: this.color,
+            vertices: this.arrayType,
+            mode: this.mode,
+            translate: this.getTranslate(),
+            scale: this.getScale(),
+            rotate: this.getRotate()
+        }
+    };
+    Shape.prototype.setColor = function(data) {
+        this.color = { r: data.r, g: data.g, b: data.b };
+    };
 
     Shape.prototype.translateShape = function(x, y, z) {
         var newX = this.parent.translate ? this.parent.translate.tx + x : x;
