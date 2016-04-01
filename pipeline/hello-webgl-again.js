@@ -68,9 +68,13 @@
 
     var getRotationMatrix = function (angle, x, y, z) {
         var data = { angle: angle, rx: x, ry: y, rz: z };
-        // console.log(data);
+        // console.log("data: " + data.rz);
         // console.log(glFormat(new Matrix(4, 4).getRotationMatrix(4, 4, data).elements));
-        return new Matrix(4, 4).getRotationMatrix(4, 4, data);
+        if (!x && !y && !z) {
+            return new Matrix(4, 4);
+        } else {
+            return new Matrix(4, 4).getRotationMatrix(4, 4, data);
+        }
     }
 
     var translate = function (x, y, z) {
@@ -143,7 +147,9 @@
 
     shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
-    shape4.getChildren()[0].getChildren()[0].translateShape(0.15, 0.15, 0);
+    shape4.getChildren()[0].getChildren()[0].translateShape(0.5, 0.5, 0);
+    shape4.getChildren()[0].getChildren()[0].rotateShape(60, 1, 1, 0);
+    shape4.getChildren()[0].getChildren()[0].scaleShape(0.5, 0.5, 0.5);
 
     var shape5 = new Shape(context);
 
@@ -261,13 +267,17 @@
         if (object.shape.getChildren().length > 0) {
             for (var i = 0; i < object.shape.getChildren().length; i += 1) {
                 child = object.shape.getChildren()[i];
+                console.log(i);
                 console.log(child.getTranslate());
+                console.log(child.getRotate());
                 newObject = {
                     shape: child,
                     color: { r: 0.0, g: 0.75, b: 0.75 },
                     vertices: child.toRawLineArray(child.cube()),
                     mode: gl.LINES,
-                    translate: child.getTranslate()
+                    translate: child.getTranslate(),
+                    scale: child.getScale(),
+                    rotate: child.getRotate()
                 }
                 array.push(newObject);
                 array = array.concat(add(newObject));

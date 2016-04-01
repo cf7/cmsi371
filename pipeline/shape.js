@@ -32,8 +32,8 @@ var Shape = (function () {
         this.parent = {}; // ** maximum call stack size exceeded
         this.children = [];
         this.translate = { tx: 0, ty: 0, tz: 0 };
-        this.scale = { sx: 0, sy: 0, sz: 0 };
-        this.rotate = { rx: 0, ry: 0, rz: 0 };
+        this.scale = { sx: 1, sy: 1, sz: 1 };
+        this.rotate = { angle: 0, rx: 0, ry: 0, rz: 0 };
         console.log(this.ctx);
     }
 
@@ -46,6 +46,26 @@ var Shape = (function () {
 
     Shape.prototype.getTranslate = function() {
         return this.translate;
+    };
+
+    Shape.prototype.scaleShape = function(x, y, z) {
+        var newX = this.parent.scale ? this.parent.scale.sx * x : x;
+        var newY = this.parent.scale ? this.parent.scale.sy * y : y;
+        var newZ = this.parent.scale ? this.parent.scale.sz * z : z;
+        this.scale = { sx: newX, sy: newY, sz: newZ };
+    };
+
+    Shape.prototype.getScale = function() {
+        return this.scale;
+    };
+
+    Shape.prototype.rotateShape = function(angle, x, y, z) {
+        var newAngle = this.parent.rotate ? this.parent.rotate.angle + angle : angle;
+        this.rotate = { angle: newAngle, rx: x, ry: y, rz: z };
+    };
+
+    Shape.prototype.getRotate = function() {
+        return this.rotate;
     };
 
     Shape.prototype.setParent = function(Shape) {
