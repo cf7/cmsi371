@@ -12,195 +12,46 @@ $(function () {
 
         equal(coneData.vertices[0].length, 3, "x, y, and z coordinates");
         equal(coneData.indices.length, faceCount, "arrangement for each face");
-        // equal(coneData.elements[1], 6, "Second element by index");
-        // equal(coneData.elements[2], 3, "Third element by index");
-        // equal(coneData.x(), 5, "First element by coordinate");
-        // equal(coneData.y(), 6, "Second element by coordinate");
-        // equal(coneData.z(), 3, "Third element by coordinate");
 
-        var squareData = shape.square();
-
-        equal(squareData.vertices.length, 4, "four corners");
-        equal(squareData.indices.length, 1, "one arrangement");
         
-        var sphereData = shape.sphere(10, 10, 10);
-
-        equal(sphereData.vertices.length, 100, "number of vertices");
-        equal(sphereData.vertices[0].length, 3, "x, y, and z coordinates");
-        equal(sphereData.indices[0].length, 3, "3 vertices per index");
-
-        // v = new Vector(3, 2, 1, 2);
-
-        // equal(v.dimensions(), 4, "Vector size");
-        // equal(v.elements[0], 3, "First element by index");
-        // equal(v.elements[1], 2, "Second element by index");
-        // equal(v.elements[2], 1, "Third element by index");
-        // equal(v.elements[3], 2, "Fourth element by index");
-        // equal(v.x(), 3, "First element by coordinate");
-        // equal(v.y(), 2, "Second element by coordinate");
-        // equal(v.z(), 1, "Third element by coordinate");
-        // equal(v.w(), 2, "Fourth element by coordinate");
-
-        // v = new Vector();
-        // equal(v.dimensions(), 0, "Empty vector (boundary case)");
     });
 
-    // test("Addition and Subtraction", function () {
-    //     var v1 = new Vector(4, 5);
-    //     var v2 = new Vector(-10, 4);
-    //     var vresult = v1.add(v2);
+    test("Testing Defaults", function () {
+        var shape2 = new Shape();
+        shape2.setDrawingStyle("triangles");
 
-    //     equal(vresult.dimensions(), 2, "Vector sum size check");
-    //     equal(vresult.x(), -6, "Vector sum first element");
-    //     equal(vresult.y(), 9, "Vector sum second element");
+        equal(shape2.color.r, 0, "red");
+        equal(shape2.color.g, 0.75, "green");
+        equal(shape2.color.b, 0.75, "blue");
+        equal(shape2.getTranslate().tx, 0, "tx");
+        equal(shape2.getTranslate().ty, 0, "ty");
+        equal(shape2.getTranslate().tz, 0, "tz");
+        equal(shape2.getScale().sx, 1, "sx");
+        equal(shape2.getScale().sy, 1, "sy");
+        equal(shape2.getScale().rz, 1, "sz");
 
-    //     v1 = new Vector(0, -2, 3, 5);
-    //     v2 = new Vector(-2, 1, 0, 7);
-    //     vresult = v1.subtract(v2);
-    //     equal(vresult.dimensions(), 4, "Vector difference size check");
-    //     equal(vresult.x(), 2, "Vector difference first element");
-    //     equal(vresult.y(), -3, "Vector difference second element");
-    //     equal(vresult.z(), 3, "Vector difference third element");
-    //     equal(vresult.w(), -2, "Vector difference fourth element");
+    });
 
-    //     // Check for errors.
-    //     v1 = new Vector(5, 8, 10, 2);
-    //     v2 = new Vector(1, 2, 2);
+    test("Testing transform functions", function () {
+        var shape3 = new Shape();
+        shape3.translateShape(0.25, 1, 0.15);
 
-    //     // We can actually check for a *specific* exception, but
-    //     // we won't go that far for now.
-    //     throws(
-    //         function () {
-    //             return v1.add(v2);
-    //         },
-    //         "Check for vectors of different sizes"
-    //     );
-    // });
+        equal(shape3.getTranslate().tx, 0.25, "tx");
+        equal(shape3.getTranslate().ty, 1, "ty");
+        equal(shape3.getTranslate().tz, 0.15, "tz");
 
-    // test("Scalar Multiplication and Division", function () {
-    //     var v = new Vector(8, 2, 3);
-    //     var vresult = v.multiply(2);
+        shape3.scaleShape(0.25, 1, 0.15);
 
-    //     equal(vresult.x(), 16, "Vector scalar multiplication first element");
-    //     equal(vresult.y(), 4, "Vector scalar multiplication second element");
-    //     equal(vresult.z(), 6, "Vector scalar multiplication third element");
+        equal(shape3.getScale().sx, 0.25, "sx");
+        equal(shape3.getScale().sy, 1, "sy");
+        equal(shape3.getScale().sz, 0.15, "sz");
 
-    //     vresult = vresult.divide(4);
+        shape3.rotateShape(180, 1, 1, 0);
 
-    //     equal(vresult.x(), 4, "Vector scalar division first element");
-    //     equal(vresult.y(), 1, "Vector scalar division second element");
-    //     equal(vresult.z(), 1.5, "Vector scalar division third element");
-    // });
+        equal(shape3.getRotate().angle, 180, "angle");
+        equal(shape3.getScale().rx, 0.25, "rx");
+        equal(shape3.getScale().ry, 1, "ry");
+        equal(shape3.getScale().rz, 0.15, "rz");
 
-    // test("Dot Product", function () {
-    //     var v1 = new Vector(-5, -2);
-    //     var v2 = new Vector(-3, 4);
-
-    //     equal(v1.dot(v2), 7, "2D dot product");
-
-    //     // Try for a perpendicular.
-    //     v1 = new Vector(Math.sqrt(2) / 2, Math.sqrt(2) / 2);
-    //     v2 = new Vector(-Math.sqrt(2) / 2, Math.sqrt(2) / 2);
-    //     equal(v1.dot(v2), 0, "Perpendicular 2D dot product");
-
-    //     // Try 3D.
-    //     v1 = new Vector(3, 2, 5);
-    //     v2 = new Vector(4, -1, 3);
-    //     equal(v1.dot(v2), 25, "3D dot product");
-
-    //     // And 4D.
-    //     v1 = new Vector(2, 2, 4, 8);
-    //     v2 = new Vector(-1, 7, 0, 20);
-    //     equal(v1.dot(v2), 172, "4D dot product");
-
-    //     // Check for errors.
-    //     v1 = new Vector(4, 2);
-    //     v2 = new Vector(3, 9, 1);
-
-    //     // We can actually check for a *specific* exception, but
-    //     // we won't go that far for now.
-    //     throws(
-    //         function () {
-    //             return v1.dot(v2);
-    //         },
-    //         "Check for vectors of different sizes"
-    //     );
-    // });
-
-    // test("Cross Product", function () {
-    //     var v1 = new Vector(3, 4);
-    //     var v2 = new Vector(1, 2);
-
-    //     // The cross product is restricted to 3D, so we start
-    //     // with an error check.
-    //     throws(
-    //         function () {
-    //             return v1.cross(v2);
-    //         },
-    //         "Check for non-3D vectors"
-    //     );
-
-    //     // Yeah, this is a bit of a trivial case.  But it at least
-    //     // establishes the right-handedness of a cross-product.
-    //     v1 = new Vector(1, 0, 0);
-    //     v2 = new Vector(0, 1, 0);
-    //     var vresult = v1.cross(v2);
-
-    //     equal(vresult.x(), 0, "Cross product first element");
-    //     equal(vresult.y(), 0, "Cross product second element");
-    //     equal(vresult.z(), 1, "Cross product third element");
-
-    //     // This one shows that switching vector order produces
-    //     // the opposite-pointing normal.
-    //     vresult = v2.cross(v1);
-
-    //     equal(vresult.x(), 0, "Cross product first element");
-    //     equal(vresult.y(), 0, "Cross product second element");
-    //     equal(vresult.z(), -1, "Cross product third element");
-    // });
-
-    // test("Magnitude and Unit Vectors", function () {
-    //     var v = new Vector(3, 4);
-
-    //     // The classic example.
-    //     equal(v.magnitude(), 5, "2D magnitude check");
-
-    //     // Kind of a cheat, but still tests the third dimension.
-    //     v = new Vector(5, 0, 12);
-    //     equal(v.magnitude(), 13, "3D magnitude check");
-
-    //     // Now for unit vectors.
-    //     v = (new Vector(3, 4)).unit();
-
-    //     equal(v.magnitude(), 1, "2D unit vector check");
-    //     equal(v.x(), 3 / 5, "2D unit vector first element");
-    //     equal(v.y(), 4 / 5, "2D unit vector second element");
-
-    //     v = (new Vector(0, -7, 24)).unit();
-
-    //     equal(v.magnitude(), 1, "3D unit vector check");
-    //     equal(v.x(), 0, "3D unit vector first element");
-    //     equal(v.y(), -7 / 25, "3D unit vector second element");
-    //     equal(v.z(), 24 / 25, "3D unit vector third element");
-    // });
-
-    // test("Projection", function () {
-    //     var v = new Vector(3, 3, 0);
-    //     var vresult = v.projection(new Vector(5, 0, 0));
-
-    //     equal(vresult.magnitude(), 3, "3D vector projection magnitude check");
-    //     equal(vresult.x(), 3, "3D vector projection first element");
-    //     equal(vresult.y(), 0, "3D vector projection second element");
-    //     equal(vresult.z(), 0, "3D vector projection third element");
-
-    //     // Error check: projection only applies to vectors with the same
-    //     // number of dimensions.
-    //     throws(
-    //         function () {
-    //             (new Vector(5, 2)).projection(new Vector(9, 8, 1));
-    //         },
-    //         "Ensure that projection applies only to vectors with the same number of dimensions"
-    //     );
-    // });
-
+    });
 });

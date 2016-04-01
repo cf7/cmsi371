@@ -27,7 +27,7 @@ var Shape = (function () {
 
     function Shape (gl, data) {
         if (data) {
-            this.gl = gl;
+            this.gl = gl || {};
             this.vertices = data.vertices ? data.vertices : [];
             this.indices = data.indices ? data.indices : [];
             this.parent = {};
@@ -40,7 +40,7 @@ var Shape = (function () {
             this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
             this.mode = data.mode ? data.mode : this.gl.LINES;
         } else {
-            this.gl = gl;
+            this.gl = gl || {};
             this.vertices = data ? data.vertices : [];
             this.indices = data ? data.indices : [];
             this.parent = {}; // ** maximum call stack size exceeded
