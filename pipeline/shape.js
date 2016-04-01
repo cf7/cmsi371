@@ -167,8 +167,25 @@ var Shape = (function () {
 
     };
 
-    Shape.prototype.composite = function(data) {
-        
+    Shape.prototype.trapezium = function(x, y, x, width, height) {
+        var vertices = [];
+        var indices = [];
+        vertices = vertices.concat(this.cube(0.5).vertices);
+        indices = indices.concat(this.cube(0.5).indices);
+
+        vertices[0][0] -= 0.25;
+        vertices[0][2] -= 0.25;
+        vertices[1][0] -= 0.25;
+        vertices[1][2] += 0.25;
+        vertices[2][0] += 0.25;
+        vertices[2][2] += 0.25;
+        vertices[3][0] += 0.25;
+        vertices[3][2] -= 0.25;
+
+        return {
+            vertices: vertices,
+            indices: indices
+        };
     };
 
     Shape.prototype.cylinder = function(radius, height, points) {
@@ -178,7 +195,6 @@ var Shape = (function () {
         vertices = vertices.concat(this.circle(radius, 0.0, points).vertices);
         indices = indices.concat(this.circle(radius, 0.0, points).indices);
 
-        // ** implement translate, scale, and rotate here
         vertices = vertices.concat(this.circle(radius, height, points).vertices);
         var length = vertices.length;
 
@@ -251,13 +267,13 @@ var Shape = (function () {
         };
     };
 
-    Shape.prototype.square = function () {
+    Shape.prototype.square = function (x, y, z, width, height) {
         return {
             vertices: [
-                [ 0, 1, 0 ],
-                [ 0, 1, -0.5 ],
-                [ 0, 0, -0.5 ],
-                [ 0, 0, 0 ]
+                [ 0, y, 0 ],
+                [ width, y, 0 ],
+                [ width, y, -height ],
+                [ 0, y, -height ]
             ],
 
             indices: [
@@ -266,17 +282,17 @@ var Shape = (function () {
         };
     };
 
-    Shape.prototype.cube = function() {
+    Shape.prototype.cube = function(edge) {
         return {
             vertices: [
-                [ 0.5, 0.5, 0.5 ],
-                [ 0.5, 0.5, -0.5 ],
-                [ -0.5, 0.5, -0.5 ],
-                [ -0.5, 0.5, 0.5 ],
-                [ 0.5, -0.5, 0.5 ],
-                [ 0.5, -0.5, -0.5 ],
-                [ -0.5, -0.5, -0.5 ],
-                [ -0.5, -0.5, 0.5 ]
+                [ edge, edge, edge ],
+                [ edge, edge, -edge ],
+                [ -edge, edge, -edge ],
+                [ -edge, edge, edge ],
+                [ edge, -edge, edge ],
+                [ edge, -edge, -edge ],
+                [ -edge, -edge, -edge ],
+                [ -edge, -edge, edge ]
             ],
 
             indices: [

@@ -153,7 +153,7 @@
 
 
     var shape4 = new Shape(gl);    
-    shape4.setVertices(shape4.cube());
+    shape4.setVertices(shape4.cube(0.5));
     shape4.translateShape(1, -0.5, -1);
     shape4.scaleShape(1.5, 1.5, 1.5);
 
@@ -174,6 +174,13 @@
     shape5.setDrawingStyle("triangles");
     shape5.scaleShape(1.5, 1.5, 1.5);
     shape5.translateShape(-1, 0, 0);
+
+    var shape6 = new Shape(gl);
+    shape6.setColor({ r: 0.0, g: 0.75, b: 0.75 });
+    shape6.setVertices(shape6.trapezium(0, 0, 0, 1, 1));
+    shape6.setDrawingStyle("lines");
+    shape6.translateShape(-1, 0, 1);
+
     // Build the objects to display.
     var preObjectsToDraw = [
         // {
@@ -227,6 +234,7 @@
     preObjectsToDraw.push(shape3.getData());
     preObjectsToDraw.push(shape4.getData());
     preObjectsToDraw.push(shape5.getData());
+    preObjectsToDraw.push(shape6.getData());
 
     var objectsToDraw = [];
 
