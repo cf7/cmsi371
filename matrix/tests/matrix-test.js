@@ -81,21 +81,6 @@ $(function () {
         equal(matrix.elements[3][1], 14, "Row 3 Col 1");
         equal(matrix.elements[3][2], 15, "Row 3 Col 2");
         equal(matrix.elements[3][3], 16, "Row 3 Col 3");
-
-        // v = new Vector(3, 2, 1, 2);
-
-        // equal(v.dimensions(), 4, "Vector size");
-        // equal(v.elements[0], 3, "First element by index");
-        // equal(v.elements[1], 2, "Second element by index");
-        // equal(v.elements[2], 1, "Third element by index");
-        // equal(v.elements[3], 2, "Fourth element by index");
-        // equal(v.x(), 3, "First element by coordinate");
-        // equal(v.y(), 2, "Second element by coordinate");
-        // equal(v.z(), 1, "Third element by coordinate");
-        // equal(v.w(), 2, "Fourth element by coordinate");
-
-        // v = new Vector();
-        // equal(v.dimensions(), 0, "Empty vector (boundary case)");
     });
 
     test("Matrix Multiplication", function () {
@@ -113,8 +98,6 @@ $(function () {
         ];
         var matrix1 = new Matrix(4, 5, array);
         var matrix2 = new Matrix(10, 4, array2);
-
-        // equal(matrix1.checkDimensions(matrix2), false, "Check that dimensions match");
 
         throws(
             function () {
@@ -149,42 +132,22 @@ $(function () {
         matrix2 = new Matrix( 5, 4, array2);
         var matrixResult = matrix1.mult(matrix2);
 
-        /**
-            result: [
-                [ 140, 125, 110, 95 ],
-                [ 440, 400, 360, 320 ],
-                [ 740, 675, 610, 545 ],
-                [ 1040, 950, 860, 770 ]
-            ]
-        */
-        // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
-        // equal(matrixResult.dimensions().rows, 4, "Rows");
-        // equal(matrixResult.dimensions().cols, 4, "Columns");
         equal(matrixResult.elements[0][0], 140, "Row 0 Col 0");
         equal(matrixResult.elements[0][1], 125, "Row 0 Col 1");
         equal(matrixResult.elements[0][2], 110, "Row 0 Col 2");
         equal(matrixResult.elements[0][3], 95, "Row 0 Col 3");
-        // equal(matrixResult.elements[0][4], 4, "Row 0 Col 3");
         equal(matrixResult.elements[1][0], 440, "Row 1 Col 0");
         equal(matrixResult.elements[1][1], 400, "Row 1 Col 1");
         equal(matrixResult.elements[1][2], 360, "Row 1 Col 2");
         equal(matrixResult.elements[1][3], 320, "Row 1 Col 3");
-        // equal(matrixResult.elements[1][4], 5, "Row 1 Col 0");
         equal(matrixResult.elements[2][0], 740, "Row 2 Col 0");
         equal(matrixResult.elements[2][1], 675, "Row 2 Col 1");
         equal(matrixResult.elements[2][2], 610, "Row 2 Col 2");
         equal(matrixResult.elements[2][3], 545, "Row 2 Col 3");
-        // equal(matrixResult.elements[2][4], 5, "Row 1 Col 0");
         equal(matrixResult.elements[3][0], 1040, "Row 3 Col 0");
         equal(matrixResult.elements[3][1], 950, "Row 3 Col 1");
         equal(matrixResult.elements[3][2], 860, "Row 3 Col 2");
         equal(matrixResult.elements[3][3], 770, "Row 3 Col 3");
-        // equal(matrixResult.elements[3][4], 5, "Row 1 Col 0");
-        // equal(matrixResult.elements[4][0], 13, "Row 3 Col 0");
-        // equal(matrixResult.elements[4][1], 14, "Row 3 Col 1");
-        // equal(matrixResult.elements[4][2], 15, "Row 3 Col 2");
-        // equal(matrixResult.elements[4][3], 16, "Row 3 Col 3");
-        // equal(matrixResult.elements[4][4], 5, "Row 1 Col 0");
 
         array = [
             [ 1, 1, 1 ],
@@ -205,28 +168,6 @@ $(function () {
         equal(matrixResult.elements[1][0], 4, "Row 1 Col 0");
         equal(matrixResult.elements[1][1], 4, "Row 1 Col 1");
         
-
-        // v1 = new Vector(0, -2, 3, 5);
-        // v2 = new Vector(-2, 1, 0, 7);
-        // matrixResult = v1.subtract(v2);
-        // equal(matrixResult.dimensions(), 4, "Vector difference size check");
-        // equal(matrixResult.x(), 2, "Vector difference first element");
-        // equal(matrixResult.y(), -3, "Vector difference second element");
-        // equal(matrixResult.z(), 3, "Vector difference third element");
-        // equal(matrixResult.w(), -2, "Vector difference fourth element");
-
-        // // Check for errors.
-        // v1 = new Vector(5, 8, 10, 2);
-        // v2 = new Vector(1, 2, 2);
-
-        // // We can actually check for a *specific* exception, but
-        // // we won't go that far for now.
-        // throws(
-        //     function () {
-        //         return v1.add(v2);
-        //     },
-        //     "Check for vectors of different sizes"
-        // );
     });
 
     test("3D Translation Matrices", function () {
@@ -234,36 +175,24 @@ $(function () {
         var data = { tx: 5, ty: 2, tz: 4 };
         var translateMatrix = new Matrix(4, 4).getTranslateMatrix(4, 4, data);
         console.log(translateMatrix);
-        // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
-        // equal(translateMatrix.dimensions().rows, 4, "Rows");
-        // equal(translateMatrix.dimensions().cols, 4, "Columns");
+
         equal(translateMatrix.elements[0][0], 1, "Row 0 Col 0");
         equal(translateMatrix.elements[0][1], 0, "Row 0 Col 1");
         equal(translateMatrix.elements[0][2], 0, "Row 0 Col 2");
         equal(translateMatrix.elements[0][3], data.tx, "Row 0 Col 3");
-        // equal(translateMatrix.elements[0][4], 4, "Row 0 Col 3");
         equal(translateMatrix.elements[1][0], 0, "Row 1 Col 0");
         equal(translateMatrix.elements[1][1], 1, "Row 1 Col 1");
         equal(translateMatrix.elements[1][2], 0, "Row 1 Col 2");
         equal(translateMatrix.elements[1][3], data.ty, "Row 1 Col 3");
-        // equal(translateMatrix.elements[1][4], 5, "Row 1 Col 0");
         equal(translateMatrix.elements[2][0], 0, "Row 2 Col 0");
         equal(translateMatrix.elements[2][1], 0, "Row 2 Col 1");
         equal(translateMatrix.elements[2][2], 1, "Row 2 Col 2");
         equal(translateMatrix.elements[2][3], data.tz, "Row 2 Col 3");
-        // equal(translateMatrix.elements[2][4], 5, "Row 1 Col 0");
         equal(translateMatrix.elements[3][0], 0, "Row 3 Col 0");
         equal(translateMatrix.elements[3][1], 0, "Row 3 Col 1");
         equal(translateMatrix.elements[3][2], 0, "Row 3 Col 2");
         equal(translateMatrix.elements[3][3], 1, "Row 3 Col 3");
-        // equal(translateMatrix.elements[3][4], 5, "Row 1 Col 0");
-        // equal(translateMatrix.elements[4][0], 13, "Row 3 Col 0");
-        // equal(translateMatrix.elements[4][1], 14, "Row 3 Col 1");
-        // equal(translateMatrix.elements[4][2], 15, "Row 3 Col 2");
-        // equal(translateMatrix.elements[4][3], 16, "Row 3 Col 3");
-        // equal(translateMatrix.elements[4][4], 5, "Row 1 Col 0");
 
-        // ** add a multiplication test case
     });
 
     
@@ -272,9 +201,6 @@ $(function () {
         var data = { sx: 2, sy: 2, sz: 2 };
         var scaleMatrix = new Matrix(4, 4).getScaleMatrix(4, 4, data);
         console.log(scaleMatrix);
-        // equal(matrix1.checkDimensions(matrix2), true, "Check that dimensions match");
-        // equal(scaleMatrix.dimensions().rows, 4, "Rows");
-        // equal(scaleMatrix.dimensions().cols, 4, "Columns");
         equal(scaleMatrix.elements[0][0], data.sx, "Row 0 Col 0");
         equal(scaleMatrix.elements[0][1], 0, "Row 0 Col 1");
         equal(scaleMatrix.elements[0][2], 0, "Row 0 Col 2");
@@ -363,6 +289,39 @@ $(function () {
         // equal(matrixResult.elements[4][4], 5, "Row 1 Col 0");
 
     });
+    
+     test("3D Ortho Matrices", function () {
+       
+        var data = { sx: 2, sy: 2, sz: 2 };
+        var scaleMatrix = new Matrix(4, 4).getScaleMatrix(4, 4, data);
+        console.log(scaleMatrix);
+        equal(scaleMatrix.elements[0][0], data.sx, "Row 0 Col 0");
+        equal(scaleMatrix.elements[0][1], 0, "Row 0 Col 1");
+        equal(scaleMatrix.elements[0][2], 0, "Row 0 Col 2");
+        equal(scaleMatrix.elements[0][3], 0, "Row 0 Col 3");
+        // equal(scaleMatrix.elements[0][4], 4, "Row 0 Col 3");
+        equal(scaleMatrix.elements[1][0], 0, "Row 1 Col 0");
+        equal(scaleMatrix.elements[1][1], data.sy, "Row 1 Col 1");
+        equal(scaleMatrix.elements[1][2], 0, "Row 1 Col 2");
+        equal(scaleMatrix.elements[1][3], 0, "Row 1 Col 3");
+        // equal(scaleMatrix.elements[1][4], 5, "Row 1 Col 0");
+        equal(scaleMatrix.elements[2][0], 0, "Row 2 Col 0");
+        equal(scaleMatrix.elements[2][1], 0, "Row 2 Col 1");
+        equal(scaleMatrix.elements[2][2], data.sz, "Row 2 Col 2");
+        equal(scaleMatrix.elements[2][3], 0, "Row 2 Col 3");
+        // equal(scaleMatrix.elements[2][4], 5, "Row 1 Col 0");
+        equal(scaleMatrix.elements[3][0], 0, "Row 3 Col 0");
+        equal(scaleMatrix.elements[3][1], 0, "Row 3 Col 1");
+        equal(scaleMatrix.elements[3][2], 0, "Row 3 Col 2");
+        equal(scaleMatrix.elements[3][3], 1, "Row 3 Col 3");
+        // equal(scaleMatrix.elements[3][4], 5, "Row 1 Col 0");
+        // equal(scaleMatrix.elements[4][0], 13, "Row 3 Col 0");
+        // equal(scaleMatrix.elements[4][1], 14, "Row 3 Col 1");
+        // equal(scaleMatrix.elements[4][2], 15, "Row 3 Col 2");
+        // equal(scaleMatrix.elements[4][3], 16, "Row 3 Col 3");
+        // equal(scaleMatrix.elements[4][4], 5, "Row 1 Col 0");
 
+        // ** add a multiplication test case
+    });
 
 });

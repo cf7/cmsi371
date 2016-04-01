@@ -321,8 +321,7 @@
     gl.enableVertexAttribArray(vertexColor);
 
    
-    var globalOrthoMatrix = gl.getUniformLocation(shaderProgram, "globalOrthoMatrix");
-    var globalFrustumMatrix = gl.getUniformLocation(shaderProgram, "globalFrustumMarix");
+    var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
    
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
     var matrix = gl.getUniformLocation(shaderProgram, "matrix");
@@ -376,7 +375,7 @@
         
         gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
-        // gl.uniformMatrix4fv(globalFrustumMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
         //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
         //     2 * (canvas.width / canvas.height),
         //     -2,
@@ -384,7 +383,7 @@
         //     -10, // viewing volume, near plane
         //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
-        gl.uniformMatrix4fv(globalOrthoMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
             -2 * (canvas.width / canvas.height), // change the 2's to change the projection
             2 * (canvas.width / canvas.height),
             -2,

@@ -303,26 +303,26 @@ var Matrix = (function () {
         var height = top - bottom;
         var depth = zFar - zNear;
 
-        this.elements[0][0] = 2.0 * zNear / width;
+        this.elements[0][0] = (2.0 * zNear) / width;
         this.elements[1][0] = 0.0;
         this.elements[2][0] = 0.0;
         this.elements[3][0] = 0.0;
 
         this.elements[0][1] = 0.0;
-        this.elements[1][1] = 2.0 * zNear / height;
+        this.elements[1][1] = (2.0 * zNear) / height;
         this.elements[2][1] = 0.0;
         this.elements[3][1] = 0.0;
 
         this.elements[0][2] = (right + left) / width;
         this.elements[1][2] = (top + bottom) / height;
         this.elements[2][2] = -(zFar + zNear) / depth;
-        this.elements[3][2] = -1;
+        this.elements[3][2] = -1.0;
 
-        this.elements[0][3] = 0;
-        this.elements[1][3] = 0;
-        this.elements[2][3] = -2 * zNear * zFar / depth;
-        this.elements[3][3] = 0;
-
+        this.elements[0][3] = 0.0;
+        this.elements[1][3] = 0.0;
+        this.elements[2][3] = (-2.0 * zNear * zFar) / depth;
+        this.elements[3][3] = 0.0;
+        console.log(this.elements);
         return this;
     };
 
