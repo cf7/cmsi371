@@ -13,7 +13,18 @@ $(function () {
         equal(coneData.vertices[0].length, 3, "x, y, and z coordinates");
         equal(coneData.indices.length, faceCount, "arrangement for each face");
 
-        
+
+        var sphereData = shape.sphere(0.75, 10, 10);
+        equal(sphereData.vertices.length, 100, "number of vertices sphere");
+        equal(sphereData.indices.length, 200, "should be double the indices");
+
+        var cylinderData = shape.cylinder(0.75, 1, 10);
+        equal(cylinderData.vertices.length, 22, "should be double the number of points + 2");
+        equal(cylinderData.indices.length, 48, "should be (number of points + 2) * 4");
+
+        var trapeziumData = shape.trapezium(0.5);
+        equal(trapeziumData.vertices.length, shape.cube(0.5).vertices.length, "should be same number as cube vertices");
+        equal(trapeziumData.indices.length, shape.cube(0.5).indices.length, "should be same number as cube indices");
     });
 
     test("Testing Defaults", function () {

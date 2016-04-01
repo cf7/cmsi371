@@ -52,10 +52,10 @@
       varying vec4 finalVertexColor;
       uniform mat4 globalMatrix;
       uniform mat4 globalOrthoMatrix;
-      uniform mat4 globalFrustumMatrix; // ** make sure these are named the same throughout all files
+      uniform mat4 globalFrustumMatrix;
       uniform mat4 matrix;
 
-      void main(void) { // ** everything after projection matrix is modelView matrix
+      void main(void) {
           gl_Position = globalOrthoMatrix * globalMatrix * matrix * vec4(vertexPosition, 1.0);
           finalVertexColor = vec4(vertexColor, 1.0);
       }

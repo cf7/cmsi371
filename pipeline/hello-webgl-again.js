@@ -177,7 +177,7 @@
 
     var shape6 = new Shape(gl);
     shape6.setColor({ r: 0.0, g: 0.75, b: 0.75 });
-    shape6.setVertices(shape6.trapezium(0, 0, 0, 1, 1));
+    shape6.setVertices(shape6.trapezium(0.5));
     shape6.setDrawingStyle("lines");
     shape6.translateShape(-1, 0, 1);
 
@@ -320,7 +320,6 @@
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
 
-    // ** retrieves the location of these variables from the html GL code
    
     var globalOrthoMatrix = gl.getUniformLocation(shaderProgram, "globalOrthoMatrix");
     var globalFrustumMatrix = gl.getUniformLocation(shaderProgram, "globalFrustumMarix");
@@ -377,10 +376,6 @@
         
         gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
-        // ** if objects are at the origin, camera is also at the origin, don't put frustum at origin
-        // ** need to push objects back by -z
-        // ** use a save and restore to translate farther out before applying perspective
-        // ** do not implement until coding save() and restore() functions
         // gl.uniformMatrix4fv(globalFrustumMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
         //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
         //     2 * (canvas.width / canvas.height),

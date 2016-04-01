@@ -144,11 +144,11 @@ var Shape = (function () {
 
     };
 
-    Shape.prototype.trapezium = function(x, y, x, width, height) {
+    Shape.prototype.trapezium = function(edge) {
         var vertices = [];
         var indices = [];
-        vertices = vertices.concat(this.cube(0.5).vertices);
-        indices = indices.concat(this.cube(0.5).indices);
+        vertices = vertices.concat(this.cube(edge).vertices);
+        indices = indices.concat(this.cube(edge).indices);
 
         vertices[0][0] -= 0.25;
         vertices[0][2] -= 0.25;
@@ -232,8 +232,6 @@ var Shape = (function () {
             indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
             indices.push([ i, (i + longit - 1) % vertices.length, (i + longit) % vertices.length ]);
         }
-
-        //indices.push([ 0, (vertices.length - 1), 1]);
 
         return {
             vertices: vertices,
@@ -364,15 +362,6 @@ var Shape = (function () {
             ]
         };
     };
-
-
-    // ** functions that traverse meshes to produce triangles or lines, because
-    // ** webGL needs a certain format to draw the vertices
-    // ** mesh must be converted to vertex array (of given type) that is needed by the mode
-
-    // *****
-    // mode specific arrays
-    // *****
 
     /*
      * Utility function for turning indexed vertices into a "raw" coordinate array
