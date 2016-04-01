@@ -29,10 +29,31 @@ var Shape = (function () {
         this.cxt = context || {};
         this.vertices = data ? data.vertices : [];
         this.indices = data ? data.indices : [];
+        this.parent = {}; // ** maximum call stack size exceeded
         this.children = [];
+        this.translate = { tx: 0, ty: 0, tz: 0 };
+        this.scale = { sx: 0, sy: 0, sz: 0 };
+        this.rotate = { rx: 0, ry: 0, rz: 0 };
+        console.log(this.ctx);
     }
 
+    Shape.prototype.translateShape = function(x, y, z) {
+        var newX = this.parent.translate ? this.parent.translate.tx + x : x;
+        var newY = this.parent.translate ? this.parent.translate.ty + y : y;
+        var newZ = this.parent.translate ? this.parent.translate.tz + z : z;
+        this.translate = { tx: newX, ty: newY, tz: newZ };
+    };
+
+    Shape.prototype.getTranslate = function() {
+        return this.translate;
+    };
+
+    Shape.prototype.setParent = function(Shape) {
+        this.parent = Shape;
+    };
+
     Shape.prototype.addChild = function (Shape) {
+        Shape.setParent(this);
         this.children.push(Shape);
     }
 
@@ -71,6 +92,10 @@ var Shape = (function () {
 
     };
 
+    Shape.prototype.composite = function(data) {
+        
+    };
+
     Shape.prototype.cylinder = function(radius, height, points) {
         var vertices = [];
         var indices = [];
@@ -78,7 +103,8 @@ var Shape = (function () {
         vertices = vertices.concat(this.circle(radius, 0.0, points).vertices);
         indices = indices.concat(this.circle(radius, 0.0, points).indices);
 
-        vertices = vertices.concat(this.circle(radius, 0.25, points).vertices);
+        // ** implement translate, scale, and rotate here
+        vertices = vertices.concat(this.circle(radius, height, points).vertices);
         var length = vertices.length;
 
         indices.push([ 0, length/2, (length/2 + 1) % length ]);

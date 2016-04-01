@@ -30,15 +30,7 @@
 
     var transformationMatrix = new Matrix(4, 4);
     var savedMatrices = [];
-    var context = {
-        save: save,
-        restore: restore,
-        translate: translate,
-        scale: scale,
-        rotate: rotate,
-        savedMatrices: savedMatrices,
-        currentTransform: transformationMatrix
-    }
+    
 
     var save = function () {
         context.savedMatrices.push(context.currentTransform.elements);
@@ -95,6 +87,16 @@
     }
 
 
+    var context = {
+        save: save,
+        restore: restore,
+        translate: translate,
+        scale: scale,
+        rotate: rotate,
+        savedMatrices: savedMatrices,
+        currentTransform: transformationMatrix
+    }
+
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
 
@@ -133,9 +135,15 @@
 
     var shape4 = new Shape(context);    
 
+    shape4.translateShape(1, -0.5, -1);
+    console.log(shape4.getTranslate());
     shape4.addChild(new Shape(context));
     shape4.addChild(new Shape(context));
     shape4.getChildren()[0].addChild(new Shape(context));
+
+    shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
+    shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
+    shape4.getChildren()[0].getChildren()[0].translateShape(0.15, 0.15, 0);
 
     var shape5 = new Shape(context);
 
@@ -227,16 +235,15 @@
             color: { r: 0.0, g: 0.75, b: 0.75 },
             vertices: shape4.toRawLineArray(shape4.cube()),
             mode: gl.LINES,
-            translate: { tx: 1, ty: -0.5, tz: -1 },
+            translate: shape4.getTranslate(),
             scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
         },
 
         {
             shape: shape5,
             color: { r: 0.0, g: 0.75, b: 0.75 },
-            vertices: shape5.toRawTriangleArray(shape5.cylinder(0.25, 1, 15)),
+            vertices: shape5.toRawTriangleArray(shape5.cylinder(0.25, 0.5, 20)),
             mode: gl.TRIANGLES,
-            translate: {tx: 0, ty: 0, tz: 0 },
             scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
         }
 
@@ -254,12 +261,13 @@
         if (object.shape.getChildren().length > 0) {
             for (var i = 0; i < object.shape.getChildren().length; i += 1) {
                 child = object.shape.getChildren()[i];
+                console.log(child.getTranslate());
                 newObject = {
                     shape: child,
                     color: { r: 0.0, g: 0.75, b: 0.75 },
                     vertices: child.toRawLineArray(child.cube()),
                     mode: gl.LINES,
-                    translate: { tx: object.translate.tx + 0.15, ty: object.translate.ty + 0.15, tz: object.translate.tz }
+                    translate: child.getTranslate()
                 }
                 array.push(newObject);
                 array = array.concat(add(newObject));
@@ -350,16 +358,6 @@
         // Set the varying colors.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
-
-        // *****
-        // Need save and restore functions for the matrices!!!!
-        // They keep the identity matrices so that any transforms can
-        // be converted back to identity matrices
-        // *****
-
-        // ****
-        // Add recursive child-drawing code here
-        // ****
 
         save();
 
