@@ -119,7 +119,9 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
 
 
-    // ** add preprocessing code here
+
+
+    // ** Shape objects default to spheres
 
     var vertices = [
         [ 2.0, 0.0, 2.0 ],
@@ -131,28 +133,47 @@
     ];
 
     var shape = new Shape(gl);
+    shape.setColor({ r: 0.0, g: 0.5, b: 0.0 });
+    shape.setVertices(shape.cone(20));
+    shape.setDrawingStyle("triangles");
+    shape.translateShape(1, 1.5, 1);
 
-    // ** take in data for custom shapes
-    var shape2 = new Shape(gl, { vertices: vertices, indices: indices });
-
+    var shape2 = new Shape(gl);
+    shape2.setVertices({ vertices: vertices, indices: indices });
+    shape2.setDrawingStyle("triangles");
+    shape2.setColor({ r: 0.0, g: 0.5, b: 0.5 });
+    shape2.translateShape(0.5, -0.75);
+    shape2.scaleShape(0.5, 0.5, 0.5);
+    shape2.rotateShape(60, 1, 1, 1);
+  
     var shape3 = new Shape(gl);
+    shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
+    shape3.setVertices(shape3.sphere(0.75, 20, 20));
+    shape3.setDrawingStyle("lines");
+
 
     var shape4 = new Shape(gl);    
-
+    shape4.setVertices(shape4.cube());
     shape4.translateShape(1, -0.5, -1);
     shape4.scaleShape(1.5, 1.5, 1.5);
+
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
 
     shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
-    shape4.getChildren()[0].getChildren()[0].translateShape(0.5, 0.5, 0);
-    shape4.getChildren()[0].getChildren()[0].rotateShape(60, 1, 1, 0);
+    shape4.getChildren()[0].getChildren()[0].translateShape(0, 1, 0);
+    shape4.getChildren()[0].getChildren()[0].rotateShape(30, 1, 1, 0);
     shape4.getChildren()[0].getChildren()[0].scaleShape(0.5, 0.5, 0.5);
 
-    var shape5 = new Shape(gl);
 
+    var shape5 = new Shape(gl);
+    shape5.setColor({ r: 0.0, g: 0.75, b: 0.75 });
+    shape5.setVertices(shape5.cylinder(0.25, 0.5, 20));
+    shape5.setDrawingStyle("triangles");
+    shape5.scaleShape(1.5, 1.5, 1.5);
+    shape5.translateShape(-1, 0, 0);
     // Build the objects to display.
     var preObjectsToDraw = [
         // {
@@ -199,62 +220,14 @@
         //     ),
         //     mode: gl.LINE_LOOP
         // },
-
-        // ** change shapes and drawing orders here
-
-        // ** rotation axis found in drawScene function
-
-
-        // **********
-        // ** can create buffer matrices on which to perform transforms
-        // ** only if the object contains a tag
-        // ** (i.e. objects that have "axis" attribute will be rotated via 
-        // ** the buffer matrix, otherwise, if "axis" not found, return identity
-        // ** matrix to uniformMatrix4fv)
-        // **********
-
-        // {
-        //     color: { r: 0.0, g: 0.5, b: 0.0 },
-        //     vertices: shape.toRawTriangleArray(shape.cone(20)),
-        //     mode: gl.TRIANGLES
-        // },
-
-        {
-            color: { r: 0.0, g: 0.5, b: 0.5 },
-            vertices: shape2.toRawTriangleArray({ vertices: shape2.vertices, indices: shape2.indices }),
-            mode: gl.TRIANGLES,
-            translate: { tx: 0.5, ty: -0.75, tz: 0.5 },
-            scale: { sx: 0.5, sy: 0.5, sz: 0.5 },
-            rotate: { angle: 60, rx: 1, ry: 1, rz: 1 }
-        },
-
-        // {
-        //     color: { r: 0.0, g: 0.75, b: 0.75 },
-        //     vertices: shape3.toRawLineArray(shape3.sphere(0.75, 20, 20)),
-        //     mode: gl.LINES,
-        // },
-
-        // ** anywhere objectToDraw is called, needs to be able to access children
-        // ** because more attributes are being added past this point such as buffers
-        // {
-        //     shape: shape4,
-        //     color: { r: 0.0, g: 0.75, b: 0.75 },
-        //     vertices: shape4.toRawTriangleArray(shape4.cube()),
-        //     mode: gl.TRIANGLES,
-        //     translate: shape4.getTranslate(),
-        //     scale: shape4.getScale()
-        // },
-
-        {
-            shape: shape5,
-            color: { r: 0.0, g: 0.75, b: 0.75 },
-            vertices: shape5.toRawTriangleArray(shape5.cylinder(0.25, 0.5, 20)),
-            mode: gl.TRIANGLES,
-            scale: { sx: 1.5, sy: 1.5, sz: 1.5 }
-        }
-
     ];
+    
+    preObjectsToDraw.push(shape.getData());
+    preObjectsToDraw.push(shape2.getData());
+    preObjectsToDraw.push(shape3.getData());
     preObjectsToDraw.push(shape4.getData());
+    preObjectsToDraw.push(shape5.getData());
+
     var objectsToDraw = [];
 
     var add = function (object) {
@@ -265,20 +238,8 @@
         if (object.shape.getChildren().length > 0) {
             for (var i = 0; i < object.shape.getChildren().length; i += 1) {
                 child = object.shape.getChildren()[i];
-                console.log(i);
-                console.log(child.getTranslate());
-                console.log(child.getRotate());
-                newObject = {
-                    shape: child,
-                    color: { r: 0.0, g: 0.75, b: 0.75 },
-                    vertices: child.toRawLineArray(child.cube()),
-                    mode: gl.LINES,
-                    translate: child.getTranslate(),
-                    scale: child.getScale(),
-                    rotate: child.getRotate()
-                }
-                array.push(newObject);
-                array = array.concat(add(newObject));
+                array.push(child.getData());
+                array = array.concat(add(child.getData()));
             }
         }
         return array;

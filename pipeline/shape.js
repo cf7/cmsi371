@@ -26,49 +26,55 @@ var Shape = (function () {
     // ** pass in the webGL context!!!! (gl is the context)
 
     function Shape (gl, data) {
-        this.vertices = data ? data.vertices : [];
-        this.indices = data ? data.indices : [];
-        this.parent = {}; // ** maximum call stack size exceeded
-        this.children = [];
-        this.translate = { tx: 0, ty: 0, tz: 0 };
-        this.scale = { sx: 1, sy: 1, sz: 1 };
-        this.rotate = { angle: 0, rx: 0, ry: 0, rz: 0 };
-        this.color = { r: 0, g: 0.75, b: 0.75 };
-        this.indexedVertices = this.sphere(0.5, 10, 10);
-        this.arrayType = this.toRawLineArray(this.indexedVertices);
-        this.mode = gl.LINES;
+        if (data) {
+            this.gl = gl;
+            this.vertices = data.vertices ? data.vertices : [];
+            this.indices = data.indices ? data.indices : [];
+            this.parent = {};
+            this.children = [];
+            this.translate = data.translate ? data.translate : { tx: 0, ty: 0, tz: 0 };
+            this.scale = data.scale ? data.scale : { sx: 1, sy: 1, sz: 1 };
+            this.rotate = data.rotate ? data.rotate : { angle: 0, rx: 0, ry: 0, rz: 0 };
+            this.color = data.color ? data.color : { r: 0, g: 0.75, b: 0.75 };
+            this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 10, 10);
+            this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
+            this.mode = data.mode ? data.mode : this.gl.LINES;
+        } else {
+            this.gl = gl;
+            this.vertices = data ? data.vertices : [];
+            this.indices = data ? data.indices : [];
+            this.parent = {}; // ** maximum call stack size exceeded
+            this.children = [];
+            this.translate = { tx: 0, ty: 0, tz: 0 };
+            this.scale = { sx: 1, sy: 1, sz: 1 };
+            this.rotate = { angle: 0, rx: 0, ry: 0, rz: 0 };
+            this.color = { r: 0, g: 0.75, b: 0.75 };
+            this.indexedVertices = this.sphere(0.5, 10, 10);
+            this.arrayType = this.toRawLineArray(this.indexedVertices);
+            this.mode = this.gl.LINES;
+        }
     }
 
     Shape.prototype.setVertices = function(data) {
         this.indexedVertices = { vertices: data.vertices, indices: data.indices };
+        this.setDrawingStyle("lines");
     };
 
-    Shape.prototype.setArrayType = function(name) {
+    Shape.prototype.setDrawingStyle = function(name) {
         if (name === "lines") {
             this.arrayType = this.toRawLineArray(this.indexedVertices);
+            this.mode = this.gl.LINES;
         } else if (name === "triangles") {
             this.arrayType = this.toRawTriangleArray(this.indexedVertices);
+            this.mode = this.gl.TRIANGLES;
         } else {
            this.arrayType = this.toRawLineArray(this.indexedVertices);
+           this.mode = this.gl.LINES;
         }
     };
 
-    Shape.prototype.getArrayType = function() {
-        return this.arrayType;
-    };
-
-    Shape.prototype.setMode = function(name) {
-        if (name === "lines") {
-            this.mode = gl.LINES;
-        } else if (name === "triangles") {
-            this.mode = gl.TRIANGLES;
-        } else {
-            this.mode = gl.LINES;
-        }
-    };
-
-    Shape.prototype.getMode = function(first_argument) {
-        return this.mode;
+    Shape.prototype.getDrawingStyle = function() {
+        return { arrayType: this.arrayType, mode: this.mode };
     };
 
     Shape.prototype.getData = function() {
