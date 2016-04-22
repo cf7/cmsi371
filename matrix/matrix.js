@@ -91,7 +91,6 @@ i.e., R(S(T(vertex)))
 
 */
 
-var Vector = require('./vector.js');
 
 var Matrix = (function () {
     
@@ -323,17 +322,69 @@ var Matrix = (function () {
         this.elements[1][3] = 0.0;
         this.elements[2][3] = (-2.0 * zNear * zFar) / depth;
         this.elements[3][3] = 0.0;
-        console.log(this.elements);
+
         return this;
     };
 
 
-    Matrix.prototype.getCameraMatrix = function(P, Q) {
-        var 
+    Matrix.prototype.getCameraMatrix = function(location, lookAt) {
+        // P and Q will be objects with coordinates
+        var p = new Vector(location.x, location.y, location.z);
+        var q = new Vector(lookAt.x, lookAt.y, lookAt.z);
+
+        console.log("P");
+        console.log(p);
+        console.log("Q");
+        console.log(q);
+        var PQ = q.subtract(p); // v2 - v1
+        var unitPQ = PQ.unit();
+        var up = new Vector(0, 1, 0);
+        console.log("up");
+        console.log(up);
+        var z = q.subtract(p).unit();
+
+        var projUp = up.projection(z);
+
+        var y = up.subtract(projUp).unit();
+        var x = y.cross(z);
+
+        var Px = p.dot(x);
+        var Py = p.dot(y);
+        var Pz = p.dot(z);
+        console.log("Px");
+        console.log(Px);
+        console.log("Py");
+        console.log(Py);
+        console.log("Pz");
+        console.log(Pz);
+        this.elements[0][0] = x.x();
+        this.elements[1][0] = y.x();
+        this.elements[2][0] = z.x();
+        this.elements[3][0] = 0.0;
+
+        this.elements[0][1] = x.y();
+        this.elements[1][1] = y.y();
+        this.elements[2][1] = z.y();
+        this.elements[3][1] = 0.0;
+
+        this.elements[0][2] = x.z();
+        this.elements[1][2] = y.z();
+        this.elements[2][2] = z.z();
+        this.elements[3][2] = 0.0;
+
+        this.elements[0][3] = -Px;
+        this.elements[1][3] = -Py;
+        this.elements[2][3] = -Pz;
+        this.elements[3][3] = 1.0;
+
+        return this;
+
         /**
             First need a vector from P to Q, (Q being the focus of the camera,
             P being the position of the camera)
             Take unit vector of PQ,
+            
+            apply unit operations AFTER vector operations/transformations
 
             unit = vector / vectorSize
             vectorSize = sqrt( x*x + y*y + z*z)
@@ -349,8 +400,8 @@ var Matrix = (function () {
             proj(up, z): (up dot Uz) * Uz // projection of up onto z
             where Uz = up dot z / zSize
 
-            z = UnitP - Qcoordinates
-            y = UnitUpVector - projectionVector(up, z)
+            z = unit(P - Q)
+            y = unit(up - projection(up, z))
             x = y crossproduct z
     
             transform will consist of two matrices
@@ -368,6 +419,7 @@ var Matrix = (function () {
             | 0  0  0       1     |
         */
         
+
 
     };
     return Matrix;

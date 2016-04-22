@@ -31,6 +31,7 @@
          is common to many WebGL programs. -->
     <script src="glsl-utilities.js"></script>
 
+    <script src="../matrix/vector.js"></script>
     <script src="../matrix/matrix.js"></script>
     
     <!-- Shapes is a library that generates "canned" shapes. -->
@@ -52,13 +53,12 @@
       varying vec4 finalVertexColor;
       uniform mat4 globalMatrix;
       uniform mat4 globalProjectionMatrix;
-      uniform mat4 matrix;
-
-      // new matrixMult -> projection * [rotation] * camera * modelView
+      uniform mat4 camera;
+      uniform mat4 modelView;
       
       void main(void) {
-          gl_Position = globalProjectionMatrix * globalMatrix * matrix * vec4(vertexPosition, 1.0);
-          finalVertexColor = vec4(vertexColor, 1.0);
+        gl_Position = globalProjectionMatrix * globalMatrix * camera * modelView * vec4(vertexPosition, 1.0);
+        finalVertexColor = vec4(vertexColor, 1.0);
       }
     </script>
 

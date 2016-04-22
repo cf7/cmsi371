@@ -135,5 +135,3 @@ var Vector = (function () {
 
     return vector;
 })();
-
-module.exports = Vector;

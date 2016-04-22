@@ -43,7 +43,7 @@
             return;
         }
     }   
-
+    
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
         // console.log("frustum");
         // console.log(glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements));
@@ -322,9 +322,9 @@
 
    
     var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
-   
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
-    var matrix = gl.getUniformLocation(shaderProgram, "matrix");
+    var camera = gl.getUniformLocation(shaderProgram, "camera");
+    var modelView = gl.getUniformLocation(shaderProgram, "modelView");
 
     /*
      * Displays an individual object.
@@ -346,7 +346,7 @@
             rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
         }
 
-        gl.uniformMatrix4fv(matrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+        gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
         restore();
 
@@ -375,7 +375,12 @@
         
         gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
-
+        var location = { x: 0, y: 0, z: 0};
+        var lookAt = { x: -1, y: 0, z: -1};
+        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt).elements;
+        console.log(cameraMatrix);
+        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix)));
+        // if getting invalid size error, might need a glFormat()
 
         // ** only activate one of the projection matrices at a time
 

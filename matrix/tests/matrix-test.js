@@ -290,4 +290,30 @@ $(function () {
 
     });
     
+    test("Camera Matrices", function () {
+        var location = { x: 0, y: 0, z: 0};
+        var lookAt = { x: 1, y: 0.5, z: 1};
+        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt);
+
+        equal(cameraMatrix.dimensions().rows, 4, "Rows");
+        equal(cameraMatrix.dimensions().cols, 4, "Cols");
+        notEqual(cameraMatrix.elements[0][0], 0, "Row 0 Col 0");
+        notEqual(cameraMatrix.elements[0][1], 0, "Row 0 Col 1");
+        notEqual(cameraMatrix.elements[0][2], 0, "Row 0 Col 2");
+        equal(cameraMatrix.elements[0][3], 0, "Row 0 Col 3");
+        notEqual(cameraMatrix.elements[1][0], 0, "Row 1 Col 0");
+        notEqual(cameraMatrix.elements[1][1], 0, "Row 1 Col 1");
+        notEqual(cameraMatrix.elements[1][2], 0, "Row 1 Col 2");
+        equal(cameraMatrix.elements[1][3], 0, "Row 1 Col 3");
+        notEqual(cameraMatrix.elements[2][0], 0,"Row 2 Col 0");
+        notEqual(cameraMatrix.elements[2][1], 0,"Row 2 Col 1");
+        notEqual(cameraMatrix.elements[2][2], 0,"Row 2 Col 2");
+        equal(cameraMatrix.elements[2][3], 0,"Row 2 Col 3");
+        equal(cameraMatrix.elements[3][0], 0, "Row 3 Col 0");
+        equal(cameraMatrix.elements[3][1], 0, "Row 3 Col 1");
+        equal(cameraMatrix.elements[3][2], 0, "Row 3 Col 2");
+        equal(cameraMatrix.elements[3][3], 1, "Row 3 Col 3");
+
+    });
+
 });
