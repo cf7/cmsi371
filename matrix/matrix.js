@@ -91,6 +91,7 @@ i.e., R(S(T(vertex)))
 
 */
 
+var Vector = require('./vector.js');
 
 var Matrix = (function () {
     
@@ -326,14 +327,6 @@ var Matrix = (function () {
         return this;
     };
 
-    var vectorSize = function (vector) {
-
-    }
-    
-    var normalize = function (vector) {
-
-        return vector;
-    }
 
     Matrix.prototype.getCameraMatrix = function(P, Q) {
         var 
