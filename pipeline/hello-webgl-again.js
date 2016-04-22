@@ -228,7 +228,7 @@
         //     mode: gl.LINE_LOOP
         // },
     ];
-    
+        
     preObjectsToDraw.push(shape.getData());
     preObjectsToDraw.push(shape2.getData());
     preObjectsToDraw.push(shape3.getData());

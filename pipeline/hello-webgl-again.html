@@ -54,6 +54,8 @@
       uniform mat4 globalProjectionMatrix;
       uniform mat4 matrix;
 
+      // new matrixMult -> projection * [rotation] * camera * modelView
+      
       void main(void) {
           gl_Position = globalProjectionMatrix * globalMatrix * matrix * vec4(vertexPosition, 1.0);
           finalVertexColor = vec4(vertexColor, 1.0);

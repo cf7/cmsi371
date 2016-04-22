@@ -326,7 +326,58 @@ var Matrix = (function () {
         return this;
     };
 
+    var vectorSize = function (vector) {
+
+    }
     
+    var normalize = function (vector) {
+
+        return vector;
+    }
+
+    Matrix.prototype.getCameraMatrix = function(P, Q) {
+        var 
+        /**
+            First need a vector from P to Q, (Q being the focus of the camera,
+            P being the position of the camera)
+            Take unit vector of PQ,
+
+            unit = vector / vectorSize
+            vectorSize = sqrt( x*x + y*y + z*z)
+
+            Second find up vector, which is <0, 1, 0>
+            Look up projection vectors (projecting a vector onto an arbitrary axis)
+
+            cos(theta) = U dot V / uSize * vSize // angle between two vectors
+            Uv = uSize * cos(theta) = U dot V / vSize // orthoganal projection of u onto v
+            
+            Projection: (U dot Uv) * Uv
+            
+            proj(up, z): (up dot Uz) * Uz // projection of up onto z
+            where Uz = up dot z / zSize
+
+            z = UnitP - Qcoordinates
+            y = UnitUpVector - projectionVector(up, z)
+            x = y crossproduct z
+    
+            transform will consist of two matrices
+            first with x,y,z vectors just calculated
+            second with inverse coordinates from P vector passed in (camera location)
+            | x xy xz 0 |     | 1 0 0 -Px |
+            | yx y yz 0 |  *  | 0 1 0 -Py |
+            | zx zy z 0 |     | 0 0 1 -Pz |
+            | 0  0  0 1 |     | 0 0 0   1 |
+
+            resulting in final matrix
+            | x xy xz (-Px dot x) |
+            | yx y yz (-Py dot y) |
+            | zx zy z (-Pz dot z) |
+            | 0  0  0       1     |
+        */
+        
+
+
+    };
     return Matrix;
 
     /** 
@@ -355,94 +406,4 @@ var Matrix = (function () {
         ];
     */
 
-
-    // vector.prototype.add = function (v) {
-    //     var result = new Vector();
-
-    //     checkDimensions(this, v);
-
-    //     for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-    //         result.elements[i] = this.elements[i] + v.elements[i];
-    //     }
-
-    //     return result;
-    // };
-
-    // vector.prototype.subtract = function (v) {
-    //     var result = new Vector();
-
-    //     checkDimensions(this, v);
-
-    //     for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-    //         result.elements[i] = this.elements[i] - v.elements[i];
-    //     }
-
-    //     return result;
-    // };
-
-    // vector.prototype.multiply = function (s) {
-    //     var result = new Vector();
-
-    //     for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-    //         result.elements[i] = this.elements[i] * s;
-    //     }
-
-    //     return result;
-    // };
-
-    // vector.prototype.divide = function (s) {
-    //     var result = new Vector();
-
-    //     for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-    //         result.elements[i] = this.elements[i] / s;
-    //     }
-
-    //     return result;
-    // };
-
-    // vector.prototype.dot = function (v) {
-    //     var result = 0;
-
-    //     checkDimensions(this, v);
-
-    //     for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-    //         result += this.elements[i] * v.elements[i];
-    //     }
-
-    //     return result;
-    // };
-
-    // vector.prototype.cross = function (v) {
-    //     if (this.dimensions() !== 3 || v.dimensions() !== 3) {
-    //         throw "Cross product is for 3D vectors only.";
-    //     }
-
-    //     // With 3D vectors, we can just return the result directly.
-    //     return new Vector(
-    //         (this.y() * v.z()) - (this.z() * v.y()),
-    //         (this.z() * v.x()) - (this.x() * v.z()),
-    //         (this.x() * v.y()) - (this.y() * v.x())
-    //     );
-    // };
-
-    // vector.prototype.magnitude = function () {
-    //     return Math.sqrt(this.dot(this));
-    // };
-
-    // vector.prototype.unit = function () {
-    //     // At this point, we can leverage our more "primitive" methods.
-    //     return this.divide(this.magnitude());
-    // };
-
-    // vector.prototype.projection = function (v) {
-    //     checkDimensions(this, v);
-
-    //     // Plug and chug :)
-    //     // The projection of u onto v is u dot the unit vector of v
-    //     // times the unit vector of v.
-    //     var unitv = v.unit();
-    //     return unitv.multiply(this.dot(unitv));
-    // };
-
-    // return vector;
 })();
