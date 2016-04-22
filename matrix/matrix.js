@@ -369,7 +369,6 @@ var Matrix = (function () {
         */
         
 
-
     };
     return Matrix;
 
