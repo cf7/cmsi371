@@ -389,6 +389,8 @@
     /*
      * Displays the scene.
      */
+    var rotationAroundX = 0.0;
+    var rotationAroundY = 0.0;
     var drawScene = function () {
         // Clear the display.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -400,14 +402,14 @@
         // context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAt);
         // console.log(context.currentTransform);
         // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
-      
 
         save();
 
         cameraFocus(1, 1, 1);
         translate(1, -1, 0);
         scale(1, 1, 1);
-        rotate(currentRotation, 1, 1, 0);
+        rotate(rotationAroundX, 1, 0, 0);
+        rotate(rotationAroundY, 0, 1, 0);
 
         gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
@@ -416,6 +418,7 @@
          // ** only activate one of the projection matrices at a time
 
         // Frustum rotates camera but not around cameraFocus
+        // ** (canvas.width / canvas.height) is the aspet ratio
         // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
         //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
         //     0.1 * (canvas.width / canvas.height),
@@ -439,7 +442,7 @@
         gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.1, 0.1, 0.1]);
-        // ** (canvas.width / canvas.height) is the aspet ratio
+
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);
@@ -452,53 +455,76 @@
     /*
      * Animates the scene.
      */
-    var animationActive = false;
-    var currentRotation = 0.0;
-    var previousTimestamp = null;
+    // var animationActive = false;
+    // var currentRotation = 0.0;
+    // var previousTimestamp = null;
 
-    var advanceScene = function (timestamp) {
-        // Check if the user has turned things off.
-        if (!animationActive) {
-            return;
-        }
+    // var advanceScene = function (timestamp) {
+    //     // Check if the user has turned things off.
+    //     if (!animationActive) {
+    //         return;
+    //     }
 
-        // Initialize the timestamp.
-        if (!previousTimestamp) {
-            previousTimestamp = timestamp;
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
+    //     // Initialize the timestamp.
+    //     if (!previousTimestamp) {
+    //         previousTimestamp = timestamp;
+    //         window.requestAnimationFrame(advanceScene);
+    //         return;
+    //     }
 
-        // Check if it's time to advance.
-        var progress = timestamp - previousTimestamp;
-        if (progress < 30) {
-            // Do nothing if it's too soon.
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
+    //     // Check if it's time to advance.
+    //     var progress = timestamp - previousTimestamp;
+    //     if (progress < 30) {
+    //         // Do nothing if it's too soon.
+    //         window.requestAnimationFrame(advanceScene);
+    //         return;
+    //     }
 
-        // All clear.
-        currentRotation += 0.033 * progress;
+    //     // All clear.
+    //     currentRotation += 0.033 * progress;
+    //     drawScene();
+    //     if (currentRotation >= 360.0) {
+    //         currentRotation -= 360.0;
+    //     }
+
+    //     // Request the next frame.
+    //     previousTimestamp = timestamp;
+    //     window.requestAnimationFrame(advanceScene);
+    // };
+
+    /*
+     * Performs rotation calculations.
+     */
+    var rotateScene = function (event) {
+        rotationAroundX = xRotationStart - yDragStart + event.clientY;
+        rotationAroundY = yRotationStart - xDragStart + event.clientX;
         drawScene();
-        if (currentRotation >= 360.0) {
-            currentRotation -= 360.0;
-        }
-
-        // Request the next frame.
-        previousTimestamp = timestamp;
-        window.requestAnimationFrame(advanceScene);
     };
+
+    var xDragStart;
+    var yDragStart;
+    var xRotationStart;
+    var yRotationStart;
+    $(canvas).mousedown(function (event) {
+        xDragStart = event.clientX;
+        yDragStart = event.clientY;
+        xRotationStart = rotationAroundX;
+        yRotationStart = rotationAroundY;
+        $(canvas).mousemove(rotateScene);
+    }).mouseup(function (event) {
+        $(canvas).unbind("mousemove");
+    });
 
     // Draw the initial scene.
     drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
-    $(canvas).click(function () {
-        animationActive = !animationActive;
-        if (animationActive) {
-            previousTimestamp = null;
-            window.requestAnimationFrame(advanceScene);
-        }
-    });
+    // $(canvas).click(function () {
+    //     animationActive = !animationActive;
+    //     if (animationActive) {
+    //         previousTimestamp = null;
+    //         window.requestAnimationFrame(advanceScene);
+    //     }
+    // });
 
 }(document.getElementById("hello-webgl")));
