@@ -65,10 +65,20 @@ var Shape = (function () {
             rotate: this.getRotate()
         }
     };
+
     Shape.prototype.setColor = function(data) {
         this.color = { r: data.r, g: data.g, b: data.b };
     };
 
+    Shape.prototype.getNormals = function(arg) {
+        // use cross product to compute normals
+        // this is why indices needed to be assigned counter-clockwise
+        // because order matters for cross-product
+        // will determine whether the resulting normal is inward or outward
+
+        // array of normals, lightposition, and lightcolor all travel into shader
+        // 
+    };
     Shape.prototype.translateShape = function(x, y, z) {
         var newX = this.parent.translate ? this.parent.translate.tx + x : x;
         var newY = this.parent.translate ? this.parent.translate.ty + y : y;

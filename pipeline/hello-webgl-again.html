@@ -49,15 +49,51 @@
       #endif
       attribute vec3 vertexPosition; // this is actually vertexPosition.x, vertexPosition.y, vertexPosition.z
       // Note this new additional output.
+      attribute vec3 vertexDiffuseColor;
+      attribute vec3 vertexSpecularColor;
       attribute vec3 vertexColor;
+      attribute vec3 normalVector;
+
       varying vec4 finalVertexColor;
+      // varying vec3 fragmentDiffuseColor;
+      // varying vec3 fragmentSpecularColor;
+      // varying vec3 fragmentNormal;
+      // varying vec3 fragmentEye;
+      // varying vec3 fragmentLight;
+
+      uniform vec3 lightPosition;
+      uniform vec3 lightDiffuse;
+
+      uniform float shininess;
+
       uniform mat4 globalProjectionMatrix;
       uniform mat4 camera;
       uniform mat4 modelView;
       
+     
+
       void main(void) {
+
+        // computing the lighting for each vertex here
+         // First, transform our vertex to its final eye location.
+          vec3 eyePosition = (modelView * vec4(vertexPosition, 1.0)).xyz;
+          // Figure out the color of the light that lands on the vertex.
+          vec3 diffuseProduct = vertexColor * lightDiffuse;
+          // Figure out our light direction vector.
+          vec3 l = normalize(lightPosition - eyePosition);
+          // 'normalize' means make a unit vector
+          // We need to transform our normal vector, too.  We don't care about
+          // translation so we pad a 0.0 rather than a 1.0.
+          vec3 n = normalize(modelView * vec4(normalVector, 0.0)).xyz;
+          // Calculate the amount of diffuse light that hits the vertex.
+          // dot will return -1 to 1, cos(theta)
+          float kd = max(dot(l, n), 0.0); // clamped at 0.0 with max()
+          vec3 finalDiffuse = kd * diffuseProduct;
+
         gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
-        finalVertexColor = vec4(vertexColor, 1.0);
+
+        finalVertexColor = vec4(finalDiffuse.rgb, 1.0);
+        // finalVertexColor = vec4(vertexColor, 1.0);
       }
     </script>
 
@@ -66,12 +102,11 @@
       #ifdef GL_ES
       precision highp float;
       #endif
+
       varying vec4 finalVertexColor;
+
       void main(void) {
-          // We vary the color based on the fragment's z coordinate,
-          // which, at this point, ranges from 0 (near) to 1 (far).
-          // Note the ".rgb" subselector.
-          gl_FragColor = vec4((1.0 - gl_FragCoord.z) * finalVertexColor.rgb, 1.0);
+          gl_FragColor = vec4(finalVertexColor.rgb, 1.0);
       }
     </script>
 

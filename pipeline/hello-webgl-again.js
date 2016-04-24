@@ -35,6 +35,9 @@
     var transformationMatrix = new Matrix(4, 4);
     var savedMatrices = [];
     
+    var clearTransform = function () {
+        context.currentTransform = new Matrix(4, 4);
+    }
 
     var save = function () {
         context.savedMatrices.push(context.currentTransform.elements);
@@ -162,7 +165,7 @@
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("lines");
+    shape3.setDrawingStyle("triangles");
 
 
     var shape4 = new Shape(gl);    
@@ -295,6 +298,8 @@
         }
         objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].colors);
+        objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
+                objectsToDraw[i].normals);
     }
 
     // Initialize the shaders.
@@ -332,8 +337,12 @@
     gl.enableVertexAttribArray(vertexPosition);
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
-
+    var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
+    gl.enableVertexAttribArray(normalVector);
    
+    var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
+    var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
+
     var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
     var camera = gl.getUniformLocation(shaderProgram, "camera");
@@ -363,6 +372,10 @@
         gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
         restore();
+
+        // Set the varying normal vectors
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
+        gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -399,32 +412,29 @@
 
          // ** only activate one of the projection matrices at a time
 
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-            0.1 * (canvas.width / canvas.height),
-            -0.1,
-            0.1,              
-            0.1, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     2 * (canvas.width / canvas.height),
-        //     -2,
-        //     2,              
-        //     -10, // viewing volume, near plane
+        // Frustum rotates camera but not around cameraFocus
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     0.1 * (canvas.width / canvas.height),
+        //     -0.1,
+        //     0.1,              
+        //     0.1, // viewing volume, near plane
         //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
 
+        // Ortho rotates camera around cameraFocus
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
-        // // have code to translate, scale, and rotate the camera
 
-        // var location = { x: 0, y: 0, z: 0};
-        // var lookAt = { x: 1, y: 1, z: 1};
-        // var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt).elements;
-        // console.log(cameraMatrix);
-        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix)));
-        // // if getting invalid size error, might need a glFormat()
+        gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);
+        gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
 
         // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
