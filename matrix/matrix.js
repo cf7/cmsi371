@@ -336,16 +336,13 @@ var Matrix = (function () {
         console.log(p);
         console.log("Q");
         console.log(q);
-        var PQ = q.subtract(p); // v2 - v1
-        var unitPQ = PQ.unit();
+       
+        var z = p.subtract(q).unit();
+
         var up = new Vector(0, 1, 0);
-        console.log("up");
-        console.log(up);
-        var z = q.subtract(p).unit();
-
         var projUp = up.projection(z);
-
         var y = up.subtract(projUp).unit();
+
         var x = y.cross(z);
 
         var Px = p.dot(x);

@@ -4,6 +4,10 @@
  */
 (function (canvas) {
 
+    // lighting: 4/14
+
+    // interactivity: 4/21
+
     var glFormat = function (matrix) {
         return [
             matrix[0][0],
@@ -345,6 +349,7 @@
         if (object.rotate) {
             rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
         }
+        // have code to translate, scale, and rotate the camera
 
         gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
@@ -365,24 +370,36 @@
 
         // Set up the rotation matrix.
 
-        var transMatrix = new Matrix(4, 4);
+        // var location = { x: 0, y: 0, z: 0};
+        // var lookAt = { x: 1, y: 1, z: 1};
+        // context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAt);
+        // console.log(context.currentTransform);
+        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+      
 
         save();
 
+        var location = { x: 0, y: 0, z: 0};
+        var lookAt = { x: 1, y: 1, z: 1};
+        context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAt).mult(context.currentTransform);
+        
         translate(0, 0, 0);
         scale(1, 1, 1);
         rotate(currentRotation, 1, 1, 0);
         
-        gl.uniformMatrix4fv(globalMatrix, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+        // have code to translate, scale, and rotate the camera
+        
 
-        var location = { x: 0, y: 0, z: 0};
-        var lookAt = { x: -1, y: 0, z: -1};
-        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt).elements;
-        console.log(cameraMatrix);
-        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix)));
+        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix)));
         // if getting invalid size error, might need a glFormat()
+        // global matrix is the camera matrix, which is actually part of the modelView matrix
+        // instead of . . . projection * [rotation] * camera * modelView
+        // do . . .  projection * [camera/modelView]
+        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
-        // ** only activate one of the projection matrices at a time
+        restore();
+
+         // ** only activate one of the projection matrices at a time
 
         // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
         //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
@@ -401,7 +418,15 @@
             10 // viewing volume, far plane, only what's inside viewing volume can be seen
         )));
 
-        restore();
+
+        // // have code to translate, scale, and rotate the camera
+
+        // var location = { x: 0, y: 0, z: 0};
+        // var lookAt = { x: 1, y: 1, z: 1};
+        // var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt).elements;
+        // console.log(cameraMatrix);
+        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix)));
+        // // if getting invalid size error, might need a glFormat()
 
         // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
