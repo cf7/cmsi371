@@ -439,8 +439,9 @@
         // Apparently, can only light shapes if they are drawn with triangles
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.0]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
-        gl.uniform3fv(lightAmbient, [0.1, 0.1, 0.1]);
+        gl.uniform3fv(lightAmbient, [0.2, 0.2, 0.2]);
         gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
+        // to turn off specular, set light to all 0.0's
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

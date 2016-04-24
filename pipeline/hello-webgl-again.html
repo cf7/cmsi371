@@ -61,11 +61,13 @@
       varying vec3 fragmentEye;
       varying vec3 fragmentLight;
 
-      uniform vec4 lightPosition;
+      uniform vec4 lightPosition; // for adding another light, need to do ALL of the calculations
+      // done with this one, including the calculations, normalizations, dot products . . .
+      // that happen in the fragment shader
+      
       // diffuse without specular
       // uniform vec3 lightPosition;
       // uniform vec3 lightDiffuse;
-      uniform vec3 lightAmbient;
 
       uniform mat4 globalProjectionMatrix;
       uniform mat4 camera;
@@ -106,6 +108,9 @@
         // We "merely" relay these vectors to the fragment shader.  However,
         // we get a cool trick: they get interpolated for us!
 
+        // need to precompute position of normalVectors and fragmentEye position
+        // before passing to fragment shader or calculating gl_Position
+        // stationary specular
         fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
         // unmodified specular
         // fragmentNormal = normalVector;
@@ -167,6 +172,7 @@
       varying vec3 fragmentLight;
       // Color settings come in here now.
       uniform vec3 lightDiffuse;
+      uniform vec3 lightAmbient;
       uniform vec3 lightSpecular;
       // Now with shininess!
       uniform float shininess;
@@ -192,7 +198,7 @@
               finalSpecular = vec3(0.0, 0.0, 0.0);
           }
           // .rgb suffix not really necessary, but included for emphasis.
-          gl_FragColor = vec4(finalDiffuse.rgb + finalSpecular.rgb, 1.0);
+          gl_FragColor = vec4(finalDiffuse.rgb + finalSpecular.rgb + lightAmbient.rgb, 1.0);
 
           // unmodifed lighting
           // gl_FragColor = vec4(finalVertexColor.rgb, 1.0);
