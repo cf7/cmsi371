@@ -65,7 +65,7 @@
       // diffuse without specular
       // uniform vec3 lightPosition;
       // uniform vec3 lightDiffuse;
-      // uniform vec3 lightAmbient;
+      uniform vec3 lightAmbient;
 
       uniform mat4 globalProjectionMatrix;
       uniform mat4 camera;
@@ -105,13 +105,17 @@
 
         // We "merely" relay these vectors to the fragment shader.  However,
         // we get a cool trick: they get interpolated for us!
-        fragmentNormal = normalVector;
+
+        fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
+        // unmodified specular
+        // fragmentNormal = normalVector;
         // fragmentEye = vertexPosition;
 
         // 4/14 19:00 - keeping light stationary
-        // vec4 finalVertextPosition = camera * modelView * vec4(vertexPosition, 1.0);
-        // fragmentEye = vec3(finalVertextPosition); // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
-        fragmentEye = vertexPosition;
+        vec4 finalVertextPosition = camera * modelView * vec4(vertexPosition, 1.0);
+        fragmentEye = vec3(finalVertextPosition); // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
+        // ** unmodified specular lighting
+        // fragmentEye = vertexPosition;
         fragmentLight = lightPosition.xyz;
 
         // No conditional expressions in GLSL, unfortunately.  We have to
@@ -126,10 +130,10 @@
         fragmentSpecularColor = vertexSpecularColor;
 
         // stationary specular lighting
-        // gl_Position = globalProjectionMatrix * finalVertextPosition;
+        gl_Position = globalProjectionMatrix * finalVertextPosition;
 
         // unmodifed specular
-        gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
+        // gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
 
         
         // diffuse without specular
