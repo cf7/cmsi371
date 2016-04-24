@@ -126,11 +126,12 @@ var Shape = (function () {
         // // comput the normals
         for (var i = 0; i < points.length; i++) {
             var vector = computeNormal(points[i][0], points[i][1], points[i][2]);
-            normalsData.push([ vector.x(), vector.y(), vector.z() ]);
-            vector = computeNormal(points[i][1], points[i][2], points[i][0]);
-            normalsData.push([ vector.x(), vector.y(), vector.z() ]);
-            vector = computeNormal(points[i][2], points[i][0], points[i][1]);
-            normalsData.push([ vector.x(), vector.y(), vector.z() ]);
+            // JD: Note, this is just a quick fix. Longer discussion in GitHub comment.
+            normalsData.push(
+                vector.x(), vector.y(), vector.z(),
+                vector.x(), vector.y(), vector.z(),
+                vector.x(), vector.y(), vector.z()
+            );
         }
 
         // for (var i = 0; i < vertices.length; i++) {
