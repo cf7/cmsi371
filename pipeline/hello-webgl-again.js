@@ -165,8 +165,7 @@
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("triangles");
-
+    shape3.setDrawingStyle("lines");
 
     var shape4 = new Shape(gl);    
     shape4.setVertices(shape4.cube(0.5));
@@ -260,7 +259,6 @@
                 );
             }
         }
-        console.log(objectsToDraw[i].colors);
         objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].colors);
 

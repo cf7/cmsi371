@@ -55,17 +55,38 @@ var Shape = (function () {
     };
 
     Shape.prototype.getData = function() {
-        return {
-            shape: this,
-            color: this.color,
-            specularColor: { r: 1.0, g: 1.0, b: 1.0 },
-            shininess: 10,
-            vertices: this.arrayType,
-            mode: this.mode,
-            translate: this.getTranslate(),
-            scale: this.getScale(),
-            rotate: this.getRotate(),
-            normals: this.toVertexNormalArray(this.indexedVertices)
+        console.log("inside");
+        console.log(this.indexedVertices.indices.length);
+        // when drawing lines, lines array comes out twice as long as normals
+        // array, need to make normals array same size as lines array
+
+        if (this.mode === this.gl.LINES) {
+            console.log("inside inside");
+            return {
+                shape: this,
+                color: this.color,
+                specularColor: { r: 1.0, g: 1.0, b: 1.0 },
+                shininess: 10,
+                vertices: this.arrayType,
+                mode: this.mode,
+                translate: this.getTranslate(),
+                scale: this.getScale(),
+                rotate: this.getRotate(),
+                normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices))
+            }
+        } else {
+            return {
+                shape: this,
+                color: this.color,
+                specularColor: { r: 1.0, g: 1.0, b: 1.0 },
+                shininess: 10,
+                vertices: this.arrayType,
+                mode: this.mode,
+                translate: this.getTranslate(),
+                scale: this.getScale(),
+                rotate: this.getRotate(),
+                normals: this.toVertexNormalArray(this.indexedVertices)
+            }
         }
     };
 
