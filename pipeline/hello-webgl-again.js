@@ -389,6 +389,9 @@
     /*
      * Displays the scene.
      */
+    var lookAtX = 0.0;
+    var lookAtY = 0.0;
+    var lookAtZ = -1.0;
     var translateX = 0.0;
     var translateZ = 0.0;
     var rotationAroundX = 0.0;
@@ -396,18 +399,12 @@
     var drawScene = function () {
         // Clear the display.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        // Set up the rotation matrix.
-
-        // var location = { x: 0, y: 0, z: 0};
-        // var lookAt = { x: 1, y: 1, z: 1};
-        // context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAt);
-        // console.log(context.currentTransform);
-        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
-
+        
         save();
 
-        cameraFocus(0, 0, -1);
+        // ** just figure out how to change the lookAt vector
+        // ** and will automatically translate relative to that vector
+        cameraFocus(lookAtX, lookAtY, lookAtZ);
         translate(translateX, 0, translateZ);
         scale(1, 1, 1);
         rotate(rotationAroundX, 1, 0, 0);
@@ -417,7 +414,7 @@
 
         restore();
 
-         // ** only activate one of the projection matrices at a time
+        // ** only activate one of the projection matrices at a time
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
@@ -427,7 +424,7 @@
             -0.1,
             0.1,              
             0.1, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+            100 // viewing volume, far plane, only what's inside viewing volume can be seen
         )));
 
         // Ortho rotates camera around cameraFocus
@@ -494,6 +491,17 @@
     //     window.requestAnimationFrame(advanceScene);
     // };
 
+    /**
+        valid interaction features for 1st part:
+        -changing the light levels
+        -user triggered events
+        -time-lapse simulations, use advanceScene code from sample code
+        -
+        mandatory interaction feature for 2nd part:
+        -first-person navigation
+
+    */
+
     /*
      * Performs rotation calculations.
      */
@@ -534,56 +542,46 @@
     $("#navigation").keydown(function (event) {
         console.log("inside");
         console.log(event);
+        var translateSpeed = 0.3;
+        var rotationSpeed = 5;
         // if it is a keydown event, then the actual keyCode is used
-        // apparently, if it is a keypress event 32 is added to each key
+        // if it is a keypress event, then 32 is added to each key
         if (event.keyCode === 87) {
-            translateZ += 0.3;
+            translateZ += translateSpeed;
             drawScene();
         }
         if (event.keyCode === 83) {
-            translateZ -= 0.3;
+            translateZ -= translateSpeed;
             drawScene();
         }
         if (event.keyCode === 65) {
-            translateX += 0.3;
+            translateX += translateSpeed;
             drawScene();
         }
         if (event.keyCode === 68) {
-            translateX -= 0.3;
+            translateX -= translateSpeed;
             drawScene();
         }
         if (event.keyCode === 37) {
-            console.log("inside Q");
-            rotationAroundY -= 5;
+            rotationAroundY -= rotationSpeed;
             drawScene();
         }
         if (event.keyCode === 39) {
-            console.log("inside E");
-            rotationAroundY += 5;
+            rotationAroundY += rotationSpeed;
             drawScene();
         }
         if (event.keyCode === 38) {
-            console.log("inside Q");
-            rotationAroundX -= 5;
+            rotationAroundX -= rotationSpeed;
             drawScene();
         }
         if (event.keyCode === 40) {
-            console.log("inside E");
-            rotationAroundX += 5;
+            rotationAroundX += rotationSpeed;
             drawScene();
         }
-        if (event.keyCode === 113) { 
-            // because the keycode for Q is actually 81, but for keypressed it's 81 + 32 = 113
-            console.log("inside Q");
-            rotationAroundY += 2;
-            drawScene();
-        }
-        if (event.keyCode === 101) {
-            console.log("inside E");
-            rotationAroundY -= 2;
-            drawScene();
-        }
+
+        $("#navigation").val("");
     });
+
     // Draw the initial scene.
     drawScene();
 

@@ -122,14 +122,6 @@ var Matrix = (function () {
         return newArray;
     }
 
-    // A private method for checking dimensions,
-    // throwing an exception when different.
-    // var checkDimensions = function (m1, m2) {
-    //     if (v1.dimensions() !== v2.dimensions()) {
-    //         throw "Vectors have different dimensions";
-    //     }
-    // };
-
     Matrix.prototype.dimensions = function () {
         return { rows: this.elements.length, cols: this.elements[0].length };
     };
@@ -139,11 +131,6 @@ var Matrix = (function () {
             throw "Matrices do not meet specifications for multiplication";
         }
     };
-
-    // Matrix.prototype.transpose = function (matrix) {
-
-    //     return matrix;
-    // };
 
     var addAndMult = function (array1, matrix2) {
         var sum = 0;
@@ -171,24 +158,6 @@ var Matrix = (function () {
         }
         return new Matrix(this.dimensions().rows, matrix2.dimensions().cols, result);
     };
-
-    // ** Givens
-
-    // ** code for 4x4 matrices for now
-    // ** arbitrary dimensions are optional
-
-    // ** the transform matrix should be the one multiplying the given matrix
-    // ** so   TranslateMatrix x [ coordinates ] = result
-    // ** as opposed to [ coordinates ] x TranslateMatrix = result
-    
-    // ** getRotationMatrix code is given in hello-webgl-again.js
-    // ** format for returning matrix to webGL is in getRotationMatrix sample code
-
-    //** orthographic projection given in matrices-webgl sample code
-
-    // ** convenience functions that produce translation, scale, and rotation matrices
-    // ** "need a translate matrix by this much that can be used to mult with this other matrix"
-
     
     Matrix.prototype.getTranslateMatrix = function(rows, cols, translateData) {
         var tx = translateData.tx;
@@ -383,77 +352,9 @@ var Matrix = (function () {
         this.elements[2][3] = -Pz;
         this.elements[3][3] = 1.0;
 
-        return this;
-
-        /**
-            First need a vector from P to Q, (Q being the focus of the camera,
-            P being the position of the camera)
-            Take unit vector of PQ,
-            
-            apply unit operations AFTER vector operations/transformations
-
-            unit = vector / vectorSize
-            vectorSize = sqrt( x*x + y*y + z*z)
-
-            Second find up vector, which is <0, 1, 0>
-            Look up projection vectors (projecting a vector onto an arbitrary axis)
-
-            cos(theta) = U dot V / uSize * vSize // angle between two vectors
-            Uv = uSize * cos(theta) = U dot V / vSize // orthoganal projection of u onto v
-            
-            Projection: (U dot Uv) * Uv
-            
-            proj(up, z): (up dot Uz) * Uz // projection of up onto z
-            where Uz = up dot z / zSize
-
-            z = unit(P - Q)
-            y = unit(up - projection(up, z))
-            x = y crossproduct z
-    
-            transform will consist of two matrices
-            first with x,y,z vectors just calculated
-            second with inverse coordinates from P vector passed in (camera location)
-            | x xy xz 0 |     | 1 0 0 -Px |
-            | yx y yz 0 |  *  | 0 1 0 -Py |
-            | zx zy z 0 |     | 0 0 1 -Pz |
-            | 0  0  0 1 |     | 0 0 0   1 |
-
-            resulting in final matrix
-            | x xy xz (-Px dot x) |
-            | yx y yz (-Py dot y) |
-            | zx zy z (-Pz dot z) |
-            | 0  0  0       1     |
-        */
-        
-
-
+        return this;     
     };
+
     return Matrix;
-
-    /** 
-        WebGL return format
-        // GL expects its matrices in column major order.
-        return [
-            (x2 * oneMinusC) + c,   // col 1
-            (xy * oneMinusC) + zs,
-            (xz * oneMinusC) - ys,
-            0.0,
-
-            (xy * oneMinusC) - zs, // col 1
-            (y2 * oneMinusC) + c,
-            (yz * oneMinusC) + xs,
-            0.0,
-
-            (xz * oneMinusC) + ys, // col 1
-            (yz * oneMinusC) - xs,
-            (z2 * oneMinusC) + c,
-            0.0,
-
-            0.0,                  // col 1
-            0.0,
-            0.0,
-            1.0
-        ];
-    */
 
 })();
