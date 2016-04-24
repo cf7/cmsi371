@@ -256,7 +256,6 @@
         
     preObjectsToDraw.push(shape.getData());
     preObjectsToDraw.push(shape2.getData());
-    console.log(shape3.getData().normals);
     preObjectsToDraw.push(shape3.getData());
     preObjectsToDraw.push(shape4.getData());
     preObjectsToDraw.push(shape5.getData());
@@ -306,8 +305,26 @@
                 );
             }
         }
+        console.log(objectsToDraw[i].colors);
         objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].colors);
+
+         // Same trick with specular colors.
+        if (!objectsToDraw[i].specularColors) {
+            // Future refactor: helper function to convert a single value or
+            // array into an array of copies of itself.
+            objectsToDraw[i].specularColors = [];
+            for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3; j < maxj; j += 1) {
+                objectsToDraw[i].specularColors = objectsToDraw[i].specularColors.concat(
+                    objectsToDraw[i].specularColor.r,
+                    objectsToDraw[i].specularColor.g,
+                    objectsToDraw[i].specularColor.b
+                );
+            }
+        }
+
+        objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
+
         objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].normals);
     }
@@ -345,14 +362,22 @@
     // Hold on to the important variables within the shaders.
     var vertexPosition = gl.getAttribLocation(shaderProgram, "vertexPosition");
     gl.enableVertexAttribArray(vertexPosition);
-    var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
-    gl.enableVertexAttribArray(vertexColor);
+    // diffuse without specular
+    // var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
+    // gl.enableVertexAttribArray(vertexColor);
+    var vertexDiffuseColor = gl.getAttribLocation(shaderProgram, "vertexDiffuseColor");
+    gl.enableVertexAttribArray(vertexDiffuseColor);
+    var vertexSpecularColor = gl.getAttribLocation(shaderProgram, "vertexSpecularColor");
+    gl.enableVertexAttribArray(vertexSpecularColor);
     var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
     gl.enableVertexAttribArray(normalVector);
 
     var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
     var lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
+    var lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
+    var shininess = gl.getUniformLocation(shaderProgram, "shininess");
+
 
     var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
@@ -364,8 +389,17 @@
      */
     var drawObject = function (object) {
         // Set the varying colors.
+        // diffuse without specular
+        // gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
+        // gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
-        gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(vertexDiffuseColor, 3, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.specularBuffer);
+        gl.vertexAttribPointer(vertexSpecularColor, 3, gl.FLOAT, false, 0, 0);
+
+        gl.uniform1f(shininess, object.shininess);
 
         save();
 
@@ -448,9 +482,10 @@
 
 
         // Apparently, can only light shapes if they are drawn with triangles
-        gl.uniform3fv(lightPosition, [0.0, 0.0, 5.0]);
+        gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.0]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.1, 0.1, 0.1]);
+        gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

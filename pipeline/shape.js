@@ -58,6 +58,8 @@ var Shape = (function () {
         return {
             shape: this,
             color: this.color,
+            specularColor: { r: 1.0, g: 1.0, b: 1.0 },
+            shininess: 10,
             vertices: this.arrayType,
             mode: this.mode,
             translate: this.getTranslate(),
