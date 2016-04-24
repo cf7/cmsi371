@@ -298,7 +298,7 @@ var Matrix = (function () {
     };
 
     // ** frustum matrix from class
-    Matrix.prototype.getFrustumMatrix = function(right, left, bottom, top, zNear, zFar) {
+    Matrix.prototype.getFrustumMatrix = function(left, right, bottom, top, zNear, zFar) {
         var width = right - left;
         var height = top - bottom;
         var depth = zFar - zNear;
@@ -327,9 +327,9 @@ var Matrix = (function () {
     };
 
 
-    Matrix.prototype.getCameraMatrix = function(location, lookAt) {
+    Matrix.prototype.getCameraMatrix = function(lookAt) {
         // P and Q will be objects with coordinates
-        var p = new Vector(location.x, location.y, location.z);
+        var p = new Vector(0, 0, 0);
         var q = new Vector(lookAt.x, lookAt.y, lookAt.z);
 
         console.log("P");

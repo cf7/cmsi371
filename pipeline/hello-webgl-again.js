@@ -47,7 +47,7 @@
             return;
         }
     }   
-    
+
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
         // console.log("frustum");
         // console.log(glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements));
@@ -56,6 +56,11 @@
 
     var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
         return glFormat(new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).elements);
+    }
+
+    var getCameraMatrix = function (x, y, z) {
+        var lookAt = { x: x, y: y, z: z };
+        return new Matrix(4, 4).getCameraMatrix(lookAt);
     }
 
     var getTranslationMatrix = function (x, y, z) {
@@ -79,6 +84,10 @@
         } else {
             return new Matrix(4, 4).getRotationMatrix(4, 4, data);
         }
+    }
+
+    var cameraFocus = function (x, y, z) {
+        context.currentTransform = getCameraMatrix(x, y, z).mult(context.currentTransform);
     }
 
     var translate = function (x, y, z) {
@@ -379,29 +388,12 @@
 
         save();
 
-        var location = { x: 0, y: 0, z: 0};
-        var lookAt = { x: 1, y: 1, z: 1};
-        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt).mult(context.currentTransform);
+        cameraFocus(1, 1, 1);
+        translate(1, -1, 0);
+        scale(1, 1, 1);
+        rotate(currentRotation, 1, 1, 0);
 
-        var dataT = { tx: 0, ty: 0, tz: 0 };
-
-        var dataR = { angle: currentRotation, rx: 1, ry: 1, rz: 0 };
-
-        // cameraMatrix = new Matrix(4, 4).getTranslateMatrix(4, 4, dataT).mult(cameraMatrix);
-        cameraMatrix = new Matrix(4, 4).getRotationMatrix(4, 4, dataR).mult(cameraMatrix);
-        // translate(1, -1, 0);
-        // scale(1, 1, 1);
-        // rotate(currentRotation, 1, 1, 0);
-
-        // have code to translate, scale, and rotate the camera
-        
-
-        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix)));
-        // if getting invalid size error, might need a glFormat()
-        // global matrix is the camera matrix, which is actually part of the modelView matrix
-        // instead of . . . projection * [rotation] * camera * modelView
-        // do . . .  projection * [camera/modelView]
-        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix.elements)));
+        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
         restore();
 
