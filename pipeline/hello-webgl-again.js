@@ -165,7 +165,7 @@
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("triangles");
+    shape3.setDrawingStyle("lines");
 
 
     var shape4 = new Shape(gl);    
@@ -246,11 +246,11 @@
     ];
         
     preObjectsToDraw.push(shape.getData());
-    // preObjectsToDraw.push(shape2.getData());
-    // preObjectsToDraw.push(shape3.getData());
-    // preObjectsToDraw.push(shape4.getData());
-    // preObjectsToDraw.push(shape5.getData());
-    // preObjectsToDraw.push(shape6.getData());
+    preObjectsToDraw.push(shape2.getData());
+    preObjectsToDraw.push(shape3.getData());
+    preObjectsToDraw.push(shape4.getData());
+    preObjectsToDraw.push(shape5.getData());
+    preObjectsToDraw.push(shape6.getData());
 
     var objectsToDraw = [];
 
@@ -339,7 +339,7 @@
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
-    gl.enableVertexAttribArray(normalVector);
+    // gl.enableVertexAttribArray(normalVector);
 
     var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
@@ -376,8 +376,8 @@
         restore();
 
         // Set the varying normal vectors
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
-        gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
+        // gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
+        // gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -389,55 +389,53 @@
     /*
      * Displays the scene.
      */
+    var lookAtX = 0.0;
+    var lookAtY = 0.0;
+    var lookAtZ = -1.0;
+    var translateX = 0.0;
+    var translateZ = 0.0;
     var rotationAroundX = 0.0;
     var rotationAroundY = 0.0;
     var drawScene = function () {
         // Clear the display.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        // Set up the rotation matrix.
-
-        // var location = { x: 0, y: 0, z: 0};
-        // var lookAt = { x: 1, y: 1, z: 1};
-        // context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAt);
-        // console.log(context.currentTransform);
-        // gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
-
+        
         save();
 
-        cameraFocus(1, 1, 1);
-        translate(1, -1, 0);
+        // ** just figure out how to change the lookAt vector
+        // ** and will automatically translate relative to that vector
+        cameraFocus(lookAtX, lookAtY, lookAtZ);
+        translate(translateX, 0, translateZ);
         scale(1, 1, 1);
-        rotate(currentRotation, 1, 1, 0);
-        // rotate(rotationAroundX, 1, 0, 0);
-        // rotate(rotationAroundY, 0, 1, 0);
+        rotate(rotationAroundX, 1, 0, 0);
+        rotate(rotationAroundY, 0, 1, 0);
 
         gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
         restore();
 
-         // ** only activate one of the projection matrices at a time
+        // ** only activate one of the projection matrices at a time
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     0.1 * (canvas.width / canvas.height),
-        //     -0.1,
-        //     0.1,              
-        //     0.1, // viewing volume, near plane
-        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+            0.1 * (canvas.width / canvas.height),
+            -0.1,
+            0.1,              
+            0.1, // viewing volume, near plane
+            100 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
         // Ortho rotates camera around cameraFocus
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     2 * (canvas.width / canvas.height),
+        //     -2,
+        //     2,              
+        //     -10, // viewing volume, near plane
+        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
 
         gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);
@@ -456,42 +454,53 @@
     /*
      * Animates the scene.
      */
-    var animationActive = false;
-    var currentRotation = 0.0;
-    var previousTimestamp = null;
+    // var animationActive = false;
+    // var currentRotation = 0.0;
+    // var previousTimestamp = null;
 
-    var advanceScene = function (timestamp) {
-        // Check if the user has turned things off.
-        if (!animationActive) {
-            return;
-        }
+    // var advanceScene = function (timestamp) {
+    //     // Check if the user has turned things off.
+    //     if (!animationActive) {
+    //         return;
+    //     }
 
-        // Initialize the timestamp.
-        if (!previousTimestamp) {
-            previousTimestamp = timestamp;
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
+    //     // Initialize the timestamp.
+    //     if (!previousTimestamp) {
+    //         previousTimestamp = timestamp;
+    //         window.requestAnimationFrame(advanceScene);
+    //         return;
+    //     }
 
-        // Check if it's time to advance.
-        var progress = timestamp - previousTimestamp;
-        if (progress < 30) {
-            // Do nothing if it's too soon.
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
+    //     // Check if it's time to advance.
+    //     var progress = timestamp - previousTimestamp;
+    //     if (progress < 30) {
+    //         // Do nothing if it's too soon.
+    //         window.requestAnimationFrame(advanceScene);
+    //         return;
+    //     }
 
-        // All clear.
-        currentRotation += 0.033 * progress;
-        drawScene();
-        if (currentRotation >= 360.0) {
-            currentRotation -= 360.0;
-        }
+    //     // All clear.
+    //     currentRotation += 0.033 * progress;
+    //     drawScene();
+    //     if (currentRotation >= 360.0) {
+    //         currentRotation -= 360.0;
+    //     }
 
-        // Request the next frame.
-        previousTimestamp = timestamp;
-        window.requestAnimationFrame(advanceScene);
-    };
+    //     // Request the next frame.
+    //     previousTimestamp = timestamp;
+    //     window.requestAnimationFrame(advanceScene);
+    // };
+
+    /**
+        valid interaction features for 1st part:
+        -changing the light levels
+        -user triggered events
+        -time-lapse simulations, use advanceScene code from sample code
+        -
+        mandatory interaction feature for 2nd part:
+        -first-person navigation
+
+    */
 
     /*
      * Performs rotation calculations.
@@ -502,67 +511,87 @@
         drawScene();
     };
 
-    // var xDragStart;
-    // var yDragStart;
-    // var xRotationStart;
-    // var yRotationStart;
-    // $(canvas).mousedown(function (event) {
-    //     xDragStart = event.clientX;
-    //     yDragStart = event.clientY;
-    //     xRotationStart = rotationAroundX;
-    //     yRotationStart = rotationAroundY;
-    //     $(canvas).mousemove(rotateScene);
-    // }).mouseup(function (event) {
-    //     $(canvas).unbind("mousemove");
-    // });
+    var xDragStart;
+    var yDragStart;
+    var xRotationStart;
+    var yRotationStart;
+    $(canvas).mousedown(function (event) {
+        xDragStart = event.clientX;
+        yDragStart = event.clientY;
+        xRotationStart = rotationAroundX;
+        yRotationStart = rotationAroundY;
+        $(canvas).mousemove(rotateScene);
+    }).mouseup(function (event) {
+        $(canvas).unbind("mousemove");
+    });
 
-    // // up: 38
-    // // down: 40
-    // // left: 37
-    // // right: 39
-    // // W: 87
-    // // A: 65
-    // // S: 83
-    // // D: 68
-    // // Q: 81
-    // // E: 69
-    // $("#navigation").keypress(function (event) {
-    //     console.log("inside");
-    //     console.log(event);
-    //     if (event.keyCode === 38) {
+    // up: 38
+    // down: 40
+    // left: 37
+    // right: 39
+    // W: 87
+    // A: 65
+    // S: 83
+    // D: 68
+    // Q: 81
+    // E: 69
 
-    //     }
-    //     if (event.keyCode === 40) {
+    // ** Note: Translate doesn't work in Ortho Projection
+    // because objects will just move relative to the camera
+    // need to be in frustum
+    $("#navigation").keydown(function (event) {
+        console.log("inside");
+        console.log(event);
+        var translateSpeed = 0.3;
+        var rotationSpeed = 5;
+        // if it is a keydown event, then the actual keyCode is used
+        // if it is a keypress event, then 32 is added to each key
+        if (event.keyCode === 87) {
+            translateZ += translateSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 83) {
+            translateZ -= translateSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 65) {
+            translateX += translateSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 68) {
+            translateX -= translateSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 37) {
+            rotationAroundY -= rotationSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 39) {
+            rotationAroundY += rotationSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 38) {
+            rotationAroundX -= rotationSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 40) {
+            rotationAroundX += rotationSpeed;
+            drawScene();
+        }
 
-    //     }
-    //     if (event.keyCode === 37) {
-            
-    //     }
-    //     if (event.keyCode === 39) {
-            
-    //     }
-    //     if (event.keyCode === 113) { // apparently 32 is added to each key
-    //         // because the keycode for Q is actually 81, but 81 + 32 = 113
-    //         console.log("inside Q");
-    //         rotationAroundY += 2;
-    //         drawScene();
-    //     }
-    //     if (event.keyCode === 101) {
-    //         console.log("inside E");
-    //         rotationAroundY -= 2;
-    //         drawScene();
-    //     }
-    // });
+        $("#navigation").val("");
+    });
+
     // Draw the initial scene.
     drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
-    $(canvas).click(function () {
-        animationActive = !animationActive;
-        if (animationActive) {
-            previousTimestamp = null;
-            window.requestAnimationFrame(advanceScene);
-        }
-    });
+    // $(canvas).click(function () {
+    //     animationActive = !animationActive;
+    //     if (animationActive) {
+    //         previousTimestamp = null;
+    //         window.requestAnimationFrame(advanceScene);
+    //     }
+    // });
 
 }(document.getElementById("hello-webgl")));
