@@ -246,11 +246,11 @@
     ];
         
     preObjectsToDraw.push(shape.getData());
-    preObjectsToDraw.push(shape2.getData());
-    preObjectsToDraw.push(shape3.getData());
-    preObjectsToDraw.push(shape4.getData());
-    preObjectsToDraw.push(shape5.getData());
-    preObjectsToDraw.push(shape6.getData());
+    // preObjectsToDraw.push(shape2.getData());
+    // preObjectsToDraw.push(shape3.getData());
+    // preObjectsToDraw.push(shape4.getData());
+    // preObjectsToDraw.push(shape5.getData());
+    // preObjectsToDraw.push(shape6.getData());
 
     var objectsToDraw = [];
 
@@ -339,7 +339,7 @@
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
-    // gl.enableVertexAttribArray(normalVector);
+    gl.enableVertexAttribArray(normalVector);
 
     var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
@@ -376,8 +376,8 @@
         restore();
 
         // Set the varying normal vectors
-        // gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
-        // gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
+        gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -408,8 +408,9 @@
         cameraFocus(1, 1, 1);
         translate(1, -1, 0);
         scale(1, 1, 1);
-        rotate(rotationAroundX, 1, 0, 0);
-        rotate(rotationAroundY, 0, 1, 0);
+        rotate(currentRotation, 1, 1, 0);
+        // rotate(rotationAroundX, 1, 0, 0);
+        // rotate(rotationAroundY, 0, 1, 0);
 
         gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
@@ -455,42 +456,42 @@
     /*
      * Animates the scene.
      */
-    // var animationActive = false;
-    // var currentRotation = 0.0;
-    // var previousTimestamp = null;
+    var animationActive = false;
+    var currentRotation = 0.0;
+    var previousTimestamp = null;
 
-    // var advanceScene = function (timestamp) {
-    //     // Check if the user has turned things off.
-    //     if (!animationActive) {
-    //         return;
-    //     }
+    var advanceScene = function (timestamp) {
+        // Check if the user has turned things off.
+        if (!animationActive) {
+            return;
+        }
 
-    //     // Initialize the timestamp.
-    //     if (!previousTimestamp) {
-    //         previousTimestamp = timestamp;
-    //         window.requestAnimationFrame(advanceScene);
-    //         return;
-    //     }
+        // Initialize the timestamp.
+        if (!previousTimestamp) {
+            previousTimestamp = timestamp;
+            window.requestAnimationFrame(advanceScene);
+            return;
+        }
 
-    //     // Check if it's time to advance.
-    //     var progress = timestamp - previousTimestamp;
-    //     if (progress < 30) {
-    //         // Do nothing if it's too soon.
-    //         window.requestAnimationFrame(advanceScene);
-    //         return;
-    //     }
+        // Check if it's time to advance.
+        var progress = timestamp - previousTimestamp;
+        if (progress < 30) {
+            // Do nothing if it's too soon.
+            window.requestAnimationFrame(advanceScene);
+            return;
+        }
 
-    //     // All clear.
-    //     currentRotation += 0.033 * progress;
-    //     drawScene();
-    //     if (currentRotation >= 360.0) {
-    //         currentRotation -= 360.0;
-    //     }
+        // All clear.
+        currentRotation += 0.033 * progress;
+        drawScene();
+        if (currentRotation >= 360.0) {
+            currentRotation -= 360.0;
+        }
 
-    //     // Request the next frame.
-    //     previousTimestamp = timestamp;
-    //     window.requestAnimationFrame(advanceScene);
-    // };
+        // Request the next frame.
+        previousTimestamp = timestamp;
+        window.requestAnimationFrame(advanceScene);
+    };
 
     /*
      * Performs rotation calculations.
@@ -501,30 +502,67 @@
         drawScene();
     };
 
-    var xDragStart;
-    var yDragStart;
-    var xRotationStart;
-    var yRotationStart;
-    $(canvas).mousedown(function (event) {
-        xDragStart = event.clientX;
-        yDragStart = event.clientY;
-        xRotationStart = rotationAroundX;
-        yRotationStart = rotationAroundY;
-        $(canvas).mousemove(rotateScene);
-    }).mouseup(function (event) {
-        $(canvas).unbind("mousemove");
-    });
+    // var xDragStart;
+    // var yDragStart;
+    // var xRotationStart;
+    // var yRotationStart;
+    // $(canvas).mousedown(function (event) {
+    //     xDragStart = event.clientX;
+    //     yDragStart = event.clientY;
+    //     xRotationStart = rotationAroundX;
+    //     yRotationStart = rotationAroundY;
+    //     $(canvas).mousemove(rotateScene);
+    // }).mouseup(function (event) {
+    //     $(canvas).unbind("mousemove");
+    // });
 
+    // // up: 38
+    // // down: 40
+    // // left: 37
+    // // right: 39
+    // // W: 87
+    // // A: 65
+    // // S: 83
+    // // D: 68
+    // // Q: 81
+    // // E: 69
+    // $("#navigation").keypress(function (event) {
+    //     console.log("inside");
+    //     console.log(event);
+    //     if (event.keyCode === 38) {
+
+    //     }
+    //     if (event.keyCode === 40) {
+
+    //     }
+    //     if (event.keyCode === 37) {
+            
+    //     }
+    //     if (event.keyCode === 39) {
+            
+    //     }
+    //     if (event.keyCode === 113) { // apparently 32 is added to each key
+    //         // because the keycode for Q is actually 81, but 81 + 32 = 113
+    //         console.log("inside Q");
+    //         rotationAroundY += 2;
+    //         drawScene();
+    //     }
+    //     if (event.keyCode === 101) {
+    //         console.log("inside E");
+    //         rotationAroundY -= 2;
+    //         drawScene();
+    //     }
+    // });
     // Draw the initial scene.
     drawScene();
 
     // Set up the rotation toggle: clicking on the canvas does it.
-    // $(canvas).click(function () {
-    //     animationActive = !animationActive;
-    //     if (animationActive) {
-    //         previousTimestamp = null;
-    //         window.requestAnimationFrame(advanceScene);
-    //     }
-    // });
+    $(canvas).click(function () {
+        animationActive = !animationActive;
+        if (animationActive) {
+            previousTimestamp = null;
+            window.requestAnimationFrame(advanceScene);
+        }
+    });
 
 }(document.getElementById("hello-webgl")));
