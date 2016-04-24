@@ -172,10 +172,19 @@
     shape4.setVertices(shape4.cube(0.5));
     shape4.translateShape(1, -0.5, -1);
     shape4.scaleShape(1.5, 1.5, 1.5);
-
+    shape4.setDrawingStyle("triangles");
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
+    var setAllTriangles = function (shapes) {
+        for (child of shapes) {
+        child.setDrawingStyle("triangles");
+            if (child.getChildren().length > 0) {
+                setAllTriangles(child.getChildren());
+            }
+        }
+    }
+    setAllTriangles(shape4.getChildren());
 
     shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
@@ -438,6 +447,7 @@
         )));
 
 
+        // Apparently, can only light shapes if they are drawn with triangles
         gl.uniform3fv(lightPosition, [0.0, 0.0, 5.0]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.1, 0.1, 0.1]);
