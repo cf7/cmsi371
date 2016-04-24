@@ -4,7 +4,7 @@
  */
 (function (canvas) {
 
-    // lighting: 4/14
+    // lighting: 4/7, 4/14
 
     // interactivity: 4/21
 
@@ -381,12 +381,18 @@
 
         var location = { x: 0, y: 0, z: 0};
         var lookAt = { x: 1, y: 1, z: 1};
-        context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAt).mult(context.currentTransform);
-        
-        translate(0, 0, 0);
-        scale(1, 1, 1);
-        rotate(currentRotation, 1, 1, 0);
-        
+        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt).mult(context.currentTransform);
+
+        var dataT = { tx: 0, ty: 0, tz: 0 };
+
+        var dataR = { angle: currentRotation, rx: 1, ry: 1, rz: 0 };
+
+        // cameraMatrix = new Matrix(4, 4).getTranslateMatrix(4, 4, dataT).mult(cameraMatrix);
+        cameraMatrix = new Matrix(4, 4).getRotationMatrix(4, 4, dataR).mult(cameraMatrix);
+        // translate(1, -1, 0);
+        // scale(1, 1, 1);
+        // rotate(currentRotation, 1, 1, 0);
+
         // have code to translate, scale, and rotate the camera
         
 
@@ -395,28 +401,28 @@
         // global matrix is the camera matrix, which is actually part of the modelView matrix
         // instead of . . . projection * [rotation] * camera * modelView
         // do . . .  projection * [camera/modelView]
-        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(cameraMatrix.elements)));
 
         restore();
 
          // ** only activate one of the projection matrices at a time
 
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+            0.1 * (canvas.width / canvas.height),
+            -0.1,
+            0.1,              
+            0.1, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
         //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
         //     2 * (canvas.width / canvas.height),
         //     -2,
         //     2,              
-        //     0.5, // viewing volume, near plane
+        //     -10, // viewing volume, near plane
         //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
 
 
         // // have code to translate, scale, and rotate the camera
