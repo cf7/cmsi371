@@ -63,84 +63,12 @@ var Shape = (function () {
             translate: this.getTranslate(),
             scale: this.getScale(),
             rotate: this.getRotate(),
-            normals: this.getNormals()
+            normals: this.toVertexNormalArray(this.indexedVertices)
         }
     };
 
     Shape.prototype.setColor = function(data) {
         this.color = { r: data.r, g: data.g, b: data.b };
-    };
-
-    Shape.prototype.getNormals = function() {
-        // use cross product to compute normals
-        // this is why indices needed to be assigned counter-clockwise
-        // because order matters for cross-product
-        // will determine whether the resulting normal is inward or outward
-
-        // array of normals, lightposition, and lightcolor all travel into shader
-        // use the arrays of indices to compute normals, because
-        // the vertices have already been sorted within the indices
-
-        // should have one normal per vertex
-
-        // use the indices to retrieve the vector data
-        // convert to Vector objects
-        // do computations to find normal vectors
-        // convert back to data
-        // store in Shape's data
-
-        var vertices = this.indexedVertices.vertices;
-        var indices = this.indexedVertices.indices;
-        var points = [];
-
-        // grab all of the vertices in each triangle group
-        for (var i = 0; i < indices.length; i++) {
-            points.push([ vertices[indices[i][0]], vertices[indices[i][1]], vertices[indices[i][2]] ]);
-        }
-        console.log(points);
-
-        // each element in points is now a group of 3 points that make up a triangle on the Shape mesh
-        /**
-                0
-               / \
-              /   \
-             1 --- 2
-
-            compute a normal for vertex0 and vertex1 and vertex2
-            means 3 cross product computations
-
-        */
-
-        var computeNormal = function (point0, point1, point2) {
-            var vector1 = new Vector(point1[0] - point0[0],
-                                    point1[1] - point0[1],
-                                    point1[2] - point0[2]);
-            var vector2 = new Vector(point2[0] - point0[0],
-                                    point2[1] - point0[1],
-                                    point2[2] - point0[2]);
-            return vector1.cross(vector2);
-        }
-
-        var normalsData = [];
-
-        // // comput the normals
-        for (var i = 0; i < points.length; i++) {
-            var vector = computeNormal(points[i][0], points[i][1], points[i][2]);
-            // JD: Note, this is just a quick fix. Longer discussion in GitHub comment.
-            normalsData.push(
-                vector.x(), vector.y(), vector.z(),
-                vector.x(), vector.y(), vector.z(),
-                vector.x(), vector.y(), vector.z()
-            );
-        }
-
-        // for (var i = 0; i < vertices.length; i++) {
-        //     normalsData.push([ 0, 1, 0 ]);
-        // }
-        console.log(normalsData);
-
-       return normalsData;
-
     };
 
     Shape.prototype.translateShape = function(x, y, z) {
@@ -480,6 +408,57 @@ var Shape = (function () {
 
         return result;
     };
+
+    Shape.prototype.toNormalArray = function (indexedVertices) {
+        var result = [];
+
+        // For each face...
+        for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            // We form vectors from the first and second then second and third vertices.
+            var p0 = indexedVertices.vertices[indexedVertices.indices[i][0]];
+            var p1 = indexedVertices.vertices[indexedVertices.indices[i][1]];
+            var p2 = indexedVertices.vertices[indexedVertices.indices[i][2]];
+
+            // Technically, the first value is not a vector, but v can stand for vertex
+            // anyway, so...
+            var v0 = new Vector(p0[0], p0[1], p0[2]);
+            var v1 = new Vector(p1[0], p1[1], p1[2]).subtract(v0);
+            var v2 = new Vector(p2[0], p2[1], p2[2]).subtract(v0);
+            var normal = v1.cross(v2).unit();
+
+            // We then use this same normal for every vertex in this face.
+            for (var j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+                result = result.concat(
+                    [ normal.x(), normal.y(), normal.z() ]
+                );
+            }
+        }
+
+        return result;
+    },
+
+    /*
+     * Another utility function for computing normals, this time just converting
+     * every vertex into its unit vector version.  This works mainly for objects
+     * that are centered around the origin.
+     */
+    Shape.prototype.toVertexNormalArray = function (indexedVertices) {
+        var result = [];
+
+        // For each face...
+        for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            // For each vertex in that face...
+            for (var j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+                var p = indexedVertices.vertices[indexedVertices.indices[i][j]];
+                var normal = new Vector(p[0], p[1], p[2]).unit();
+                result = result.concat(
+                    [ normal.x(), normal.y(), normal.z() ]
+                );
+            }
+        }
+
+        return result;
+    }
 
     return Shape;
 })();

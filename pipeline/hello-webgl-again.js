@@ -298,7 +298,6 @@
         }
         objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].colors);
-        console.log(objectsToDraw[i].normals);
         objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].normals);
     }
@@ -339,7 +338,7 @@
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
-    // gl.enableVertexAttribArray(normalVector);
+    gl.enableVertexAttribArray(normalVector);
 
     var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
@@ -376,8 +375,8 @@
         restore();
 
         // Set the varying normal vectors
-        // gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
-        // gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
+        gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
@@ -418,24 +417,24 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-            0.1 * (canvas.width / canvas.height),
-            -0.1,
-            0.1,              
-            0.1, // viewing volume, near plane
-            100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     0.1 * (canvas.width / canvas.height),
+        //     -0.1,
+        //     0.1,              
+        //     0.1, // viewing volume, near plane
+        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
         // Ortho rotates camera around cameraFocus
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     2 * (canvas.width / canvas.height),
-        //     -2,
-        //     2,              
-        //     -10, // viewing volume, near plane
-        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
 
         gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);

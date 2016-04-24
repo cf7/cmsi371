@@ -105,7 +105,7 @@
         gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
 
   
-        // finalVertexColor = vec4(finalDiffuse.rgb, 1.0);
+        finalVertexColor = vec4(finalDiffuse.rgb, 1.0);
 
         // ambient light: 4/12 49:00
         // finalVertexColor = vec4(finalDiffuse.rgb + lightAmbient.rgb, 1.0);
@@ -116,7 +116,7 @@
         // multiple light sources: 4/12 52:00
 
         // unmodified color
-        finalVertexColor = vec4(vertexColor, 1.0);
+        // finalVertexColor = vec4(vertexColor, 1.0);
 
       }
     </script>
