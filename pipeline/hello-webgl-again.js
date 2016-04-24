@@ -165,7 +165,7 @@
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("lines");
+    shape3.setDrawingStyle("triangles");
 
 
     var shape4 = new Shape(gl);    
@@ -194,7 +194,7 @@
     var shape6 = new Shape(gl);
     shape6.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape6.setVertices(shape6.trapezium(0.5));
-    shape6.setDrawingStyle("lines");
+    shape6.setDrawingStyle("triangles");
     shape6.translateShape(-1, 0, 1);
 
     // Build the objects to display.
@@ -247,6 +247,7 @@
         
     preObjectsToDraw.push(shape.getData());
     preObjectsToDraw.push(shape2.getData());
+    console.log(shape3.getData().normals);
     preObjectsToDraw.push(shape3.getData());
     preObjectsToDraw.push(shape4.getData());
     preObjectsToDraw.push(shape5.getData());
@@ -437,7 +438,7 @@
         )));
 
 
-        gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);
+        gl.uniform3fv(lightPosition, [0.0, 0.0, 5.0]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.1, 0.1, 0.1]);
 
