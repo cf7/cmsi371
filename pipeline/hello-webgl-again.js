@@ -4,7 +4,7 @@
  */
 (function (canvas) {
 
-    // lighting: 4/7, 4/14
+    // lighting: 4/7, 4/12, 4/14
 
     // interactivity: 4/21
 
@@ -298,6 +298,7 @@
         }
         objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].colors);
+        console.log(objectsToDraw[i].normals);
         objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].normals);
     }
@@ -338,10 +339,11 @@
     var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
     var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
-    gl.enableVertexAttribArray(normalVector);
-   
+    // gl.enableVertexAttribArray(normalVector);
+
     var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
+    var lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
 
     var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
@@ -374,12 +376,13 @@
         restore();
 
         // Set the varying normal vectors
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
-        gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
+        // gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
+        // gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
     };
 
@@ -435,7 +438,7 @@
 
         gl.uniform3fv(lightPosition, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
-
+        gl.uniform3fv(lightAmbient, [0.1, 0.1, 0.1]);
         // ** (canvas.width / canvas.height) is the aspet ratio
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

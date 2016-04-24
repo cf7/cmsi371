@@ -49,8 +49,8 @@
       #endif
       attribute vec3 vertexPosition; // this is actually vertexPosition.x, vertexPosition.y, vertexPosition.z
       // Note this new additional output.
-      attribute vec3 vertexDiffuseColor;
-      attribute vec3 vertexSpecularColor;
+      // attribute vec3 vertexDiffuseColor;
+      // attribute vec3 vertexSpecularColor;
       attribute vec3 vertexColor;
       attribute vec3 normalVector;
 
@@ -63,6 +63,7 @@
 
       uniform vec3 lightPosition;
       uniform vec3 lightDiffuse;
+      uniform vec3 lightAmbient;
 
       uniform float shininess;
 
@@ -70,12 +71,22 @@
       uniform mat4 camera;
       uniform mat4 modelView;
       
-     
+      /**
+        areas of code to check:
+        -vertex shader variable instantiation (above)
+        -vertex shader variable incorporation (below)
+        -passing in buffered data (e.g. gl.uniformMat4fv() statements)
+        -buffering data (e.g. bindBuffer() and vertexAttributePointer())
+        -variable connecting (e.g. getUniformLocation() statements)
+        -colorBuffer and normalBuffer in objectsToDraw loops
+        -fragment shader variable instantiation (below below)
+        -fragment shader variable incorporation (below below)
+      */
 
       void main(void) {
 
-        // computing the lighting for each vertex here
-         // First, transform our vertex to its final eye location.
+        // // computing the lighting for each vertex here
+        //  // First, transform our vertex to its final eye location.
           vec3 eyePosition = (modelView * vec4(vertexPosition, 1.0)).xyz;
           // Figure out the color of the light that lands on the vertex.
           vec3 diffuseProduct = vertexColor * lightDiffuse;
@@ -92,8 +103,18 @@
 
         gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
 
-        finalVertexColor = vec4(finalDiffuse.rgb, 1.0);
-        // finalVertexColor = vec4(vertexColor, 1.0);
+        // finalVertexColor = vec4(finalDiffuse.rgb, 1.0);
+        // ambient light: 4/12 49:00
+        // finalVertexColor = vec4(finalDiffuse.rgb + lightAmbient.rgb, 1.0);
+
+        // specular light: 4/12 1:10:00 or 4/14
+        // reflection vector, Math of Space pdf
+
+        // multiple light sources: 4/12 52:00
+
+        // unmodified color
+        finalVertexColor = vec4(vertexColor, 1.0);
+
       }
     </script>
 

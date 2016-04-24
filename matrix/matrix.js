@@ -329,8 +329,17 @@ var Matrix = (function () {
 
     Matrix.prototype.getCameraMatrix = function(lookAt) {
         // P and Q will be objects with coordinates
+
+        // fix this, don't turn them into vectors yet
+        // data for vectors should be difference between two points
+        
         var p = new Vector(0, 0, 0);
         var q = new Vector(lookAt.x, lookAt.y, lookAt.z);
+
+        // fix this after finishing lighting
+        // vector is difference between two points
+        // so vector for P - Q should be Pcoords - Qcoords
+        // should not be turning them into Vectors beforehand
 
         console.log("P");
         console.log(p);

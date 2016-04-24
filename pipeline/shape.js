@@ -62,7 +62,8 @@ var Shape = (function () {
             mode: this.mode,
             translate: this.getTranslate(),
             scale: this.getScale(),
-            rotate: this.getRotate()
+            rotate: this.getRotate(),
+            normals: this.getNormals()
         }
     };
 
@@ -70,15 +71,77 @@ var Shape = (function () {
         this.color = { r: data.r, g: data.g, b: data.b };
     };
 
-    Shape.prototype.getNormals = function(arg) {
+    Shape.prototype.getNormals = function() {
         // use cross product to compute normals
         // this is why indices needed to be assigned counter-clockwise
         // because order matters for cross-product
         // will determine whether the resulting normal is inward or outward
 
         // array of normals, lightposition, and lightcolor all travel into shader
-        // 
+        // use the arrays of indices to compute normals, because
+        // the vertices have already been sorted within the indices
+
+        // should have one normal per vertex
+
+        // use the indices to retrieve the vector data
+        // convert to Vector objects
+        // do computations to find normal vectors
+        // convert back to data
+        // store in Shape's data
+
+        var vertices = this.indexedVertices.vertices;
+        var indices = this.indexedVertices.indices;
+        var points = [];
+
+        // grab all of the vertices in each triangle group
+        for (var i = 0; i < indices.length; i++) {
+            points.push([ vertices[indices[i][0]], vertices[indices[i][1]], vertices[indices[i][2]] ]);
+        }
+        console.log(points);
+
+        // each element in points is now a group of 3 points that make up a triangle on the Shape mesh
+        /**
+                0
+               / \
+              /   \
+             1 --- 2
+
+            compute a normal for vertex0 and vertex1 and vertex2
+            means 3 cross product computations
+
+        */
+
+        var computeNormal = function (point0, point1, point2) {
+            var vector1 = new Vector(point1[0] - point0[0],
+                                    point1[1] - point0[1],
+                                    point1[2] - point0[2]);
+            var vector2 = new Vector(point2[0] - point0[0],
+                                    point2[1] - point0[1],
+                                    point2[2] - point0[2]);
+            return vector1.cross(vector2);
+        }
+
+        var normalsData = [];
+
+        // // comput the normals
+        for (var i = 0; i < points.length; i++) {
+            var vector = computeNormal(points[i][0], points[i][1], points[i][2]);
+            normalsData.push([ vector.x(), vector.y(), vector.z() ]);
+            vector = computeNormal(points[i][1], points[i][2], points[i][0]);
+            normalsData.push([ vector.x(), vector.y(), vector.z() ]);
+            vector = computeNormal(points[i][2], points[i][0], points[i][1]);
+            normalsData.push([ vector.x(), vector.y(), vector.z() ]);
+        }
+
+        // for (var i = 0; i < vertices.length; i++) {
+        //     normalsData.push([ 0, 1, 0 ]);
+        // }
+        console.log(normalsData);
+
+       return normalsData;
+
     };
+
     Shape.prototype.translateShape = function(x, y, z) {
         var newX = this.parent.translate ? this.parent.translate.tx + x : x;
         var newY = this.parent.translate ? this.parent.translate.ty + y : y;
