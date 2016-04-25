@@ -33,22 +33,27 @@
     }
 
     var transformationMatrix = new Matrix(4, 4);
+    var lightingVector = [ 0.0, 0.0, 0.0, 0.0 ];
     var savedMatrices = [];
-    
+    var savedLighting = [];
+
     var clearTransform = function () {
         context.currentTransform = new Matrix(4, 4);
     }
 
     var save = function () {
         context.savedMatrices.push(context.currentTransform.elements);
+        context.savedLighting.push(context.lightingVector);
     }
 
     var restore = function () {
         if (context.savedMatrices.length > 0) {
             context.currentTransform.elements = context.savedMatrices.pop().slice();
-        } else {
-            return;
         }
+        if (context.savedLighting.length > 0) {
+            context.lightingVector = context.savedLighting.pop().slice();
+        }
+        return;
     }   
 
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
@@ -93,6 +98,16 @@
         context.currentTransform = getCameraMatrix(x, y, z).mult(context.currentTransform);
     }
 
+    var translateLighting = function (x, y, z) {
+        context.lightingVector[0] = x;
+        context.lightingVector[1] = y;
+        context.lightingVector[2] = z;
+    }
+
+    var lightPos = function () {
+        return context.lightingVector;
+    }
+
     var translate = function (x, y, z) {
         context.currentTransform = getTranslationMatrix(x, y, z).mult(context.currentTransform);
     }
@@ -114,7 +129,9 @@
         scale: scale,
         rotate: rotate,
         savedMatrices: savedMatrices,
-        currentTransform: transformationMatrix
+        savedLighting: savedLighting,
+        currentTransform: transformationMatrix,
+        lightingVector: lightingVector
     }
 
     // Grab the WebGL rendering context.
@@ -414,32 +431,34 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     0.1 * (canvas.width / canvas.height),
-        //     -0.1,
-        //     0.1,              
-        //     0.1, // viewing volume, near plane
-        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
-
-        // Ortho rotates camera around cameraFocus
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+            0.1 * (canvas.width / canvas.height),
+            -0.1,
+            0.1,              
+            0.1, // viewing volume, near plane
+            100 // viewing volume, far plane, only what's inside viewing volume can be seen
         )));
 
+        // Ortho rotates camera around cameraFocus
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     2 * (canvas.width / canvas.height),
+        //     -2,
+        //     2,              
+        //     -10, // viewing volume, near plane
+        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
+        save();
+        translateLighting(0.0, 0.0, 2.0);
         // Apparently, can only light shapes if they are drawn with triangles
-        gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.0]);
+        gl.uniform4fv(lightPosition, context.lightingVector);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.2, 0.2, 0.2]);
         gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
         // to turn off specular, set light to all 0.0's
+        restore();
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

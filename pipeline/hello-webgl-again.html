@@ -111,14 +111,14 @@
         // need to precompute position of normalVectors and fragmentEye position
         // before passing to fragment shader or calculating gl_Position
         // stationary specular
-        fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
+        // fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
         // unmodified specular
-        // fragmentNormal = normalVector;
-        // fragmentEye = vertexPosition;
+        fragmentNormal = normalVector;
+        fragmentEye = vertexPosition;
 
         // 4/14 19:00 - keeping light stationary
-        vec4 finalVertextPosition = camera * modelView * vec4(vertexPosition, 1.0);
-        fragmentEye = vec3(finalVertextPosition); // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
+        // vec4 finalVertextPosition = camera * modelView * vec4(vertexPosition, 1.0);
+        // fragmentEye = vec3(finalVertextPosition); // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
         // ** unmodified specular lighting
         // fragmentEye = vertexPosition;
         fragmentLight = lightPosition.xyz;
@@ -135,10 +135,10 @@
         fragmentSpecularColor = vertexSpecularColor;
 
         // stationary specular lighting
-        gl_Position = globalProjectionMatrix * finalVertextPosition;
+        // gl_Position = globalProjectionMatrix * finalVertextPosition;
 
         // unmodifed specular
-        // gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
+        gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
 
         
         // diffuse without specular
