@@ -33,9 +33,9 @@
     }
 
     var transformationMatrix = new Matrix(4, 4);
-    var lightingVector = [ 0.0, 0.0, 0.0, 0.0 ];
+    var lookAtVertex = new Vector(0, 0, 100);
+    var percentComplete = new Vector(0, 0, 0);
     var savedMatrices = [];
-    var savedLighting = [];
 
     var clearTransform = function () {
         context.currentTransform = new Matrix(4, 4);
@@ -43,15 +43,11 @@
 
     var save = function () {
         context.savedMatrices.push(context.currentTransform.elements);
-        context.savedLighting.push(context.lightingVector);
     }
 
     var restore = function () {
         if (context.savedMatrices.length > 0) {
             context.currentTransform.elements = context.savedMatrices.pop().slice();
-        }
-        if (context.savedLighting.length > 0) {
-            context.lightingVector = context.savedLighting.pop().slice();
         }
         return;
     }   
@@ -64,11 +60,6 @@
 
     var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
         return glFormat(new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).elements);
-    }
-
-    var getCameraMatrix = function (x, y, z) {
-        var lookAt = { x: x, y: y, z: z };
-        return new Matrix(4, 4).getCameraMatrix(lookAt);
     }
 
     var getTranslationMatrix = function (x, y, z) {
@@ -94,18 +85,13 @@
         }
     }
 
+    var getCameraMatrix = function (x, y, z) {
+        var lookAt = { x: x, y: y, z: z };
+        return new Matrix(4, 4).getCameraMatrix(lookAt);
+    }
+
     var cameraFocus = function (x, y, z) {
         context.currentTransform = getCameraMatrix(x, y, z).mult(context.currentTransform);
-    }
-
-    var translateLighting = function (x, y, z) {
-        context.lightingVector[0] = x;
-        context.lightingVector[1] = y;
-        context.lightingVector[2] = z;
-    }
-
-    var lightPos = function () {
-        return context.lightingVector;
     }
 
     var translate = function (x, y, z) {
@@ -129,9 +115,7 @@
         scale: scale,
         rotate: rotate,
         savedMatrices: savedMatrices,
-        savedLighting: savedLighting,
-        currentTransform: transformationMatrix,
-        lightingVector: lightingVector
+        currentTransform: transformationMatrix
     }
 
     // Grab the WebGL rendering context.
@@ -182,7 +166,7 @@
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("lines");
+    shape3.setDrawingStyle("triangles");
 
     var shape4 = new Shape(gl);    
     shape4.setVertices(shape4.cube(0.5));
@@ -402,11 +386,9 @@
     /*
      * Displays the scene.
      */
-    var lookAtX = 0.0;
-    var lookAtY = 0.0;
-    var lookAtZ = -1.0;
-    var translateX = 0.0;
-    var translateZ = 0.0;
+ 
+    var translateX = 0;
+    var translateZ = 0;
     var rotationAroundX = 0.0;
     var rotationAroundY = 0.0;
     var drawScene = function () {
@@ -417,12 +399,28 @@
 
         // ** just figure out how to change the lookAt vector
         // ** and will automatically translate relative to that vector
-        cameraFocus(lookAtX, lookAtY, lookAtZ);
         translate(translateX, 0, translateZ);
         scale(1, 1, 1);
         rotate(rotationAroundX, 1, 0, 0);
         rotate(rotationAroundY, 0, 1, 0);
 
+        // rotation will only need to act on lookAtVertex
+        // translation forward and backward only acts on location
+        // translation side to side acts on both location and lookAtVertex
+
+        // lookAtVertex
+        // var location = new Vector(0, 0, 0);
+        // var up = new Vector(0, 1, 0);
+        
+        // var distance = lookAtVertex.subtract(location);
+        // var direction = distance.unit();
+        // console.log("percentComplete");
+        // console.log(percentComplete);
+        // direction = direction.multiply(percentComplete);
+        // console.log("direction");
+        // console.log(direction);
+        // location = location.add(direction);
+        // context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAtVertex, up);
         gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
         restore();
@@ -431,34 +429,30 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-            0.1 * (canvas.width / canvas.height),
-            -0.1,
-            0.1,              
-            0.1, // viewing volume, near plane
-            100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
-
-        // Ortho rotates camera around cameraFocus
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     2 * (canvas.width / canvas.height),
-        //     -2,
-        //     2,              
-        //     -10, // viewing volume, near plane
-        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     0.1 * (canvas.width / canvas.height),
+        //     -0.1,
+        //     0.1,              
+        //     0.1, // viewing volume, near plane
+        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
         // )));
 
-        save();
-        translateLighting(0.0, 0.0, 2.0);
-        // Apparently, can only light shapes if they are drawn with triangles
-        gl.uniform4fv(lightPosition, context.lightingVector);
+        // Ortho rotates camera around cameraFocus
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
+
+        gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.2, 0.2, 0.2]);
         gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
         // to turn off specular, set light to all 0.0's
-        restore();
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
@@ -558,44 +552,46 @@
     // because objects will just move relative to the camera
     // need to be in frustum
     $("#navigation").keydown(function (event) {
-        console.log("inside");
-        console.log(event);
-        var translateSpeed = 0.3;
-        var rotationSpeed = 5;
-        // if it is a keydown event, then the actual keyCode is used
-        // if it is a keypress event, then 32 is added to each key
-        if (event.keyCode === 87) {
-            translateZ += translateSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 83) {
-            translateZ -= translateSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 65) {
-            translateX += translateSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 68) {
-            translateX -= translateSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 37) {
-            rotationAroundY -= rotationSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 39) {
-            rotationAroundY += rotationSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 38) {
-            rotationAroundX -= rotationSpeed;
-            drawScene();
-        }
-        if (event.keyCode === 40) {
-            rotationAroundX += rotationSpeed;
-            drawScene();
-        }
+        // console.log("inside");
+        // console.log(event);
+        // var translateSpeed = 0.3;
+        // var rotationSpeed = 0.3;
+        // // if it is a keydown event, then the actual keyCode is used
+        // // if it is a keypress event, then 32 is added to each key
+        // if (event.keyCode === 87) {
+        //     // translateZ += translateSpeed;
+        //     percentComplete = percentComplete.add(new Vector(0, 0, translateSpeed));
+        //     drawScene();
+        // }
+        // if (event.keyCode === 83) {
+        //     // translateZ -= translateSpeed;
+        //     percentComplete = percentComplete.subtract(new Vector(0, 0, translateSpeed));
+        //     drawScene();
+        // }
+        // if (event.keyCode === 65) {
+        //     translateX += translateSpeed;
+        //     drawScene();
+        // }
+        // if (event.keyCode === 68) {
+        //     translateX -= translateSpeed;
+        //     drawScene();
+        // }
+        // if (event.keyCode === 37) {
+        //     rotationAroundY -= rotationSpeed;
+        //     drawScene();
+        // }
+        // if (event.keyCode === 39) {
+        //     rotationAroundY += rotationSpeed;
+        //     drawScene();
+        // }
+        // if (event.keyCode === 38) {
+        //     rotationAroundX -= rotationSpeed;
+        //     drawScene();
+        // }
+        // if (event.keyCode === 40) {
+        //     rotationAroundX += rotationSpeed;
+        //     drawScene();
+        // }
 
         $("#navigation").val("");
     });

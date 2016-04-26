@@ -296,14 +296,14 @@ var Matrix = (function () {
     };
 
 
-    Matrix.prototype.getCameraMatrix = function(lookAt) {
+    Matrix.prototype.getCameraMatrix = function(location, lookAt, upward) {
         // P and Q will be objects with coordinates
 
         // fix this, don't turn them into vectors yet
         // data for vectors should be difference between two points
         
-        var p = new Vector(0, 0, 0);
-        var q = new Vector(lookAt.x, lookAt.y, lookAt.z);
+        var p = location;
+        var q = lookAt;
 
         // fix this after finishing lighting
         // vector is difference between two points
@@ -317,7 +317,7 @@ var Matrix = (function () {
        
         var z = p.subtract(q).unit();
 
-        var up = new Vector(0, 1, 0);
+        var up = upward;
         var projUp = up.projection(z);
         var y = up.subtract(projUp).unit();
 

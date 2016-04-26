@@ -87,41 +87,18 @@
 
       void main(void) {
 
-        /**  // diffuse without specular
-        // // computing the lighting for each vertex here
-        //  // First, transform our vertex to its final eye location.
-          vec3 eyePosition = (modelView * vec4(vertexPosition, 1.0)).xyz;
-          // Figure out the color of the light that lands on the vertex.
-          vec3 diffuseProduct = vertexColor * lightDiffuse;
-          // Figure out our light direction vector.
-          vec3 l = normalize(lightPosition - eyePosition);
-          // 'normalize' means make a unit vector
-          // We need to transform our normal vector, too.  We don't care about
-          // translation so we pad a 0.0 rather than a 1.0.
-          vec3 n = normalize(modelView * vec4(normalVector, 0.0)).xyz;
-          // Calculate the amount of diffuse light that hits the vertex.
-          // dot will return -1 to 1, cos(theta)
-          float kd = max(dot(l, n), 0.0); // clamped at 0.0 with max()
-          vec3 finalDiffuse = kd * diffuseProduct;
-        */
 
-        // We "merely" relay these vectors to the fragment shader.  However,
-        // we get a cool trick: they get interpolated for us!
-
-        // need to precompute position of normalVectors and fragmentEye position
-        // before passing to fragment shader or calculating gl_Position
-        // stationary specular
-        // fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
+        fragmentLight = lightPosition.xyz;
+        fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
         // unmodified specular
-        fragmentNormal = normalVector;
-        fragmentEye = vertexPosition;
+        // fragmentNormal = normalVector;
+        // fragmentEye = vertexPosition;
 
         // 4/14 19:00 - keeping light stationary
-        // vec4 finalVertextPosition = camera * modelView * vec4(vertexPosition, 1.0);
-        // fragmentEye = vec3(finalVertextPosition); // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
+        vec4 finalVertexPosition = camera * modelView * vec4(vertexPosition, 1.0);
+        fragmentEye = finalVertexPosition.xyz; // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
         // ** unmodified specular lighting
         // fragmentEye = vertexPosition;
-        fragmentLight = lightPosition.xyz;
 
         // No conditional expressions in GLSL, unfortunately.  We have to
         // do this the other way.
@@ -135,10 +112,10 @@
         fragmentSpecularColor = vertexSpecularColor;
 
         // stationary specular lighting
-        // gl_Position = globalProjectionMatrix * finalVertextPosition;
+        gl_Position = globalProjectionMatrix * finalVertexPosition;
 
         // unmodifed specular
-        gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
+        // gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
 
         
         // diffuse without specular
