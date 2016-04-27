@@ -541,6 +541,7 @@
         console.log(event);
         var translateSpeed = 0.3;
         var rotationSpeed = 3;
+        var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
         if (event.keyCode === 87) {
@@ -548,19 +549,25 @@
             // else's y's that are being moved! not the camera's
             // can't multiply vectors!
             // vector.multiply(s) takes in a scalar
-            cameraStatus.location = cameraStatus.location.add(cameraStatus.lookAt.subtract(cameraStatus.location).unit().multiply(translateSpeed));
+            cameraStatus.location = cameraStatus.location.add(directionalVector.multiply(translateSpeed));
+            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
             drawScene();
         }
         if (event.keyCode === 83) {
-            cameraStatus.location = cameraStatus.location.subtract(cameraStatus.lookAt.subtract(cameraStatus.location).unit().multiply(translateSpeed));
+            cameraStatus.location = cameraStatus.location.subtract(directionalVector.multiply(translateSpeed));
+            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
             drawScene();
         }
         if (event.keyCode === 65) {
-            translateX += translateSpeed;
+            directionalVector = new Vector(-translateSpeed, 0, 0);
+            cameraStatus.location = cameraStatus.location.add(directionalVector);
+            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
             drawScene();
         }
         if (event.keyCode === 68) {
-            translateX -= translateSpeed;
+            directionalVector = new Vector(translateSpeed, 0, 0);
+            cameraStatus.location = cameraStatus.location.add(directionalVector);
+            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
             drawScene();
         }
 
