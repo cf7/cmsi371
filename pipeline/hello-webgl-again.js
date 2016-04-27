@@ -533,7 +533,8 @@
     // Q: 81
     // E: 69
 
-    var XZAngle = 0;
+    var XZAngle = 0.0;
+    var YZAngle = 0.0;
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
@@ -541,8 +542,9 @@
         console.log("inside");
         console.log(event);
         var translateSpeed = 0.3;
-        var rotationSpeed = 30 * (Math.PI/180);
+        var rotationSpeed = 10 * (Math.PI/180);
         var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
+        var lateralDirectional = directionalVector.cross(cameraStatus.up);
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
         if (event.keyCode === 87) {
@@ -560,15 +562,13 @@
             drawScene();
         }
         if (event.keyCode === 65) {
-            directionalVector = new Vector(-translateSpeed, 0, 0);
-            cameraStatus.location = cameraStatus.location.add(directionalVector);
-            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
+            cameraStatus.location = cameraStatus.location.subtract(lateralDirectional);
+            cameraStatus.lookAt = cameraStatus.lookAt.subtract(lateralDirectional);
             drawScene();
         }
         if (event.keyCode === 68) {
-            directionalVector = new Vector(translateSpeed, 0, 0);
-            cameraStatus.location = cameraStatus.location.add(directionalVector);
-            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
+            cameraStatus.location = cameraStatus.location.add(lateralDirectional);
+            cameraStatus.lookAt = cameraStatus.lookAt.add(lateralDirectional);
             drawScene();
         }
 
@@ -590,11 +590,15 @@
             drawScene();
         }
         if (event.keyCode === 38) {
-            rotationAroundX -= rotationSpeed;
+            YZAngle -= rotationSpeed;
+            var rotationVector = new Vector(0, cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
+            cameraStatus.lookAt = directionalVector.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 40) {
-            rotationAroundX += rotationSpeed;
+            YZAngle += rotationSpeed;
+            var rotationVector = new Vector(0, cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
+            cameraStatus.lookAt = directionalVector.add(rotationVector);
             drawScene();
         }
 
