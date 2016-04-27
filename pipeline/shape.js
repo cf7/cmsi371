@@ -85,7 +85,7 @@ var Shape = (function () {
                 translate: this.getTranslate(),
                 scale: this.getScale(),
                 rotate: this.getRotate(),
-                normals: this.toVertexNormalArray(this.indexedVertices)
+                normals: this.toNormalArray(this.indexedVertices)
             }
         }
     };
@@ -199,22 +199,22 @@ var Shape = (function () {
 
         vertices = vertices.concat(this.circle(radius, height, points).vertices);
         var length = vertices.length;
-
-        indices.push([ 0, length/2, (length/2 + 1) % length ]);
+        var midVertex = length / 2;
+        indices.push([ 0, midVertex, (midVertex + 1) % length ]);
 
         for (var i = 1; i < vertices.length/2; i++) {
-            indices.push([ length/2, (length/2 + i) % length, (length/2 + i + 1) % length ]);
+            indices.push([ midVertex, (midVertex + i + 1) % length, (midVertex + i) % length ]);
         }
-        indices.push([ length/2, (length - 1) % length, (length/2 + 1) % length ]);
+        indices.push([ midVertex, (midVertex + 1) % length, (length - 1) % length ]);
 
-        indices.push([ 1, (length/2 + 1) % length, (length/2 + 2) % length ]);
-        indices.push([ 1, 2, (length/2 + 2) % length ]);
+        indices.push([ (midVertex + 2) % length, 1, (midVertex + 1) % length ]);
+        indices.push([ 1, (midVertex + 2) % length, 2 ]);
         for (var i = 1; i < vertices.length/2; i++) {
-            indices.push([ i, (length/2 + i) % length, (length/2 + i + 1) % length ]);
-            indices.push([ i, (i + 1) % length, (length/2 + i + 1) % length ]);
+            indices.push([ i, (midVertex + i) % length, (midVertex + i + 1) % length ]);
+            indices.push([ i, (midVertex + i + 1) % length, (i + 1) % length ]);
         }
-        indices.push([ (length/2 - 1), (length - 1) % length, (length/2 + 1) % length ]);
-        indices.push([ (length/2 - 1), (length/2 + 1) % length, 1 ]);
+        indices.push([ (midVertex - 1), (length - 1) % length, (midVertex + 1) % length ]);
+        indices.push([ (midVertex - 1), (midVertex + 1) % length, 1 ]);
 
         return {
             vertices: vertices,

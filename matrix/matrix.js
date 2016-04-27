@@ -314,15 +314,15 @@ var Matrix = (function () {
         console.log(p);
         console.log("Q");
         console.log(q);
-       
-        var z = p.subtract(q).unit();
 
+        var z = p.subtract(q).unit();
+        console.log("z");
+        console.log(z);
         var up = upward;
         var projUp = up.projection(z);
         var y = up.subtract(projUp).unit();
 
         var x = y.cross(z);
-
         var Px = p.dot(x);
         var Py = p.dot(y);
         var Pz = p.dot(z);

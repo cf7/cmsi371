@@ -83,8 +83,9 @@ var Vector = (function () {
         var result = new Vector();
 
         for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-            result.elements[i] = this.elements[i] / s;
+            result.elements[i] = (s === 0) ? this.elements[i] : this.elements[i] / s;
         }
+        
 
         return result;
     };

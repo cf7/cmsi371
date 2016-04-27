@@ -33,9 +33,13 @@
     }
 
     var transformationMatrix = new Matrix(4, 4);
-    var lookAtVertex = new Vector(0, 0, 100);
-    var percentComplete = new Vector(0, 0, 0);
     var savedMatrices = [];
+
+    var cameraStatus = {
+        location: new Vector(0, 0, 0),
+        lookAt: new Vector(0, 0, -1),
+        up: new Vector(0, 1, 0)
+    };
 
     var clearTransform = function () {
         context.currentTransform = new Matrix(4, 4);
@@ -85,13 +89,13 @@
         }
     }
 
-    var getCameraMatrix = function (x, y, z) {
-        var lookAt = { x: x, y: y, z: z };
-        return new Matrix(4, 4).getCameraMatrix(lookAt);
+    var getCameraMatrix = function () {
+        console.log(cameraStatus);
+        return new Matrix(4, 4).getCameraMatrix(cameraStatus.location, cameraStatus.lookAt, cameraStatus.up);
     }
 
-    var cameraFocus = function (x, y, z) {
-        context.currentTransform = getCameraMatrix(x, y, z).mult(context.currentTransform);
+    var cameraTransform = function () {
+        context.currentTransform = getCameraMatrix().mult(context.currentTransform);
     }
 
     var translate = function (x, y, z) {
@@ -167,7 +171,7 @@
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
     shape3.setDrawingStyle("triangles");
-
+    
     var shape4 = new Shape(gl);    
     shape4.setVertices(shape4.cube(0.5));
     shape4.translateShape(1, -0.5, -1);
@@ -397,30 +401,9 @@
         
         save();
 
-        // ** just figure out how to change the lookAt vector
-        // ** and will automatically translate relative to that vector
-        translate(translateX, 0, translateZ);
-        scale(1, 1, 1);
+        cameraTransform();
         rotate(rotationAroundX, 1, 0, 0);
         rotate(rotationAroundY, 0, 1, 0);
-
-        // rotation will only need to act on lookAtVertex
-        // translation forward and backward only acts on location
-        // translation side to side acts on both location and lookAtVertex
-
-        // lookAtVertex
-        // var location = new Vector(0, 0, 0);
-        // var up = new Vector(0, 1, 0);
-        
-        // var distance = lookAtVertex.subtract(location);
-        // var direction = distance.unit();
-        // console.log("percentComplete");
-        // console.log(percentComplete);
-        // direction = direction.multiply(percentComplete);
-        // console.log("direction");
-        // console.log(direction);
-        // location = location.add(direction);
-        // context.currentTransform = new Matrix(4, 4).getCameraMatrix(location, lookAtVertex, up);
         gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
         restore();
@@ -519,7 +502,9 @@
      */
     var rotateScene = function (event) {
         rotationAroundX = xRotationStart - yDragStart + event.clientY;
+        // cameraStatus.lookAt.elements[0] = rotationAroundX;
         rotationAroundY = yRotationStart - xDragStart + event.clientX;
+        // cameraStatus.lookAt.elements[1] = rotationAroundY;
         drawScene();
     };
 
@@ -552,46 +537,55 @@
     // because objects will just move relative to the camera
     // need to be in frustum
     $("#navigation").keydown(function (event) {
-        // console.log("inside");
-        // console.log(event);
-        // var translateSpeed = 0.3;
-        // var rotationSpeed = 0.3;
-        // // if it is a keydown event, then the actual keyCode is used
-        // // if it is a keypress event, then 32 is added to each key
-        // if (event.keyCode === 87) {
-        //     // translateZ += translateSpeed;
-        //     percentComplete = percentComplete.add(new Vector(0, 0, translateSpeed));
-        //     drawScene();
-        // }
-        // if (event.keyCode === 83) {
-        //     // translateZ -= translateSpeed;
-        //     percentComplete = percentComplete.subtract(new Vector(0, 0, translateSpeed));
-        //     drawScene();
-        // }
-        // if (event.keyCode === 65) {
-        //     translateX += translateSpeed;
-        //     drawScene();
-        // }
-        // if (event.keyCode === 68) {
-        //     translateX -= translateSpeed;
-        //     drawScene();
-        // }
-        // if (event.keyCode === 37) {
-        //     rotationAroundY -= rotationSpeed;
-        //     drawScene();
-        // }
-        // if (event.keyCode === 39) {
-        //     rotationAroundY += rotationSpeed;
-        //     drawScene();
-        // }
-        // if (event.keyCode === 38) {
-        //     rotationAroundX -= rotationSpeed;
-        //     drawScene();
-        // }
-        // if (event.keyCode === 40) {
-        //     rotationAroundX += rotationSpeed;
-        //     drawScene();
-        // }
+        console.log("inside");
+        console.log(event);
+        var translateSpeed;
+        var rotationSpeed = 3;
+        // if it is a keydown event, then the actual keyCode is used
+        // if it is a keypress event, then 32 is added to each key
+        if (event.keyCode === 87) {
+            // need to subtract the y from the Q vector because it's everything
+            // else's y's that are being moved! not the camera's
+            translateSpeed = new Vector(0, 0, 0.3);
+            cameraStatus.location = cameraStatus.location.add(cameraStatus.lookAt.subtract(cameraStatus.location));
+            // translateZ += translateSpeed;
+            // percentComplete = percentComplete.add(new Vector(0, 0, translateSpeed));
+            drawScene();
+        }
+        if (event.keyCode === 83) {
+            translateSpeed = new Vector(0, 0, -0.3);
+            cameraStatus.location = cameraStatus.location.subtract(cameraStatus.lookAt.subtract(cameraStatus.location));
+            // translateZ -= translateSpeed;
+            // percentComplete = percentComplete.subtract(new Vector(0, 0, translateSpeed));
+            drawScene();
+        }
+        if (event.keyCode === 65) {
+            translateX += translateSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 68) {
+            translateX -= translateSpeed;
+            drawScene();
+        }
+
+        // when rotating Q, keep it's position radial
+        // to the camera's location
+        if (event.keyCode === 37) {
+            rotationAroundY -= rotationSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 39) {
+            rotationAroundY += rotationSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 38) {
+            rotationAroundX -= rotationSpeed;
+            drawScene();
+        }
+        if (event.keyCode === 40) {
+            rotationAroundX += rotationSpeed;
+            drawScene();
+        }
 
         $("#navigation").val("");
     });
