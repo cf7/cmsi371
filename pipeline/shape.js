@@ -255,7 +255,7 @@ var Shape = (function () {
 
         for (var i = 0; i < vertices.length; i++) {
             indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
-            indices.push([ i, (i + longit - 1) % vertices.length, (i + longit) % vertices.length ]);
+            indices.push([ (i + longit - 1) % vertices.length, i, (i + longit) % vertices.length ]);
         }
 
         return {
