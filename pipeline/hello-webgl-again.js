@@ -533,6 +533,7 @@
     // Q: 81
     // E: 69
 
+    var XZAngle = 0;
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
@@ -540,7 +541,7 @@
         console.log("inside");
         console.log(event);
         var translateSpeed = 0.3;
-        var rotationSpeed = 3;
+        var rotationSpeed = 30 * (Math.PI/180);
         var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
@@ -574,11 +575,18 @@
         // when rotating Q, keep it's position radial
         // to the camera's location
         if (event.keyCode === 37) {
-            rotationAroundY -= rotationSpeed;
+            // rotating around y, so move along x-z plane (1, 0, 1)
+            // rotate lookAt vector
+            // then recompute directional
+            XZAngle -= rotationSpeed;
+            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), 0, cameraStatus.location.z() + Math.sin(XZAngle));
+            cameraStatus.lookAt = directionalVector.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 39) {
-            rotationAroundY += rotationSpeed;
+            XZAngle += rotationSpeed;
+            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), 0, cameraStatus.location.z() + Math.sin(XZAngle));
+            cameraStatus.lookAt = directionalVector.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 38) {
