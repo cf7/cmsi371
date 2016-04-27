@@ -253,9 +253,14 @@ var Shape = (function () {
             currentPhi += phiDelta;
         }
 
+        // spherical coordinates cause vertices to wrap back up through
+        // the interior of the sphere multiple times, so the black triangles
+        // are actually the backs of triangles being drawn facing the interior
+        // the coordinates also pass over the sphere multiple times, so there
+        // are multiple layers
         for (var i = 0; i < vertices.length; i++) {
             indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
-            indices.push([ (i + longit - 1) % vertices.length, i, (i + longit) % vertices.length ]);
+            indices.push([ i, (i + longit - 1) % vertices.length, (i + longit) % vertices.length ]);
         }
 
         return {

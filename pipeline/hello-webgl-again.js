@@ -171,7 +171,7 @@
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
     shape3.setDrawingStyle("triangles");
-    
+
     var shape4 = new Shape(gl);    
     shape4.setVertices(shape4.cube(0.5));
     shape4.translateShape(1, -0.5, -1);
@@ -412,24 +412,24 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     0.1 * (canvas.width / canvas.height),
-        //     -0.1,
-        //     0.1,              
-        //     0.1, // viewing volume, near plane
-        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+            0.1 * (canvas.width / canvas.height),
+            -0.1,
+            0.1,              
+            0.1, // viewing volume, near plane
+            100 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
         // Ortho rotates camera around cameraFocus
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     2 * (canvas.width / canvas.height),
+        //     -2,
+        //     2,              
+        //     -10, // viewing volume, near plane
+        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
@@ -539,24 +539,20 @@
     $("#navigation").keydown(function (event) {
         console.log("inside");
         console.log(event);
-        var translateSpeed;
+        var translateSpeed = 0.3;
         var rotationSpeed = 3;
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
         if (event.keyCode === 87) {
             // need to subtract the y from the Q vector because it's everything
             // else's y's that are being moved! not the camera's
-            translateSpeed = new Vector(0, 0, 0.3);
-            cameraStatus.location = cameraStatus.location.add(cameraStatus.lookAt.subtract(cameraStatus.location));
-            // translateZ += translateSpeed;
-            // percentComplete = percentComplete.add(new Vector(0, 0, translateSpeed));
+            // can't multiply vectors!
+            // vector.multiply(s) takes in a scalar
+            cameraStatus.location = cameraStatus.location.add(cameraStatus.lookAt.subtract(cameraStatus.location).unit().multiply(translateSpeed));
             drawScene();
         }
         if (event.keyCode === 83) {
-            translateSpeed = new Vector(0, 0, -0.3);
-            cameraStatus.location = cameraStatus.location.subtract(cameraStatus.lookAt.subtract(cameraStatus.location));
-            // translateZ -= translateSpeed;
-            // percentComplete = percentComplete.subtract(new Vector(0, 0, translateSpeed));
+            cameraStatus.location = cameraStatus.location.subtract(cameraStatus.lookAt.subtract(cameraStatus.location).unit().multiply(translateSpeed));
             drawScene();
         }
         if (event.keyCode === 65) {

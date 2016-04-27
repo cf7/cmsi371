@@ -69,21 +69,21 @@ var Vector = (function () {
         return result;
     };
 
-    vector.prototype.multiply = function (s) {
+    vector.prototype.multiply = function (scalar) {
         var result = new Vector();
 
         for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-            result.elements[i] = this.elements[i] * s;
+            result.elements[i] = this.elements[i] * scalar;
         }
 
         return result;
     };
 
-    vector.prototype.divide = function (s) {
+    vector.prototype.divide = function (scalar) {
         var result = new Vector();
 
         for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-            result.elements[i] = (s === 0) ? this.elements[i] : this.elements[i] / s;
+            result.elements[i] = (scalar === 0) ? this.elements[i] : this.elements[i] / scalar;
         }
         
 
