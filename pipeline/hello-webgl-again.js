@@ -533,6 +533,15 @@
     // Q: 81
     // E: 69
 
+
+    // ** for some reason, XZAngle jumps to 1,1 on first rotation clockwise
+    // ** also, rotations stay on YZ plane relative to canvas and not camera's axes
+
+    // ** right now, angles are not reset because events are passed discretely
+    // ** need to start where angles left off to maintain radial movement
+    // ** however, this also means that if YZAngle rotates differently than XZAngle
+    // ** then when going back XZAngle will bounce all the way back to it,
+    // ** might be huge difference between angles, causing camera to snap to different point
     var XZAngle = 0.0;
     var YZAngle = 0.0;
     // ** Note: Translate doesn't work in Ortho Projection
@@ -542,12 +551,12 @@
         console.log("inside");
         console.log(event);
         var translateSpeed = 0.3;
-        var rotationSpeed = 10 * (Math.PI/180);
+        var rotationSpeed = Math.PI/10;
         var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
         var lateralDirectional = directionalVector.cross(cameraStatus.up);
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
-        if (event.keyCode === 87) {
+        if (event.keyCode === 87) { // w
             // need to subtract the y from the Q vector because it's everything
             // else's y's that are being moved! not the camera's
             // can't multiply vectors!
@@ -556,17 +565,17 @@
             cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
             drawScene();
         }
-        if (event.keyCode === 83) {
+        if (event.keyCode === 83) { // s
             cameraStatus.location = cameraStatus.location.subtract(directionalVector.multiply(translateSpeed));
             cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
             drawScene();
         }
-        if (event.keyCode === 65) {
+        if (event.keyCode === 65) { // a
             cameraStatus.location = cameraStatus.location.subtract(lateralDirectional);
             cameraStatus.lookAt = cameraStatus.lookAt.subtract(lateralDirectional);
             drawScene();
         }
-        if (event.keyCode === 68) {
+        if (event.keyCode === 68) { // d
             cameraStatus.location = cameraStatus.location.add(lateralDirectional);
             cameraStatus.lookAt = cameraStatus.lookAt.add(lateralDirectional);
             drawScene();
@@ -574,31 +583,33 @@
 
         // when rotating Q, keep it's position radial
         // to the camera's location
-        if (event.keyCode === 37) {
+        if (event.keyCode === 37) { // left
             // rotating around y, so move along x-z plane (1, 0, 1)
             // rotate lookAt vector
             // then recompute directional
             XZAngle -= rotationSpeed;
-            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), 0, cameraStatus.location.z() + Math.sin(XZAngle));
-            cameraStatus.lookAt = directionalVector.add(rotationVector);
+            console.log(XZAngle);
+            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), cameraStatus.location.y(), cameraStatus.location.z() + Math.sin(XZAngle));
+            cameraStatus.lookAt = rotationVector;
             drawScene();
         }
-        if (event.keyCode === 39) {
+        if (event.keyCode === 39) { // right
             XZAngle += rotationSpeed;
-            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), 0, cameraStatus.location.z() + Math.sin(XZAngle));
-            cameraStatus.lookAt = directionalVector.add(rotationVector);
+            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), cameraStatus.location.y(), cameraStatus.location.z() + Math.sin(XZAngle));
+            cameraStatus.lookAt = rotationVector;
             drawScene();
         }
-        if (event.keyCode === 38) {
+        if (event.keyCode === 38) { // up
             YZAngle -= rotationSpeed;
-            var rotationVector = new Vector(0, cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
-            cameraStatus.lookAt = directionalVector.add(rotationVector);
+            console.log(YZAngle);
+            var rotationVector = new Vector(cameraStatus.location.x(), cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
+            cameraStatus.lookAt = rotationVector
             drawScene();
         }
-        if (event.keyCode === 40) {
+        if (event.keyCode === 40) { // down
             YZAngle += rotationSpeed;
-            var rotationVector = new Vector(0, cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
-            cameraStatus.lookAt = directionalVector.add(rotationVector);
+            var rotationVector = new Vector(cameraStatus.location.x(), cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
+            cameraStatus.lookAt = rotationVector
             drawScene();
         }
 
