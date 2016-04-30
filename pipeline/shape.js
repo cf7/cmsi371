@@ -16,6 +16,7 @@ var Shape = (function () {
             this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 10, 10);
             this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
             this.mode = data.mode ? data.mode : this.gl.LINES;
+            this.normals = this.toNormalArray(this.indexedVertices);
         } else {
             this.gl = gl || {};
             this.vertices = data ? data.vertices : [];
@@ -29,6 +30,7 @@ var Shape = (function () {
             this.indexedVertices = this.sphere(0.5, 10, 10);
             this.arrayType = this.toRawLineArray(this.indexedVertices);
             this.mode = this.gl.LINES;
+            this.normals = this.toNormalArray(this.indexedVertices);
         }
     }
 
@@ -90,6 +92,13 @@ var Shape = (function () {
         }
     };
 
+    Shape.prototype.setNormals = function(type) {
+        if (this.mode === this.gl.LINES) {
+            
+        } else {
+
+        }
+    };
     Shape.prototype.setColor = function(data) {
         this.color = { r: data.r, g: data.g, b: data.b };
     };

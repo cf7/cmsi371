@@ -36,7 +36,7 @@
     var savedMatrices = [];
 
     var cameraStatus = {
-        location: new Vector(0, 0, 0),
+        location: new Vector(0, 0, 2),
         lookAt: new Vector(0, 0, -1),
         up: new Vector(0, 1, 0)
     };
@@ -412,24 +412,24 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     0.1 * (canvas.width / canvas.height),
-        //     -0.1,
-        //     0.1,              
-        //     0.1, // viewing volume, near plane
-        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+            0.1 * (canvas.width / canvas.height),
+            -0.1,
+            0.1,              
+            0.1, // viewing volume, near plane
+            100 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
         // Ortho rotates camera around cameraFocus
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     2 * (canvas.width / canvas.height),
+        //     -2,
+        //     2,              
+        //     -10, // viewing volume, near plane
+        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
@@ -542,8 +542,8 @@
     // ** however, this also means that if YZAngle rotates differently than XZAngle
     // ** then when going back XZAngle will bounce all the way back to it,
     // ** might be huge difference between angles, causing camera to snap to different point
-    var XZAngle = 0.0;
-    var YZAngle = 0.0;
+    var XZAngle = 0;
+    var YZAngle = 0;
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
@@ -554,6 +554,8 @@
         var rotationSpeed = Math.PI/10;
         var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
         var lateralDirectional = directionalVector.cross(cameraStatus.up);
+        var rotationVector = new Vector (directionalVector.x(), directionalVector.y(), directionalVector.z());
+       
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
         if (event.keyCode === 87) { // w
@@ -587,28 +589,29 @@
             // rotating around y, so move along x-z plane (1, 0, 1)
             // rotate lookAt vector
             // then recompute directional
+            console.log("XZAngle before: " + XZAngle * (180/Math.PI));
             XZAngle -= rotationSpeed;
-            console.log(XZAngle);
-            var rotationVector = new Vector(directionalVector.x() + Math.cos(XZAngle), directionalVector.y(), directionalVector.z() + Math.sin(XZAngle));
+            console.log("AZAngle after: " + XZAngle * (180/Math.PI));
+            rotationVector = rotationVector.add(new Vector(Math.cos(XZAngle), 0, Math.sin(XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 39) { // right
             XZAngle += rotationSpeed;
-            var rotationVector = new Vector(directionalVector.x() + Math.cos(XZAngle), directionalVector.y(), directionalVector.z() + Math.sin(XZAngle));
+            rotationVector = rotationVector.add(new Vector(Math.cos(XZAngle), 0, Math.sin(XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 38) { // up
             YZAngle -= rotationSpeed;
             console.log(YZAngle);
-            var rotationVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(YZAngle), directionalVector.z() + Math.cos(YZAngle));
+            rotationVector = rotationVector.add(new Vector(0, Math.sin(YZAngle), Math.cos(YZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 40) { // down
             YZAngle += rotationSpeed;
-            var rotationVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(YZAngle), directionalVector.z() + Math.cos(YZAngle));
+            rotationVector = rotationVector.add(new Vector(0, Math.sin(YZAngle), Math.cos(YZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }

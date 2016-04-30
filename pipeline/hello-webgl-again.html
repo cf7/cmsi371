@@ -18,8 +18,11 @@
     <p>This page adds a few more fundamental features, showing how
       further functionality can be added to the software stack.
       Click the canvas to see what else is new.</p>
+
     <label for="navigation">Click in here to enter commands for navigation</label>
     <input type="text" class="form-control" id="navigation">
+    <label for="cameraX">Set the camera's x position</label>
+    <input type="text" class="form-control" id="cameraX">
     <canvas id="hello-webgl" width="512" height="512">
       Sorry, your web browser does not appear to support
       the <code>canvas</code> element, either.
@@ -89,14 +92,14 @@
 
 
         fragmentLight = lightPosition.xyz;
-        fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
+        // fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
         // unmodified specular
-        // fragmentNormal = normalVector;
-        // fragmentEye = vertexPosition;
+        fragmentNormal = normalVector;
+        fragmentEye = vertexPosition;
 
         // 4/14 19:00 - keeping light stationary
         vec4 finalVertexPosition = camera * modelView * vec4(vertexPosition, 1.0);
-        fragmentEye = finalVertexPosition.xyz; // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
+        // fragmentEye = finalVertexPosition.xyz; // or finalVertexPosition.xyz expresses as 3 element instead of 4 element
         // ** unmodified specular lighting
         // fragmentEye = vertexPosition;
 
@@ -147,12 +150,15 @@
       varying vec3 fragmentNormal;
       varying vec3 fragmentEye;
       varying vec3 fragmentLight;
+
       // Color settings come in here now.
       uniform vec3 lightDiffuse;
       uniform vec3 lightAmbient;
       uniform vec3 lightSpecular;
+
       // Now with shininess!
       uniform float shininess;
+
       void main(void) {
           // Normalize our vectors.
           vec3 n = normalize(fragmentNormal);
