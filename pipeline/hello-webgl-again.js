@@ -77,8 +77,6 @@
 
     var getTranslationMatrix = function (x, y, z) {
         var data = { tx: x, ty: y, tz: z };
-        console.log(data);
-        console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements));
         return new Matrix(4, 4).getTranslateMatrix(4, 4, data);
     }
 
@@ -165,6 +163,11 @@
     shape.setDrawingStyle("triangles");
     // shape.translateShape(1, 1.5, 1);
 
+    save();
+    translate(1, 1.5, 1);
+    shape.setTransform(context.currentTransform);
+    restore();
+
     var shape2 = new Shape(gl);
     shape2.setVertices({ vertices: vertices, indices: indices });
     shape2.setDrawingStyle("triangles");
@@ -183,7 +186,7 @@
     shape3.setDrawingStyle("lines");
 
     save();
-    translate(1, 1, 1);
+    translate(0, 0, -1);
     shape3.setTransform(context.currentTransform);
     restore();
 
@@ -226,13 +229,22 @@
     shape5.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape5.setVertices(shape5.cylinder(0.25, 0.5, 20));
     shape5.setDrawingStyle("triangles");
-    // shape5.scaleShape(1.5, 1.5, 1.5);
-    // shape5.translateShape(-1, 0, 0);
+
+    save();
+    scale(1.5, 1.5, 1.5);
+    translate(-1, 0, 0);
+    shape5.setTransform(context.currentTransform);
+    restore();
 
     var shape6 = new Shape(gl);
     shape6.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape6.setVertices(shape6.trapezium(0.5));
     shape6.setDrawingStyle("triangles");
+
+    save();
+    translate(-1, 0, 1);
+    shape6.setTransform(context.currentTransform);
+    restore();
     // shape6.translateShape(-1, 0, 1);
 
     // Build the objects to display.
@@ -260,46 +272,55 @@
 
     draw(shapes);
 
-    // Pass the vertices to WebGL.
-    for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-        objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].vertices);
+    var prepObjects = function (objectsToDraw) {
+        console.log("inside prepObjects");
+        console.log(objectsToDraw.length);
+        // Pass the vertices to WebGL.
+        for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
+            objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].vertices);
 
-        if (!objectsToDraw[i].colors) {
-            // If we have a single color, we expand that into an array
-            // of the same color over and over.
-            objectsToDraw[i].colors = [];
-            for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3;
-                    j < maxj; j += 1) {
-                objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
-                    objectsToDraw[i].color.r,
-                    objectsToDraw[i].color.g,
-                    objectsToDraw[i].color.b
-                );
+            if (!objectsToDraw[i].colors) {
+                // If we have a single color, we expand that into an array
+                // of the same color over and over.
+                objectsToDraw[i].colors = [];
+                for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3;
+                        j < maxj; j += 1) {
+                    objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
+                        objectsToDraw[i].color.r,
+                        objectsToDraw[i].color.g,
+                        objectsToDraw[i].color.b
+                    );
+                }
             }
-        }
-        objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].colors);
+            objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].colors);
 
-         // Same trick with specular colors.
-        if (!objectsToDraw[i].specularColors) {
-            // Future refactor: helper function to convert a single value or
-            // array into an array of copies of itself.
-            objectsToDraw[i].specularColors = [];
-            for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3; j < maxj; j += 1) {
-                objectsToDraw[i].specularColors = objectsToDraw[i].specularColors.concat(
-                    objectsToDraw[i].specularColor.r,
-                    objectsToDraw[i].specularColor.g,
-                    objectsToDraw[i].specularColor.b
-                );
+             // Same trick with specular colors.
+            if (!objectsToDraw[i].specularColors) {
+                // Future refactor: helper function to convert a single value or
+                // array into an array of copies of itself.
+                objectsToDraw[i].specularColors = [];
+                for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3; j < maxj; j += 1) {
+                    objectsToDraw[i].specularColors = objectsToDraw[i].specularColors.concat(
+                        objectsToDraw[i].specularColor.r,
+                        objectsToDraw[i].specularColor.g,
+                        objectsToDraw[i].specularColor.b
+                    );
+                }
             }
+
+            objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
+
+            objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].normals);
         }
 
-        objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
-
-        objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].normals);
+        console.log(objectsToDraw);
+        return objectsToDraw;
     }
+
+    objectsToDraw = prepObjects(objectsToDraw);
 
     // Initialize the shaders.
     var abort = false;
@@ -365,6 +386,7 @@
         // gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         // gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
+        console.log(object);
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexDiffuseColor, 3, gl.FLOAT, false, 0, 0);
 
@@ -375,21 +397,8 @@
 
         save();
 
-        // if (object.translate) {
-        //     translate(object.translate.tx, object.translate.ty, object.translate.tz);
-        // }
-        // if (object.scale) {
-        //     scale(object.scale.sx, object.scale.sy, object.scale.sz);
-        // }
-        // if (object.rotate) {
-        //     rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
-        // }
-        // have code to translate, scale, and rotate the camera
-
         if (object.transform) {
-            console.log("this object has a transform");
             context.currentTransform = object.transform.mult(context.currentTransform);
-            console.log(context.currentTransform);
         }
 
         gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
@@ -561,44 +570,53 @@
 
         shape.setDrawingStyle("triangles");
 
-        var shapeToDraw = shape.getData();
-        console.log(shapeToDraw.vertices.length);
-        shapeToDraw.buffer = GLSLUtilities.initVertexBuffer(gl,
-                shapeToDraw.vertices);
+        save();
+        translate(x/canvas.width, y/canvas.height, 0);
+        shape.setTransform(context.currentTransform);
+        restore();
 
-        if (!shapeToDraw.colors) {
-            // If we have a single color, we expand that into an array
-            // of the same color over and over.
-            shapeToDraw.colors = [];
-            
-            shapeToDraw.colors = shapeToDraw.colors.concat(
-                shapeToDraw.color.r,
-                shapeToDraw.color.g,
-                shapeToDraw.color.b
-            );
-        }
-        shapeToDraw.colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-                shapeToDraw.colors);
+        var shapeToDraw = prepObjects([shape.getData()]);
 
-         // Same trick with specular colors.
-        if (!shapeToDraw.specularColors) {
-            // Future refactor: helper function to convert a single value or
-            // array into an array of copies of itself.
-            shapeToDraw.specularColors = [];
-            shapeToDraw.specularColors = shapeToDraw.specularColors.concat(
-                shapeToDraw.specularColor.r,
-                shapeToDraw.specularColor.g,
-                shapeToDraw.specularColor.b
-            );
-        }
-
-        shapeToDraw.specularBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.specularColors);
-
-        shapeToDraw.normalBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.normals);
-
-        objectsToDraw.push(shapeToDraw);
+        objectsToDraw = objectsToDraw.concat(shapeToDraw);
 
         drawScene();
+        // console.log(shapeToDraw.vertices.length);
+        // shapeToDraw.buffer = GLSLUtilities.initVertexBuffer(gl,
+        //         shapeToDraw.vertices);
+
+        // if (!shapeToDraw.colors) {
+        //     // If we have a single color, we expand that into an array
+        //     // of the same color over and over.
+        //     shapeToDraw.colors = [];
+            
+        //     shapeToDraw.colors = shapeToDraw.colors.concat(
+        //         shapeToDraw.color.r,
+        //         shapeToDraw.color.g,
+        //         shapeToDraw.color.b
+        //     );
+        // }
+        // shapeToDraw.colorBuffer = GLSLUtilities.initVertexBuffer(gl,
+        //         shapeToDraw.colors);
+
+        //  // Same trick with specular colors.
+        // if (!shapeToDraw.specularColors) {
+        //     // Future refactor: helper function to convert a single value or
+        //     // array into an array of copies of itself.
+        //     shapeToDraw.specularColors = [];
+        //     shapeToDraw.specularColors = shapeToDraw.specularColors.concat(
+        //         shapeToDraw.specularColor.r,
+        //         shapeToDraw.specularColor.g,
+        //         shapeToDraw.specularColor.b
+        //     );
+        // }
+
+        // shapeToDraw.specularBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.specularColors);
+
+        // shapeToDraw.normalBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.normals);
+
+        // objectsToDraw.push(shapeToDraw);
+
+        // drawScene();
     }
 
     // up: 38
