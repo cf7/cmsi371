@@ -2,8 +2,15 @@
 <html>
   <head>
     <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Hello WebGL (again)</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+
     <link rel="stylesheet" href="hello-webgl-again.css" />
+
   </head>
   <body>
     <h1>Hello WebGL (again)!</h1>
@@ -18,16 +25,22 @@
     <p>This page adds a few more fundamental features, showing how
       further functionality can be added to the software stack.
       Click the canvas to see what else is new.</p>
-
-    <label for="navigation">Click in here to enter commands for navigation</label>
-    <input type="text" class="form-control" id="navigation">
-    <label for="cameraX">Set the camera's x position</label>
-    <input type="text" class="form-control" id="cameraX">
-    <canvas id="hello-webgl" width="512" height="512">
-      Sorry, your web browser does not appear to support
-      the <code>canvas</code> element, either.
-    </canvas>
-
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12" id="user-options">
+          <label for="navigation">Click in here to enter commands for navigation</label>
+          <input type="text" class="form-control" id="navigation">
+          <label for="cameraX">Set the camera's x position</label>
+          <input type="text" class="form-control" id="cameraX">
+        </div>
+        <div class="col-sm-12" id="display-area">
+          <canvas id="hello-webgl" width="512" height="512">
+            Sorry, your web browser does not appear to support
+            the <code>canvas</code> element, either.
+          </canvas>
+        </div>
+      </div>
+    </div>
     <!-- jQuery makes some things more convenient. -->
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 

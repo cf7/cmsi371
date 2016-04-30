@@ -35,10 +35,19 @@
     var transformationMatrix = new Matrix(4, 4);
     var savedMatrices = [];
 
+    var context = {
+        savedMatrices: savedMatrices,
+        currentTransform: transformationMatrix
+    }
+
     var cameraStatus = {
         location: new Vector(0, 0, 2),
         lookAt: new Vector(0, 0, -1),
-        up: new Vector(0, 1, 0)
+        up: new Vector(0, 1, 0),
+        XZAngle: 0.0,
+        YZAngle: 0.0,
+        beginRotatingHorizontal: false,
+        beginRotatingVertical: false
     };
 
     var clearTransform = function () {
@@ -68,7 +77,8 @@
 
     var getTranslationMatrix = function (x, y, z) {
         var data = { tx: x, ty: y, tz: z };
-        // console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements));
+        console.log(data);
+        console.log(glFormat(new Matrix(4, 4).getTranslateMatrix(4, 4, data).elements));
         return new Matrix(4, 4).getTranslateMatrix(4, 4, data);
     }
 
@@ -99,7 +109,10 @@
     }
 
     var translate = function (x, y, z) {
-        context.currentTransform = getTranslationMatrix(x, y, z).mult(context.currentTransform);
+        context.currentTransform = context.currentTransform.mult(getTranslationMatrix(x, y, z));
+        console.log(context.currentTransform.mult(getTranslationMatrix(x, y, z)));
+        console.log("inside translate");
+        console.log(context.currentTransform);
     }
 
     var scale = function (x, y, z) {
@@ -111,16 +124,6 @@
         context.currentTransform = getRotationMatrix(angle, x, y, z).mult(context.currentTransform);
     }
 
-
-    var context = {
-        save: save,
-        restore: restore,
-        translate: translate,
-        scale: scale,
-        rotate: rotate,
-        savedMatrices: savedMatrices,
-        currentTransform: transformationMatrix
-    }
 
     // Grab the WebGL rendering context.
     var gl = GLSLUtilities.getGL(canvas);
@@ -153,30 +156,43 @@
         [ 0, 1, 2 ]
     ];
 
+
+    // ** find a way to include shape's transforms
+    // ** in the translate, scale, and rotate functions 
+    // ** such that the shape's transforms are changed by the currentTransform
+    // ** (and their child shapes' transforms as well)
+
     var shape = new Shape(gl);
     shape.setColor({ r: 0.0, g: 0.5, b: 0.0 });
     shape.setVertices(shape.cone(20));
     shape.setDrawingStyle("triangles");
-    shape.translateShape(1, 1.5, 1);
+    // shape.translateShape(1, 1.5, 1);
 
     var shape2 = new Shape(gl);
     shape2.setVertices({ vertices: vertices, indices: indices });
     shape2.setDrawingStyle("triangles");
     shape2.setColor({ r: 0.0, g: 0.5, b: 0.5 });
-    shape2.translateShape(0.5, -0.75);
-    shape2.scaleShape(0.5, 0.5, 0.5);
-    shape2.rotateShape(60, 1, 1, 1);
+    // shape2.translateShape(0.5, -0.75);
+    // shape2.scaleShape(0.5, 0.5, 0.5);
+    // shape2.rotateShape(60, 1, 1, 1);
   
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("triangles");
+    shape3.setDrawingStyle("lines");
+
+    save();
+    translate(1, 1, 1);
+    console.log(context.currentTransform);
+    shape3.setTransform(context.currentTransform);
+    console.log(shape3.getTransform());
+    restore();
 
     var shape4 = new Shape(gl);    
     shape4.setVertices(shape4.cube(0.5));
-    shape4.translateShape(1, -0.5, -1);
-    shape4.scaleShape(1.5, 1.5, 1.5);
-    shape4.setDrawingStyle("triangles");
+    // shape4.translateShape(1, 2.5, -1);
+    // shape4.scaleShape(1.5, 1.5, 1.5);
+    shape4.setDrawingStyle("lines");
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
@@ -192,25 +208,25 @@
 
     // ** 4/19 21:00 child shapes
 
-    shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
-    shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
-    shape4.getChildren()[0].getChildren()[0].translateShape(0, 1, 0);
-    shape4.getChildren()[0].getChildren()[0].rotateShape(30, 1, 1, 0);
-    shape4.getChildren()[0].getChildren()[0].scaleShape(0.5, 0.5, 0.5);
+    // shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
+    // shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
+    // shape4.getChildren()[0].getChildren()[0].translateShape(0, 1, 0);
+    // shape4.getChildren()[0].getChildren()[0].rotateShape(30, 1, 1, 0);
+    // shape4.getChildren()[0].getChildren()[0].scaleShape(0.5, 0.5, 0.5);
 
 
     var shape5 = new Shape(gl);
     shape5.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape5.setVertices(shape5.cylinder(0.25, 0.5, 20));
     shape5.setDrawingStyle("triangles");
-    shape5.scaleShape(1.5, 1.5, 1.5);
-    shape5.translateShape(-1, 0, 0);
+    // shape5.scaleShape(1.5, 1.5, 1.5);
+    // shape5.translateShape(-1, 0, 0);
 
     var shape6 = new Shape(gl);
     shape6.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape6.setVertices(shape6.trapezium(0.5));
     shape6.setDrawingStyle("triangles");
-    shape6.translateShape(-1, 0, 1);
+    // shape6.translateShape(-1, 0, 1);
 
     // Build the objects to display.
     var shapes = [];
@@ -350,16 +366,20 @@
 
         save();
 
-        if (object.translate) {
-            translate(object.translate.tx, object.translate.ty, object.translate.tz);
-        }
-        if (object.scale) {
-            scale(object.scale.sx, object.scale.sy, object.scale.sz);
-        }
-        if (object.rotate) {
-            rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
-        }
+        // if (object.translate) {
+        //     translate(object.translate.tx, object.translate.ty, object.translate.tz);
+        // }
+        // if (object.scale) {
+        //     scale(object.scale.sx, object.scale.sy, object.scale.sz);
+        // }
+        // if (object.rotate) {
+        //     rotate(object.rotate.angle, object.rotate.rx, object.rotate.ry, object.rotate.rz);
+        // }
         // have code to translate, scale, and rotate the camera
+
+        if (object.transform) {
+            context.currentTransform = object.transform;
+        }
 
         gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
 
@@ -401,24 +421,24 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-            0.1 * (canvas.width / canvas.height),
-            -0.1,
-            0.1,              
-            0.1, // viewing volume, near plane
-            100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     0.1 * (canvas.width / canvas.height),
+        //     -0.1,
+        //     0.1,              
+        //     0.1, // viewing volume, near plane
+        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
         // Ortho rotates camera around cameraFocus
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     2 * (canvas.width / canvas.height),
-        //     -2,
-        //     2,              
-        //     -10, // viewing volume, near plane
-        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
@@ -504,6 +524,7 @@
     $(canvas).mousedown(function (event) {
         xDragStart = event.clientX;
         yDragStart = event.clientY;
+        addSphere(xDragStart, yDragStart);
         xRotationStart = rotationAroundX;
         yRotationStart = rotationAroundY;
         $(canvas).mousemove(rotateScene);
@@ -531,8 +552,7 @@
     // ** however, this also means that if YZAngle rotates differently than XZAngle
     // ** then when going back XZAngle will bounce all the way back to it,
     // ** might be huge difference between angles, causing camera to snap to different point
-    var XZAngle = 0.0;
-    var YZAngle = 0.0;
+   
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
@@ -544,7 +564,18 @@
         var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
         var lateralDirectional = directionalVector.cross(cameraStatus.up);
         var rotationVector = new Vector (directionalVector.x(), directionalVector.y(), directionalVector.z());
-       
+
+        // ** hardcoding adjustment for rotation when camera starts
+        // ** out facing (0, 0, -1), otherwise, camera rotation will
+        // ** start at 0 or Math.PI angle every time and cause camera to snap
+        if (cameraStatus.XZAngle === 0 && !cameraStatus.beginRotating) {
+            cameraStatus.XZAngle = 3 * Math.PI / 2;
+            cameraStatus.beginRotatingHorizontal = true;
+        }
+        if (cameraStatus.YZAngle === 0 && !cameraStatus.beginRotating) {
+            cameraStatus.YZAngle = Math.PI;
+            cameraStatus.beginRotatingVertical = true;
+        }
         // if it is a keydown event, then the actual keyCode is used
         // if it is a keypress event, then 32 is added to each key
         if (event.keyCode === 87) { // w
@@ -578,31 +609,35 @@
             // rotating around y, so move along x-z plane (1, 0, 1)
             // rotate lookAt vector
             // then recompute directional
-            console.log("XZAngle before: " + XZAngle * (180/Math.PI));
-            XZAngle -= rotationSpeed;
-            console.log("XZAngle after: " + XZAngle * (180/Math.PI));
-            rotationVector = rotationVector.add(new Vector(Math.cos(XZAngle), 0, Math.sin(XZAngle)));
+            console.log("XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
+            cameraStatus.XZAngle -= rotationSpeed;
+            console.log("cameraStatus.XZAngle after: " + cameraStatus.XZAngle * (180/Math.PI));
+            rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 39) { // right
-            console.log("XZAngle before: " + XZAngle * (180/Math.PI));
-            XZAngle += rotationSpeed;
-            console.log("XZAngle before: " + XZAngle * (180/Math.PI));
-            rotationVector = rotationVector.add(new Vector(Math.cos(XZAngle), 0, Math.sin(XZAngle)));
+            console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
+            cameraStatus.XZAngle += rotationSpeed;
+            console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
+            rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 38) { // up
-            YZAngle -= rotationSpeed;
-            console.log(YZAngle);
-            rotationVector = rotationVector.add(new Vector(0, Math.sin(YZAngle), Math.cos(YZAngle)));
+            console.log("YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
+            cameraStatus.YZAngle -= rotationSpeed;
+            console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
+            console.log(cameraStatus.YZAngle);
+            rotationVector = rotationVector.add(new Vector(0, Math.sin(cameraStatus.YZAngle), Math.cos(cameraStatus.YZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 40) { // down
-            YZAngle += rotationSpeed;
-            rotationVector = rotationVector.add(new Vector(0, Math.sin(YZAngle), Math.cos(YZAngle)));
+            console.log("cameraStatus.YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
+            cameraStatus.YZAngle += rotationSpeed;
+            console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
+            rotationVector = rotationVector.add(new Vector(0, Math.sin(cameraStatus.YZAngle), Math.cos(cameraStatus.YZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }

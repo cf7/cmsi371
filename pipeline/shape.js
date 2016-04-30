@@ -5,13 +5,11 @@ var Shape = (function () {
     function Shape (gl, data) {
         if (data) {
             this.gl = gl || {};
+            this.transform = data.transform ? data.transform : new Matrix(4, 4);
             this.vertices = data.vertices ? data.vertices : [];
             this.indices = data.indices ? data.indices : [];
             this.parent = {};
             this.children = [];
-            this.translate = data.translate ? data.translate : { tx: 0, ty: 0, tz: 0 };
-            this.scale = data.scale ? data.scale : { sx: 1, sy: 1, sz: 1 };
-            this.rotate = data.rotate ? data.rotate : { angle: 0, rx: 0, ry: 0, rz: 0 };
             this.color = data.color ? data.color : { r: 0, g: 0.75, b: 0.75, a: 1.0 };
             this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 10, 10);
             this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
@@ -19,13 +17,11 @@ var Shape = (function () {
             this.normals = this.toNormalArray(this.indexedVertices);
         } else {
             this.gl = gl || {};
+            this.transform = new Matrix(4, 4);
             this.vertices = data ? data.vertices : [];
             this.indices = data ? data.indices : [];
             this.parent = {};
             this.children = [];
-            this.translate = { tx: 0, ty: 0, tz: 0 };
-            this.scale = { sx: 1, sy: 1, sz: 1 };
-            this.rotate = { angle: 0, rx: 0, ry: 0, rz: 0 };
             this.color = { r: 0, g: 0.75, b: 0.75, a: 1.0 };
             this.indexedVertices = this.sphere(0.5, 10, 10);
             this.arrayType = this.toRawLineArray(this.indexedVertices);
@@ -71,10 +67,9 @@ var Shape = (function () {
                 shininess: 10,
                 vertices: this.arrayType,
                 mode: this.mode,
-                translate: this.getTranslate(),
-                scale: this.getScale(),
-                rotate: this.getRotate(),
-                normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices))
+                transform: this.transform,
+                normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices)),
+                chilren: this.children
             }
         } else {
             return {
@@ -84,10 +79,9 @@ var Shape = (function () {
                 shininess: 10,
                 vertices: this.arrayType,
                 mode: this.mode,
-                translate: this.getTranslate(),
-                scale: this.getScale(),
-                rotate: this.getRotate(),
-                normals: this.toNormalArray(this.indexedVertices)
+                transform: this.transform,
+                normals: this.toNormalArray(this.indexedVertices),
+                children: this.children
             }
         }
     };
@@ -103,36 +97,41 @@ var Shape = (function () {
         this.color = { r: data.r, g: data.g, b: data.b };
     };
 
-    Shape.prototype.translateShape = function(x, y, z) {
-        var newX = this.parent.translate ? this.parent.translate.tx + x : x;
-        var newY = this.parent.translate ? this.parent.translate.ty + y : y;
-        var newZ = this.parent.translate ? this.parent.translate.tz + z : z;
-        this.translate = { tx: newX, ty: newY, tz: newZ };
+    Shape.prototype.setTransform = function(transform) {
+        console.log("INSIDE");
+        this.transform = transform;
     };
 
-    Shape.prototype.getTranslate = function() {
-        return this.translate;
+    Shape.prototype.getTransform = function() {
+        return this.transform;
     };
 
-    Shape.prototype.scaleShape = function(x, y, z) {
-        var newX = this.parent.scale ? this.parent.scale.sx * x : x;
-        var newY = this.parent.scale ? this.parent.scale.sy * y : y;
-        var newZ = this.parent.scale ? this.parent.scale.sz * z : z;
-        this.scale = { sx: newX, sy: newY, sz: newZ };
-    };
+    // Shape.prototype.translateShape = function(x, y, z) {
+    //     var translateMatrix = new Matrix(4, 4).getTranslateMatrix(x, y, z);
+    //     if (this.parent && this.parent.transform) {
+    //         this.transform = translateMatrix.mult(this.parent.transform);
+    //     } else {
+    //         this.transform = translateMatrix.mult(this.transform);
+    //     }
+    // };
 
-    Shape.prototype.getScale = function() {
-        return this.scale;
-    };
+    // Shape.prototype.scaleShape = function(x, y, z) {
+    //     var scaleMatrix = new Matrix(4, 4).getScaleMatrix(x, y, z);
+    //     if (this.parent && this.parent.transform) {
+    //         this.transform = scaleMatrix.mult(this.parent.transform);
+    //     } else {
+    //         this.transform = scaleMatrix.mult(this.transform);
+    //     }
+    // };
 
-    Shape.prototype.rotateShape = function(angle, x, y, z) {
-        var newAngle = this.parent.rotate ? this.parent.rotate.angle + angle : angle;
-        this.rotate = { angle: newAngle, rx: x, ry: y, rz: z };
-    };
-
-    Shape.prototype.getRotate = function() {
-        return this.rotate;
-    };
+    // Shape.prototype.rotateShape = function(angle, x, y, z) {
+    //    var rotateMatrix = new Matrix(4, 4).getRotationMatrix(angle, x, y, z);
+    //    if (this.parent && this.parent.transform) {
+    //         this.transform = rotateMatrix.mult(this.parent.transform);
+    //    } else {
+    //         this.transform = rotateMatrix.mult(this.transform);
+    //    }
+    // };
 
     Shape.prototype.setParent = function(Shape) {
         this.parent = Shape;
