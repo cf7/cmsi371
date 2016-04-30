@@ -190,6 +190,8 @@
     }
     setAllTriangles(shape4.getChildren());
 
+    // ** 4/19 21:00 child shapes
+
     shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
     shape4.getChildren()[0].getChildren()[0].translateShape(0, 1, 0);
@@ -211,40 +213,27 @@
     shape6.translateShape(-1, 0, 1);
 
     // Build the objects to display.
-    var preObjectsToDraw = [];
+    var shapes = [];
         
-    preObjectsToDraw.push(shape.getData());
-    preObjectsToDraw.push(shape2.getData());
-    preObjectsToDraw.push(shape3.getData());
-    preObjectsToDraw.push(shape4.getData());
-    preObjectsToDraw.push(shape5.getData());
-    preObjectsToDraw.push(shape6.getData());
+    shapes.push(shape);
+    shapes.push(shape2);
+    shapes.push(shape3);
+    shapes.push(shape4);
+    shapes.push(shape5);
+    shapes.push(shape6);
 
     var objectsToDraw = [];
 
-    var add = function (object) {
-        var child;
-        var newObject = {};
-        var array = [];
-
-        if (object.shape.getChildren().length > 0) {
-            for (var i = 0; i < object.shape.getChildren().length; i += 1) {
-                child = object.shape.getChildren()[i];
-                array.push(child.getData());
-                array = array.concat(add(child.getData()));
+    var draw = function (shapes) {
+        for (var i = 0; i < shapes.length; i++) {
+            objectsToDraw.push(shapes[i].getData());
+            if (shapes[i].getChildren().length > 0) {
+                draw(shapes[i].getChildren());
             }
         }
-        return array;
     }
 
-    for (var i = 0, maxi = preObjectsToDraw.length; i < maxi; i += 1) {
-        objectsToDraw.push(preObjectsToDraw[i]);
-        if (preObjectsToDraw[i].shape) {
-            objectsToDraw = objectsToDraw.concat(add(preObjectsToDraw[i]));
-        }
-    }
-    
-
+    draw(shapes);
 
     // Pass the vertices to WebGL.
     for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
@@ -542,8 +531,8 @@
     // ** however, this also means that if YZAngle rotates differently than XZAngle
     // ** then when going back XZAngle will bounce all the way back to it,
     // ** might be huge difference between angles, causing camera to snap to different point
-    var XZAngle = 0;
-    var YZAngle = 0;
+    var XZAngle = 0.0;
+    var YZAngle = 0.0;
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
@@ -591,13 +580,15 @@
             // then recompute directional
             console.log("XZAngle before: " + XZAngle * (180/Math.PI));
             XZAngle -= rotationSpeed;
-            console.log("AZAngle after: " + XZAngle * (180/Math.PI));
+            console.log("XZAngle after: " + XZAngle * (180/Math.PI));
             rotationVector = rotationVector.add(new Vector(Math.cos(XZAngle), 0, Math.sin(XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 39) { // right
+            console.log("XZAngle before: " + XZAngle * (180/Math.PI));
             XZAngle += rotationSpeed;
+            console.log("XZAngle before: " + XZAngle * (180/Math.PI));
             rotationVector = rotationVector.add(new Vector(Math.cos(XZAngle), 0, Math.sin(XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
