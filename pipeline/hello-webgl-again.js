@@ -169,9 +169,13 @@
     shape2.setVertices({ vertices: vertices, indices: indices });
     shape2.setDrawingStyle("triangles");
     shape2.setColor({ r: 0.0, g: 0.5, b: 0.5 });
-    // shape2.translateShape(0.5, -0.75);
-    // shape2.scaleShape(0.5, 0.5, 0.5);
-    // shape2.rotateShape(60, 1, 1, 1);
+
+    save();
+    translate(0.5, -0.75, 0.5);
+    scale(0.5, 0.5, 0.5);
+    rotate(60, 1, 1, 1);
+    shape2.setTransform(context.currentTransform);
+    restore();
   
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
@@ -185,8 +189,6 @@
 
     var shape4 = new Shape(gl);    
     shape4.setVertices(shape4.cube(0.5));
-    // shape4.translateShape(1, 2.5, -1);
-    // shape4.scaleShape(1.5, 1.5, 1.5);
     shape4.setDrawingStyle("lines");
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
@@ -201,8 +203,18 @@
     }
     setAllTriangles(shape4.getChildren());
 
+    save();
+    translate(1, 0, -1);
+    scale(1.5, 1.5, 1.5);
+    shape4.setTransform(context.currentTransform);
+    restore();
+
     // ** 4/19 21:00 child shapes
 
+    save();
+    translate(0.75, 0.75, 0);
+    shape4.getChildren()[0].setTransform(context.currentTransform);
+    restore();
     // shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     // shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
     // shape4.getChildren()[0].getChildren()[0].translateShape(0, 1, 0);
@@ -226,12 +238,12 @@
     // Build the objects to display.
     var shapes = [];
         
-    // shapes.push(shape);
-    // shapes.push(shape2);
+    shapes.push(shape);
+    shapes.push(shape2);
     shapes.push(shape3);
-    // shapes.push(shape4);
+    shapes.push(shape4);
     shapes.push(shape5);
-    // shapes.push(shape6);
+    shapes.push(shape6);
 
     var objectsToDraw = [];
 

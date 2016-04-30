@@ -96,8 +96,12 @@ var Shape = (function () {
 
     // ** Remember: To set transforms, need to merge them by multiplying
     Shape.prototype.setTransform = function(transform) {
-        console.log("INSIDE");
         this.transform = this.transform.mult(transform);
+        if (this.children.length > 0) {
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].setTransform(transform);
+            }
+        }
     };
 
     Shape.prototype.getTransform = function() {
