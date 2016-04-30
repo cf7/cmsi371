@@ -291,14 +291,15 @@ $(function () {
     });
     
     test("Camera Matrices", function () {
-        var location = { x: 0, y: 0, z: 0};
-        var lookAt = { x: 1, y: 0.5, z: 1};
-        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt);
+        var location = new Vector(0, 0, 0);
+        var lookAt = new Vector(1, 0.5, 1);
+        var upward = new Vector(0, 1, 0);
+        var cameraMatrix = new Matrix(4, 4).getCameraMatrix(location, lookAt, upward);
 
         equal(cameraMatrix.dimensions().rows, 4, "Rows");
         equal(cameraMatrix.dimensions().cols, 4, "Cols");
         notEqual(cameraMatrix.elements[0][0], 0, "Row 0 Col 0");
-        notEqual(cameraMatrix.elements[0][1], 0, "Row 0 Col 1");
+        equal(cameraMatrix.elements[0][1], 0, "Row 0 Col 1");
         notEqual(cameraMatrix.elements[0][2], 0, "Row 0 Col 2");
         equal(cameraMatrix.elements[0][3], 0, "Row 0 Col 3");
         notEqual(cameraMatrix.elements[1][0], 0, "Row 1 Col 0");

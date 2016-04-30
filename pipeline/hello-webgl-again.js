@@ -41,11 +41,12 @@
     }
 
     var cameraStatus = {
-        location: new Vector(0, 0, 2),
+        location: new Vector(0, 0, 0),
         lookAt: new Vector(0, 0, -1),
         up: new Vector(0, 1, 0),
         XZAngle: 0.0,
         YZAngle: 0.0,
+        phiAngle: 0.0,
         beginRotatingHorizontal: false,
         beginRotatingVertical: false
     };
@@ -183,7 +184,7 @@
     var shape3 = new Shape(gl);
     shape3.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape3.setVertices(shape3.sphere(0.75, 20, 20));
-    shape3.setDrawingStyle("lines");
+    shape3.setDrawingStyle("triangles");
 
     save();
     translate(0, 0, -1);
@@ -386,7 +387,6 @@
         // gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         // gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-        console.log(object);
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexDiffuseColor, 3, gl.FLOAT, false, 0, 0);
 
@@ -460,11 +460,12 @@
             10 // viewing volume, far plane, only what's inside viewing volume can be seen
         )));
 
+        // ** right now setting position relative to the camera
+        // ** but shouldn't be
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
-        gl.uniform3fv(lightAmbient, [0.2, 0.2, 0.2]);
+        gl.uniform3fv(lightAmbient, [0.25, 0.25, 0.25]);
         gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
-        // to turn off specular, set light to all 0.0's
 
         console.log(objectsToDraw);
         // Display the objects.
@@ -545,7 +546,8 @@
     $(canvas).mousedown(function (event) {
         xDragStart = event.clientX;
         yDragStart = event.clientY;
-        addShape(xDragStart, yDragStart);
+        var coords = getMousePos(document.getElementById("hello-webgl"), event)
+        addShape(coords.x, coords.y);
         xRotationStart = rotationAroundX;
         yRotationStart = rotationAroundY;
         $(canvas).mousemove(rotateScene);
@@ -553,70 +555,44 @@
         $(canvas).unbind("mousemove");
     });
 
+    var getMousePos = function (canvas, event) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: event.clientX-rect.left, // )/(rect.right-rect.left)*canvas.width,
+            y: event.clientY-rect.top//)/(rect.bottom-rect.top)*canvas.height
+        };
+    }
+
     var addShape = function (x, y) {
 
         var shape = new Shape(gl);
         shape.setColor({ r: 0.0, g: 0.75, b: 0.75 });
 
-        console.log($("#sphere-button")[0].checked);
+        
         if ($("#sphere-button")[0].checked) {
-            console.log("INSIDE sphere button checked");
+            console.log("inside sphere button checked");
             shape.setVertices(shape.sphere(0.75, 20, 20));
-        } else if ($("#cylinder-button").checked) {
-
-        } else if ($("#trapezium-button").checked) {
-
+        }
+        if ($("#cylinder-button")[0].checked) {
+            console.log("inside cylinder button checked");
+            shape.setVertices(shape.cylinder(0.25, 0.5, 20));
+        }
+        if ($("#trapezium-button")[0].checked) {
+            console.log("inside trapezium button checked");
+            shape.setVertices(shape.trapezium(0.5));
         }
 
         shape.setDrawingStyle("triangles");
 
         save();
         translate(x/canvas.width, y/canvas.height, 0);
+        scale(0.5, 0.5, 0.5);
         shape.setTransform(context.currentTransform);
         restore();
 
-        var shapeToDraw = prepObjects([shape.getData()]);
-
-        objectsToDraw = objectsToDraw.concat(shapeToDraw);
+        objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
 
         drawScene();
-        // console.log(shapeToDraw.vertices.length);
-        // shapeToDraw.buffer = GLSLUtilities.initVertexBuffer(gl,
-        //         shapeToDraw.vertices);
-
-        // if (!shapeToDraw.colors) {
-        //     // If we have a single color, we expand that into an array
-        //     // of the same color over and over.
-        //     shapeToDraw.colors = [];
-            
-        //     shapeToDraw.colors = shapeToDraw.colors.concat(
-        //         shapeToDraw.color.r,
-        //         shapeToDraw.color.g,
-        //         shapeToDraw.color.b
-        //     );
-        // }
-        // shapeToDraw.colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-        //         shapeToDraw.colors);
-
-        //  // Same trick with specular colors.
-        // if (!shapeToDraw.specularColors) {
-        //     // Future refactor: helper function to convert a single value or
-        //     // array into an array of copies of itself.
-        //     shapeToDraw.specularColors = [];
-        //     shapeToDraw.specularColors = shapeToDraw.specularColors.concat(
-        //         shapeToDraw.specularColor.r,
-        //         shapeToDraw.specularColor.g,
-        //         shapeToDraw.specularColor.b
-        //     );
-        // }
-
-        // shapeToDraw.specularBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.specularColors);
-
-        // shapeToDraw.normalBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.normals);
-
-        // objectsToDraw.push(shapeToDraw);
-
-        // drawScene();
     }
 
     // up: 38
@@ -692,40 +668,32 @@
 
         // when rotating Q, keep it's position radial
         // to the camera's location
-        if (event.keyCode === 37) { // left
-            // rotating around y, so move along x-z plane (1, 0, 1)
-            // rotate lookAt vector
-            // then recompute directional
-            console.log("XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            cameraStatus.XZAngle -= rotationSpeed;
-            console.log("cameraStatus.XZAngle after: " + cameraStatus.XZAngle * (180/Math.PI));
+        if (event.keyCode === 37 || event.keyCode === 39) {
+            if (event.keyCode === 37) { // left
+                cameraStatus.XZAngle -= rotationSpeed;
+            }
+            if (event.keyCode === 39) { // right
+                cameraStatus.XZAngle += rotationSpeed;
+            }
+            // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
+            // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
             rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
-        if (event.keyCode === 39) { // right
-            console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            cameraStatus.XZAngle += rotationSpeed;
-            console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
-            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
-            drawScene();
-        }
-        if (event.keyCode === 38) { // up
-            console.log("YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
-            cameraStatus.YZAngle -= rotationSpeed;
-            console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
-            console.log(cameraStatus.YZAngle);
-            rotationVector = rotationVector.add(new Vector(0, Math.sin(cameraStatus.YZAngle), Math.cos(cameraStatus.YZAngle)));
-            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
-            drawScene();
-        }
-        if (event.keyCode === 40) { // down
-            console.log("cameraStatus.YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
-            cameraStatus.YZAngle += rotationSpeed;
-            console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
-            rotationVector = rotationVector.add(new Vector(0, Math.sin(cameraStatus.YZAngle), Math.cos(cameraStatus.YZAngle)));
-            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
+        // ** YZ rotation vector stays in YZ plane even when
+        // ** not facing direction that is parallel with it
+        if (event.keyCode === 38 || event.keyCode === 40) {
+            if (event.keyCode === 38) { // up
+                cameraStatus.YZAngle -= rotationSpeed;
+            }
+            if (event.keyCode === 40) { // down
+                cameraStatus.YZAngle += rotationSpeed;
+            }
+            // console.log("YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
+            // console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
+            var coordVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(cameraStatus.YZAngle), directionalVector.z() + Math.cos(cameraStatus.YZAngle));
+            cameraStatus.lookAt = cameraStatus.location.add(coordVector);
             drawScene();
         }
 
