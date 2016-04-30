@@ -412,24 +412,24 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-            -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-            0.1 * (canvas.width / canvas.height),
-            -0.1,
-            0.1,              
-            0.1, // viewing volume, near plane
-            100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
+        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+        //     0.1 * (canvas.width / canvas.height),
+        //     -0.1,
+        //     0.1,              
+        //     0.1, // viewing volume, near plane
+        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
+        // )));
 
         // Ortho rotates camera around cameraFocus
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-        //     -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     2 * (canvas.width / canvas.height),
-        //     -2,
-        //     2,              
-        //     -10, // viewing volume, near plane
-        //     10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
+        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+            2 * (canvas.width / canvas.height),
+            -2,
+            2,              
+            -10, // viewing volume, near plane
+            10 // viewing volume, far plane, only what's inside viewing volume can be seen
+        )));
 
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
@@ -589,27 +589,27 @@
             // then recompute directional
             XZAngle -= rotationSpeed;
             console.log(XZAngle);
-            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), cameraStatus.location.y(), cameraStatus.location.z() + Math.sin(XZAngle));
-            cameraStatus.lookAt = rotationVector;
+            var rotationVector = new Vector(directionalVector.x() + Math.cos(XZAngle), directionalVector.y(), directionalVector.z() + Math.sin(XZAngle));
+            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 39) { // right
             XZAngle += rotationSpeed;
-            var rotationVector = new Vector(cameraStatus.location.x() + Math.cos(XZAngle), cameraStatus.location.y(), cameraStatus.location.z() + Math.sin(XZAngle));
-            cameraStatus.lookAt = rotationVector;
+            var rotationVector = new Vector(directionalVector.x() + Math.cos(XZAngle), directionalVector.y(), directionalVector.z() + Math.sin(XZAngle));
+            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 38) { // up
             YZAngle -= rotationSpeed;
             console.log(YZAngle);
-            var rotationVector = new Vector(cameraStatus.location.x(), cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
-            cameraStatus.lookAt = rotationVector
+            var rotationVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(YZAngle), directionalVector.z() + Math.cos(YZAngle));
+            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
         if (event.keyCode === 40) { // down
             YZAngle += rotationSpeed;
-            var rotationVector = new Vector(cameraStatus.location.x(), cameraStatus.location.y() + Math.sin(YZAngle), cameraStatus.location.z() + Math.cos(YZAngle));
-            cameraStatus.lookAt = rotationVector
+            var rotationVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(YZAngle), directionalVector.z() + Math.cos(YZAngle));
+            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
             drawScene();
         }
 

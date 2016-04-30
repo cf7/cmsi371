@@ -227,7 +227,7 @@ var Shape = (function () {
         var vertices = [];
         var indices = [];
 
-        var thetaDelta = 2 * Math.PI / longit;
+        var thetaDelta = 2 * Math.PI / lat;
         var phiDelta = 2 * Math.PI / lat;
         var currentTheta = 0.0;
         var currentPhi = 0.0;
@@ -258,9 +258,25 @@ var Shape = (function () {
         // are actually the backs of triangles being drawn facing the interior
         // the coordinates also pass over the sphere multiple times, so there
         // are multiple layers
-        for (var i = 0; i < vertices.length; i++) {
-            indices.push([ i, (i + 1) % vertices.length, (i + longit) % vertices.length ]);
-            indices.push([ i, (i + longit - 1) % vertices.length, (i + longit) % vertices.length ]);
+        // need to find where coordinates begin to wrap back inside and reverse
+        // the order that they are drawn
+        for (var i = 0; i < vertices.length/2; i += longit) {
+            for (var j = i; j < i + longit/2; j++) {
+                indices.push([ j,  (j + longit) % vertices.length, (j + 1) % vertices.length ]);
+            }
+            for (var j = i + longit/2; j < i + longit; j++) {
+                indices.push([ j, (j + 1) % vertices.length, (j + longit) % vertices.length ]);
+
+            }
+        }
+        for (var i = vertices.length/2; i < vertices.length; i += longit) {
+            for (var j = i; j < i + longit/2; j++) {
+                indices.push([ j,  (j + longit) % vertices.length, (j + longit + 1) % vertices.length ]);
+            }
+            for (var j = i + longit/2; j < i + longit; j++) {
+                indices.push([ j, (j + longit + 1) % vertices.length, (j + longit) % vertices.length ]);
+
+            }
         }
 
         return {
