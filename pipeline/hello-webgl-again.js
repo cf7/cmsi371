@@ -109,10 +109,7 @@
     }
 
     var translate = function (x, y, z) {
-        context.currentTransform = context.currentTransform.mult(getTranslationMatrix(x, y, z));
-        console.log(context.currentTransform.mult(getTranslationMatrix(x, y, z)));
-        console.log("inside translate");
-        console.log(context.currentTransform);
+        context.currentTransform = getTranslationMatrix(x, y, z).mult(context.currentTransform);
     }
 
     var scale = function (x, y, z) {
@@ -183,9 +180,7 @@
 
     save();
     translate(1, 1, 1);
-    console.log(context.currentTransform);
     shape3.setTransform(context.currentTransform);
-    console.log(shape3.getTransform());
     restore();
 
     var shape4 = new Shape(gl);    
@@ -231,17 +226,19 @@
     // Build the objects to display.
     var shapes = [];
         
-    shapes.push(shape);
-    shapes.push(shape2);
+    // shapes.push(shape);
+    // shapes.push(shape2);
     shapes.push(shape3);
-    shapes.push(shape4);
+    // shapes.push(shape4);
     shapes.push(shape5);
-    shapes.push(shape6);
+    // shapes.push(shape6);
 
     var objectsToDraw = [];
 
     var draw = function (shapes) {
         for (var i = 0; i < shapes.length; i++) {
+            console.log("draw function");
+            console.log(shapes[i].getData());
             objectsToDraw.push(shapes[i].getData());
             if (shapes[i].getChildren().length > 0) {
                 draw(shapes[i].getChildren());
@@ -378,7 +375,9 @@
         // have code to translate, scale, and rotate the camera
 
         if (object.transform) {
-            context.currentTransform = object.transform;
+            console.log("this object has a transform");
+            context.currentTransform = object.transform.mult(context.currentTransform);
+            console.log(context.currentTransform);
         }
 
         gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
@@ -446,6 +445,7 @@
         gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
         // to turn off specular, set light to all 0.0's
 
+        console.log(objectsToDraw);
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);
@@ -524,13 +524,70 @@
     $(canvas).mousedown(function (event) {
         xDragStart = event.clientX;
         yDragStart = event.clientY;
-        addSphere(xDragStart, yDragStart);
+        addShape(xDragStart, yDragStart);
         xRotationStart = rotationAroundX;
         yRotationStart = rotationAroundY;
         $(canvas).mousemove(rotateScene);
     }).mouseup(function (event) {
         $(canvas).unbind("mousemove");
     });
+
+    var addShape = function (x, y) {
+
+        var shape = new Shape(gl);
+        shape.setColor({ r: 0.0, g: 0.75, b: 0.75 });
+
+        console.log($("#sphere-button")[0].checked);
+        if ($("#sphere-button")[0].checked) {
+            console.log("INSIDE sphere button checked");
+            shape.setVertices(shape.sphere(0.75, 20, 20));
+        } else if ($("#cylinder-button").checked) {
+
+        } else if ($("#trapezium-button").checked) {
+
+        }
+
+        shape.setDrawingStyle("triangles");
+
+        var shapeToDraw = shape.getData();
+        console.log(shapeToDraw.vertices.length);
+        shapeToDraw.buffer = GLSLUtilities.initVertexBuffer(gl,
+                shapeToDraw.vertices);
+
+        if (!shapeToDraw.colors) {
+            // If we have a single color, we expand that into an array
+            // of the same color over and over.
+            shapeToDraw.colors = [];
+            
+            shapeToDraw.colors = shapeToDraw.colors.concat(
+                shapeToDraw.color.r,
+                shapeToDraw.color.g,
+                shapeToDraw.color.b
+            );
+        }
+        shapeToDraw.colorBuffer = GLSLUtilities.initVertexBuffer(gl,
+                shapeToDraw.colors);
+
+         // Same trick with specular colors.
+        if (!shapeToDraw.specularColors) {
+            // Future refactor: helper function to convert a single value or
+            // array into an array of copies of itself.
+            shapeToDraw.specularColors = [];
+            shapeToDraw.specularColors = shapeToDraw.specularColors.concat(
+                shapeToDraw.specularColor.r,
+                shapeToDraw.specularColor.g,
+                shapeToDraw.specularColor.b
+            );
+        }
+
+        shapeToDraw.specularBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.specularColors);
+
+        shapeToDraw.normalBuffer = GLSLUtilities.initVertexBuffer(gl, shapeToDraw.normals);
+
+        objectsToDraw.push(shapeToDraw);
+
+        drawScene();
+    }
 
     // up: 38
     // down: 40

@@ -53,13 +53,10 @@ var Shape = (function () {
     };
 
     Shape.prototype.getData = function() {
-        console.log("inside");
-        console.log(this.indexedVertices.indices.length);
         // when drawing lines, lines array comes out twice as long as normals
         // array, need to make normals array same size as lines array
 
         if (this.mode === this.gl.LINES) {
-            console.log("inside inside");
             return {
                 shape: this,
                 color: this.color,
@@ -97,9 +94,10 @@ var Shape = (function () {
         this.color = { r: data.r, g: data.g, b: data.b };
     };
 
+    // ** Remember: To set transforms, need to merge them by multiplying
     Shape.prototype.setTransform = function(transform) {
         console.log("INSIDE");
-        this.transform = transform;
+        this.transform = this.transform.mult(transform);
     };
 
     Shape.prototype.getTransform = function() {

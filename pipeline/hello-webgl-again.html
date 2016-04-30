@@ -28,10 +28,39 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12" id="user-options">
-          <label for="navigation">Click in here to enter commands for navigation</label>
-          <input type="text" class="form-control" id="navigation">
-          <label for="cameraX">Set the camera's x position</label>
-          <input type="text" class="form-control" id="cameraX">
+          <div class="col-sm-4">
+            <label for="navigation">Click in here to enter commands for navigation</label>
+            <input type="text" cols="12" class="form-control" id="navigation">
+          </div>
+          <div class="col-sm-4">
+            <label for="cameraX">Set the camera's x position</label>
+            <input type="text" class="form-control" id="cameraX">
+            <label for="cameraX">Set the camera's y position</label>
+            <input type="text" class="form-control" id="cameraX">
+            <label for="cameraX">Set the camera's z position</label>
+            <input type="text" class="form-control" id="cameraX">
+          </div>
+
+          <div class="col-sm-4" id="shape-options">
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="sphere-button" value="option1" checked>
+                Sphere
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="cylinder-button" value="option2">
+                Cylinder
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="optionsRadios" id="trapezium-button" value="option3" disabled>
+                Trapezium
+              </label>
+            </div>
+          </div>
         </div>
         <div class="col-sm-12" id="display-area">
           <canvas id="hello-webgl" width="512" height="512">
