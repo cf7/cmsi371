@@ -621,7 +621,7 @@
     // E: 69
     // j: 74
     // k: 75
-
+    // enter: 13
 
     // ** for some reason, XZAngle jumps to 1,1 on first rotation clockwise
     // ** also, rotations stay on YZ plane relative to canvas and not camera's axes
@@ -646,6 +646,13 @@
         return index;
     }
 
+    var nextShape = function () {
+        var i = findBuildObject();
+        objectsToDraw[i].buildObject = false;
+        addShape(0, 0, true);
+        index = findBuildObject();
+    }
+
     console.log($("#builder-mode-button")[0].checked);
 
 
@@ -654,10 +661,7 @@
     var angleSpeed = 10;
     var currentScale = 1.0;
     // ** what happens when builder mode is turned off?
-    $("#builder-mode-button").on('click', function (event) {
-        addShape(0, 0, true);
-        index = findBuildObject();
-    });
+    $("#builder-mode-button").on('click', nextShape);
 
     // ** fix the lag, will sway between values, will keep moving in one direction
     // ** instead of switching to other
@@ -762,6 +766,9 @@
                 drawScene();
             }
 
+            if (event.keyCode === 13) {
+                nextShape();
+            }
         }
 
         $("#navigation").val("");

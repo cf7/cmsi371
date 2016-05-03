@@ -28,17 +28,13 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12" id="user-options">
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             <label for="navigation">Click in here to enter commands for navigation</label>
             <input type="text" cols="12" class="form-control" id="navigation">
-            <p>w = forward</p>
-            <p>a = left</p>
-            <p>s = backward</p>
-            <p>d = right</p>
-            <br>
+            <p>w = forward, a = left, s = backward, d = right</p>
             <p>arrow keys = camera movement</p>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             <label for="cameraX">Set the camera's x position</label>
             <input type="text" class="form-control" id="cameraX">
             <label for="cameraX">Set the camera's y position</label>
@@ -47,7 +43,7 @@
             <input type="text" class="form-control" id="cameraX">
           </div>
 
-          <div class="col-sm-4" id="shape-options">
+          <div class="col-sm-3" id="shape-options">
             <p><strong>Mouse Actions</strong></p>
             <div class="radio">
               <label>
@@ -80,16 +76,21 @@
                 Trapezium
               </label>
             </div>
+          </div>
 
-
-            <div class="checkbox">
+          <div class="col-sm-3" id="builder-options">
+          <p><strong>Builder Mode</strong></p>
+          <div class="checkbox">
             <label>
-              <input type="checkbox" id="builder-mode-button" unchecked> Builder mode
+              <input type="checkbox" id="builder-mode-button" unchecked> Builder mode on
             </label>
           </div>
+           <p>translate shape: w = forward, a = left, s = backward, d = right</p>
+           <p>scale shape: j = smaller, k = bigger</p>
+           <p>rotate shape: arrow keys</p>
+           <p>place shape:  enter</p>
+        </div>
 
-
-          </div>
         </div>
         <div class="col-sm-12" id="display-area">
           <canvas id="hello-webgl" width="1000" height="512">
