@@ -594,7 +594,7 @@
         shape.setDrawingStyle("triangles");
 
         save();
-        translate(x/canvas.width, y/canvas.height, 0);
+        translate(x, y, 0);
         scale(0.5, 0.5, 0.5);
         shape.setTransform(context.currentTransform);
         restore();
@@ -619,6 +619,8 @@
     // D: 68
     // Q: 81
     // E: 69
+    // j: 74
+    // k: 75
 
 
     // ** for some reason, XZAngle jumps to 1,1 on first rotation clockwise
@@ -648,26 +650,118 @@
 
 
     var index = 0;
-    var tz = 0;
-
+    var speed = 0.25;
+    var angleSpeed = 10;
+    var currentScale = 1.0;
+    // ** what happens when builder mode is turned off?
     $("#builder-mode-button").on('click', function (event) {
         addShape(0, 0, true);
         index = findBuildObject();
     });
 
+    // ** fix the lag, will sway between values, will keep moving in one direction
+    // ** instead of switching to other
     $("#navigation").keydown(function (event) {
         if ($("#builder-mode-button")[0].checked) {
-            if (event.keyCode === 87) {
-                console.log("inside Builder mode W keydown");
-                console.log(index);
-                console.log(objectsToDraw[index]);
-                tz -= 1;
+            if (event.keyCode === 87) { // w
                 save();
-                translate(0, 0, tz);
+                translate(0, 0, -speed);
                 objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
                 restore();
                 drawScene();
             }
+            if (event.keyCode === 83) { // s
+                save();
+                translate(0, 0, speed);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 65) { // a
+                save();
+                translate(-speed, 0, 0);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 68) { // d
+                save();
+                translate(speed, 0, 0);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 81) { // q
+                save();
+                translate(0, speed, 0);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 69) { // e
+                save();
+                translate(0, -speed, 0);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 37) { // left
+                save();
+                rotate(angleSpeed, 0, 0, 1);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 39) { // right
+                save();
+                rotate(-angleSpeed, 0, 0, 1);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+
+            if (event.keyCode === 38) { // up
+                save();
+                rotate(-angleSpeed, 1, 0, 0);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+
+            if (event.keyCode === 40) { // down
+                save();
+                rotate(angleSpeed, 1, 0, 0);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 74) { // j
+                currentScale -= speed;
+                save();
+                scale(currentScale, currentScale, currentScale);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
+            if (event.keyCode === 75) { // k
+                currentScale += speed;
+                save();
+                scale(currentScale, currentScale, currentScale);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
+            }
+
         }
 
         $("#navigation").val("");
