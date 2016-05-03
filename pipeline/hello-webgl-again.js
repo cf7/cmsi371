@@ -549,13 +549,17 @@
     var xRotationStart;
     var yRotationStart;
     $(canvas).mousedown(function (event) {
-        xDragStart = event.clientX;
-        yDragStart = event.clientY;
-        var coords = getMousePos(document.getElementById("hello-webgl"), event)
-        addShape(coords.x, coords.y);
-        xRotationStart = rotationAroundX;
-        yRotationStart = rotationAroundY;
-        $(canvas).mousemove(rotateScene);
+
+        if ($("#rotation-button")[0].checked) {
+            xDragStart = event.clientX;
+            yDragStart = event.clientY;
+            xRotationStart = rotationAroundX;
+            yRotationStart = rotationAroundY;
+            $(canvas).mousemove(rotateScene);
+        } else if ($("#place-shape-button")[0].checked) {
+            var coords = getMousePos(document.getElementById("hello-webgl"), event)
+            addShape(coords.x, coords.y, false);
+        }
     }).mouseup(function (event) {
         $(canvas).unbind("mousemove");
     });
@@ -568,7 +572,7 @@
         };
     }
 
-    var addShape = function (x, y) {
+    var addShape = function (x, y, isBuildObject) {
 
         var shape = new Shape(gl);
         shape.setColor({ r: 0.0, g: 0.75, b: 0.75 });
@@ -595,9 +599,14 @@
         shape.setTransform(context.currentTransform);
         restore();
 
+        shape.buildObject = isBuildObject;
+        
+
         objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
 
         drawScene();
+
+        return shape;
     }
 
     // up: 38
@@ -624,86 +633,128 @@
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
+
+    var findBuildObject = function () {
+        var index = 0;
+        for (var i = 0; i < objectsToDraw.length; i++) {
+            if (objectsToDraw[i].buildObject) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    console.log($("#builder-mode-button")[0].checked);
+
+
+    var index = 0;
+    var tz = 0;
+
+    $("#builder-mode-button").on('click', function (event) {
+        addShape(0, 0, true);
+        index = findBuildObject();
+    });
+
     $("#navigation").keydown(function (event) {
-        console.log("inside");
-        console.log(event);
-        var translateSpeed = 0.3;
-        var rotationSpeed = Math.PI/10;
-        var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
-        var lateralDirectional = directionalVector.cross(cameraStatus.up);
-        var rotationVector = new Vector (directionalVector.x(), directionalVector.y(), directionalVector.z());
-
-        // ** hardcoding adjustment for rotation when camera starts
-        // ** out facing (0, 0, -1), otherwise, camera rotation will
-        // ** start at 0 or Math.PI angle every time and cause camera to snap
-        if (cameraStatus.XZAngle === 0 && !cameraStatus.beginRotating) {
-            cameraStatus.XZAngle = 3 * Math.PI / 2;
-            cameraStatus.beginRotatingHorizontal = true;
-        }
-        if (cameraStatus.YZAngle === 0 && !cameraStatus.beginRotating) {
-            cameraStatus.YZAngle = Math.PI;
-            cameraStatus.beginRotatingVertical = true;
-        }
-        // if it is a keydown event, then the actual keyCode is used
-        // if it is a keypress event, then 32 is added to each key
-        if (event.keyCode === 87) { // w
-            // need to subtract the y from the Q vector because it's everything
-            // else's y's that are being moved! not the camera's
-            // can't multiply vectors!
-            // vector.multiply(s) takes in a scalar
-            cameraStatus.location = cameraStatus.location.add(directionalVector.multiply(translateSpeed));
-            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
-            drawScene();
-        }
-        if (event.keyCode === 83) { // s
-            cameraStatus.location = cameraStatus.location.subtract(directionalVector.multiply(translateSpeed));
-            cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
-            drawScene();
-        }
-        if (event.keyCode === 65) { // a
-            cameraStatus.location = cameraStatus.location.subtract(lateralDirectional);
-            cameraStatus.lookAt = cameraStatus.lookAt.subtract(lateralDirectional);
-            drawScene();
-        }
-        if (event.keyCode === 68) { // d
-            cameraStatus.location = cameraStatus.location.add(lateralDirectional);
-            cameraStatus.lookAt = cameraStatus.lookAt.add(lateralDirectional);
-            drawScene();
-        }
-
-        // when rotating Q, keep it's position radial
-        // to the camera's location
-        if (event.keyCode === 37 || event.keyCode === 39) {
-            if (event.keyCode === 37) { // left
-                cameraStatus.XZAngle -= rotationSpeed;
+        if ($("#builder-mode-button")[0].checked) {
+            if (event.keyCode === 87) {
+                console.log("inside Builder mode W keydown");
+                console.log(index);
+                console.log(objectsToDraw[index]);
+                tz -= 1;
+                save();
+                translate(0, 0, tz);
+                objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+                restore();
+                drawScene();
             }
-            if (event.keyCode === 39) { // right
-                cameraStatus.XZAngle += rotationSpeed;
-            }
-            // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
-            cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
-            drawScene();
-        }
-        // ** YZ rotation vector stays in YZ plane even when
-        // ** not facing direction that is parallel with it
-        if (event.keyCode === 38 || event.keyCode === 40) {
-            if (event.keyCode === 38) { // up
-                cameraStatus.YZAngle -= rotationSpeed;
-            }
-            if (event.keyCode === 40) { // down
-                cameraStatus.YZAngle += rotationSpeed;
-            }
-            // console.log("YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
-            // console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
-            var coordVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(cameraStatus.YZAngle), directionalVector.z() + Math.cos(cameraStatus.YZAngle));
-            cameraStatus.lookAt = cameraStatus.location.add(coordVector);
-            drawScene();
         }
 
         $("#navigation").val("");
     });
+     
+    // else {
+    //     $("#navigation").keydown(function (event) {
+    //         console.log("inside");
+    //         console.log(event);
+    //         var translateSpeed = 0.3;
+    //         var rotationSpeed = Math.PI/10;
+    //         var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
+    //         var lateralDirectional = directionalVector.cross(cameraStatus.up);
+    //         var rotationVector = new Vector (directionalVector.x(), directionalVector.y(), directionalVector.z());
+
+    //         // ** hardcoding adjustment for rotation when camera starts
+    //         // ** out facing (0, 0, -1), otherwise, camera rotation will
+    //         // ** start at 0 or Math.PI angle every time and cause camera to snap
+    //         if (cameraStatus.XZAngle === 0 && !cameraStatus.beginRotating) {
+    //             cameraStatus.XZAngle = 3 * Math.PI / 2;
+    //             cameraStatus.beginRotatingHorizontal = true;
+    //         }
+    //         if (cameraStatus.YZAngle === 0 && !cameraStatus.beginRotating) {
+    //             cameraStatus.YZAngle = Math.PI;
+    //             cameraStatus.beginRotatingVertical = true;
+    //         }
+    //         // if it is a keydown event, then the actual keyCode is used
+    //         // if it is a keypress event, then 32 is added to each key
+    //         if (event.keyCode === 87) { // w
+    //             // need to subtract the y from the Q vector because it's everything
+    //             // else's y's that are being moved! not the camera's
+    //             // can't multiply vectors!
+    //             // vector.multiply(s) takes in a scalar
+    //             cameraStatus.location = cameraStatus.location.add(directionalVector.multiply(translateSpeed));
+    //             cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
+    //             drawScene();
+    //         }
+    //         if (event.keyCode === 83) { // s
+    //             cameraStatus.location = cameraStatus.location.subtract(directionalVector.multiply(translateSpeed));
+    //             cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
+    //             drawScene();
+    //         }
+    //         if (event.keyCode === 65) { // a
+    //             cameraStatus.location = cameraStatus.location.subtract(lateralDirectional);
+    //             cameraStatus.lookAt = cameraStatus.lookAt.subtract(lateralDirectional);
+    //             drawScene();
+    //         }
+    //         if (event.keyCode === 68) { // d
+    //             cameraStatus.location = cameraStatus.location.add(lateralDirectional);
+    //             cameraStatus.lookAt = cameraStatus.lookAt.add(lateralDirectional);
+    //             drawScene();
+    //         }
+
+    //         // when rotating Q, keep it's position radial
+    //         // to the camera's location
+    //         if (event.keyCode === 37 || event.keyCode === 39) {
+    //             if (event.keyCode === 37) { // left
+    //                 cameraStatus.XZAngle -= rotationSpeed;
+    //             }
+    //             if (event.keyCode === 39) { // right
+    //                 cameraStatus.XZAngle += rotationSpeed;
+    //             }
+    //             // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
+    //             // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
+    //             rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
+    //             cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
+    //             drawScene();
+    //         }
+    //         // ** YZ rotation vector stays in YZ plane even when
+    //         // ** not facing direction that is parallel with it
+    //         if (event.keyCode === 38 || event.keyCode === 40) {
+    //             if (event.keyCode === 38) { // up
+    //                 cameraStatus.YZAngle -= rotationSpeed;
+    //             }
+    //             if (event.keyCode === 40) { // down
+    //                 cameraStatus.YZAngle += rotationSpeed;
+    //             }
+    //             // console.log("YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
+    //             // console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
+    //             var coordVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(cameraStatus.YZAngle), directionalVector.z() + Math.cos(cameraStatus.YZAngle));
+    //             cameraStatus.lookAt = cameraStatus.location.add(coordVector);
+    //             drawScene();
+    //         }
+
+    //         $("#navigation").val("");
+    //     });
+    // }
 
     // Draw the initial scene.
     drawScene();

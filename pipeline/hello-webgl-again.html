@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Hello WebGL (again)</title>
+    <title>Scene Builder</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
@@ -13,7 +13,7 @@
 
   </head>
   <body>
-    <h1>Hello WebGL (again)!</h1>
+    <h1>Scene Builder</h1>
 
     <!-- ** If WebGL context not found error in Chrome, go to Settings -> Advanced Settings ->
           check 'Use hardware acceleration when available' ** -->
@@ -57,7 +57,7 @@
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="mouseoption" id="place-shape" value="option3">
+                <input type="radio" name="mouseoption" id="place-shape-button" value="option3">
                 place shape
               </label>
             </div>
@@ -80,10 +80,19 @@
                 Trapezium
               </label>
             </div>
+
+
+            <div class="checkbox">
+            <label>
+              <input type="checkbox" id="builder-mode-button" unchecked> Builder mode
+            </label>
+          </div>
+
+
           </div>
         </div>
         <div class="col-sm-12" id="display-area">
-          <canvas id="hello-webgl" width="512" height="512">
+          <canvas id="hello-webgl" width="1000" height="512">
             Sorry, your web browser does not appear to support
             the <code>canvas</code> element, either.
           </canvas>

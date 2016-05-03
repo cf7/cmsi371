@@ -15,6 +15,7 @@ var Shape = (function () {
             this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
             this.mode = data.mode ? data.mode : this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
+            this.buildObject = data.buildObject ? data.buildObject : false;
         } else {
             this.gl = gl || {};
             this.transform = new Matrix(4, 4);
@@ -27,6 +28,7 @@ var Shape = (function () {
             this.arrayType = this.toRawLineArray(this.indexedVertices);
             this.mode = this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
+            this.buildObject = false;
         }
     }
 
@@ -66,7 +68,8 @@ var Shape = (function () {
                 mode: this.mode,
                 transform: this.transform,
                 normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices)),
-                chilren: this.children
+                chilren: this.children,
+                buildObject: this.buildObject
             }
         } else {
             return {
@@ -78,7 +81,8 @@ var Shape = (function () {
                 mode: this.mode,
                 transform: this.transform,
                 normals: this.toNormalArray(this.indexedVertices),
-                children: this.children
+                children: this.children,
+                buildObject: this.buildObject
             }
         }
     };
