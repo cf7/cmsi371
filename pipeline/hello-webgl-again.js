@@ -653,8 +653,17 @@
         index = findBuildObject();
     }
 
-    console.log($("#builder-mode-button")[0].checked);
 
+    $("[name='shape-option']").on('click', function (event) {
+        if ($("#builder-mode-button")[0].checked) {
+            var data = {};
+            var i = findBuildObject();
+            if (i !== -1) {
+                data = objectsToDraw.splice(i, 1)[0];
+            }
+            nextShape();
+        }
+    });
 
     var index = 0;
     var speed = 0.25;
@@ -729,6 +738,7 @@
             objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
             restore();
             drawScene();
+            $("#navigation").val("");
         } else {
             console.log("inside");
             console.log(event);
