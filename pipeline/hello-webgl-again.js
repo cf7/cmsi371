@@ -216,8 +216,13 @@
     // ** 4/19 21:00 child shapes
 
     save();
-    translate(0.75, 0.75, 0);
+    translate(0.5, 0.5, 0.5);
+    scale(0.75, 0.75, 0.75);
     shape4.getChildren()[0].setTransform(context.currentTransform);
+    restore();
+    save();
+    translate(0, 0, 1.5);
+    shape4.getChildren()[0].getChildren()[0].setTransform(context.currentTransform);
     restore();
     // shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
     // shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
