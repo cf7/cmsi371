@@ -33,6 +33,7 @@
             <input type="text" cols="12" class="form-control" id="navigation">
             <p>w = forward, a = left, s = backward, d = right</p>
             <p>arrow keys = camera movement</p>
+            <p>translate shape: w = forward, a = left, s = backward, d = right, q = up, e = down; scale shape: j = smaller, k = bigger;; caleXUp = x, scaleYUp = y, scaleZUp = z;; scaleXDown = ctrl + x, scaleYDown = ctrl + y, scaleZDown = ctrl + z;; rotate shape: arrow keys;; place shape:  enter</p>
           </div>
           <div class="col-sm-3">
             <label for="cameraX">Set the camera's x position</label>
@@ -41,6 +42,16 @@
             <input type="text" class="form-control" id="cameraX">
             <label for="cameraX">Set the camera's z position</label>
             <input type="text" class="form-control" id="cameraX">
+
+            <p><strong>Camera Perspective</strong></p>
+            <label>
+            <input type="radio" name="camera-option" id="first-person-button" value="option1">
+            First-Person
+            </label>
+            <label>
+            <input type="radio" name="camera-option" id="third-person-button" value="option2" checked>
+            Third-Person
+            </label>
           </div>
 
           <div class="col-sm-3" id="shape-options">
@@ -51,12 +62,8 @@
                 rotate scene
               </label>
             </div>
-            <div class="radio">
-              <label>
-                <input type="radio" name="mouseoption" id="place-shape-button" value="option3">
-                place shape
-              </label>
-            </div>
+          
+
             <p><strong>Place Shape</strong></p>
             <div class="radio">
               <label>
@@ -78,18 +85,16 @@
             </div>
           </div>
 
+
           <div class="col-sm-3" id="builder-options">
-          <p><strong>Builder Mode</strong></p>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" id="builder-mode-button" unchecked> Builder mode on
-            </label>
+            <p><strong>Builder Mode</strong></p>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" id="builder-mode-button" unchecked> Builder mode on
+              </label>
+            </div>
+
           </div>
-           <p>translate shape: w = forward, a = left, s = backward, d = right, q = up, e = down</p>
-           <p>scale shape: j = smaller, k = bigger</p>
-           <p>rotate shape: arrow keys</p>
-           <p>place shape:  enter</p>
-        </div>
 
         </div>
         <div class="col-sm-12" id="display-area">

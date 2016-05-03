@@ -16,6 +16,7 @@ var Shape = (function () {
             this.mode = data.mode ? data.mode : this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
             this.buildObject = data.buildObject ? data.buildObject : false;
+            this.specularColor = data.specularColor ? data.specularColor : { r: 1.0, g: 1.0, b: 1.0 }
         } else {
             this.gl = gl || {};
             this.transform = new Matrix(4, 4);
@@ -29,6 +30,7 @@ var Shape = (function () {
             this.mode = this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
             this.buildObject = false;
+            this.specularColor = { r: 1.0, g: 1.0, b: 1.0 };
         }
     }
 
@@ -62,7 +64,7 @@ var Shape = (function () {
             return {
                 shape: this,
                 color: this.color,
-                specularColor: { r: 1.0, g: 1.0, b: 1.0 },
+                specularColor: this.specularColor,
                 shininess: 10,
                 vertices: this.arrayType,
                 mode: this.mode,
@@ -75,7 +77,7 @@ var Shape = (function () {
             return {
                 shape: this,
                 color: this.color,
-                specularColor: { r: 1.0, g: 1.0, b: 1.0 },
+                specularColor: this.specularColor,
                 shininess: 10,
                 vertices: this.arrayType,
                 mode: this.mode,
@@ -94,8 +96,13 @@ var Shape = (function () {
 
         }
     };
+    
     Shape.prototype.setColor = function(data) {
         this.color = { r: data.r, g: data.g, b: data.b };
+    };
+
+    Shape.prototype.setSpecularColor = function(data) {
+        this.specularColor = { r: data.r, g: data.g, b: data.b };
     };
 
     // ** Remember: To set transforms, need to merge them by multiplying

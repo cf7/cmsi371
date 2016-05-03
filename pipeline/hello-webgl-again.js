@@ -235,6 +235,7 @@
     shape5.setColor({ r: 0.0, g: 0.75, b: 0.75 });
     shape5.setVertices(shape5.cylinder(0.25, 0.5, 20));
     shape5.setDrawingStyle("triangles");
+    shape5.setSpecularColor({ r: 0.0, g: 0.0, b: 0.0 });
 
     save();
     scale(1.5, 1.5, 1.5);
@@ -446,25 +447,29 @@
 
         // Frustum rotates camera but not around cameraFocus
         // ** (canvas.width / canvas.height) is the aspet ratio
-        // gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-        //     -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
-        //     0.1 * (canvas.width / canvas.height),
-        //     -0.1,
-        //     0.1,              
-        //     0.1, // viewing volume, near plane
-        //     100 // viewing volume, far plane, only what's inside viewing volume can be seen
-        // )));
 
-        // Ortho rotates camera around cameraFocus
-        gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-            -2 * (canvas.width / canvas.height), // change the 2's to change the projection
-            2 * (canvas.width / canvas.height),
-            -2,
-            2,              
-            -10, // viewing volume, near plane
-            10 // viewing volume, far plane, only what's inside viewing volume can be seen
-        )));
-
+        console.log($("#first-person-button")[0].checked);
+        console.log($("#third-person-button")[0].checked);
+        if ($("#first-person-button")[0].checked) {
+            gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+                -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+                0.1 * (canvas.width / canvas.height),
+                -0.1,
+                0.1,              
+                0.1, // viewing volume, near plane
+                100 // viewing volume, far plane, only what's inside viewing volume can be seen
+            )));
+        } else if ($("#third-person-button")[0].checked) {
+            // Ortho rotates camera around cameraFocus
+            gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+                -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+                2 * (canvas.width / canvas.height),
+                -2,
+                2,              
+                -10, // viewing volume, near plane
+                10 // viewing volume, far plane, only what's inside viewing volume can be seen
+            )));
+        }
         // ** right now setting position relative to the camera
         // ** but shouldn't be
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
@@ -621,6 +626,9 @@
     // E: 69
     // j: 74
     // k: 75
+    // x: 88
+    // y: 89
+    // z: 90
     // enter: 13
 
     // ** for some reason, XZAngle jumps to 1,1 on first rotation clockwise
@@ -653,6 +661,7 @@
         index = findBuildObject();
     }
 
+    $("[name='camera-option']").on('click', drawScene);
 
     $("[name='shape-option']").on('click', function (event) {
         if ($("#builder-mode-button")[0].checked) {
@@ -669,6 +678,8 @@
     var speed = 0.25;
     var angleSpeed = 10;
     var currentScale = 1.0;
+    var scaleVector = new Vector(1.0, 1.0, 1.0);
+
     // ** what happens when builder mode is turned off?
     // might not disappear right away, may need to refresh the page
     // after unchecking builder-mode-button
@@ -685,10 +696,24 @@
     });
 
 
-    // ** fix the lag, will sway between values, will keep moving in one direction
-    // ** instead of switching to other
+    /**
+
+        Bugs:
+
+        1.) user controls have lag, will sway between values, will keep moving in one direction
+        instead of switching to other
+
+        2.) rotating scaled objects distorts them
+
+        3.) camara's YZ rotation remains in YZ plane even when camera isn't
+
+        4.) diffuse and spectral lighting don't work in frustum perspective
+
+    */
+
     $("#navigation").keydown(function (event) {
         if ($("#builder-mode-button")[0].checked) {
+            console.log(event);
             save();
             switch (event.keyCode) {
                 case 87: // w
@@ -728,6 +753,21 @@
                 case 75: // k
                     currentScale -= speed;
                     scale(currentScale, currentScale, currentScale);
+                    break;
+                case 88: // x
+                    var spd = event.ctrlKey ? -speed : speed;
+                    scaleVector = scaleVector.add(new Vector(spd, 0.0, 0.0));
+                    scale(scaleVector.x(), 1.0, 1.0);
+                    break;
+                case 89: // y
+                    var spd = event.ctrlKey ? -speed : speed;
+                    scaleVector = scaleVector.add(new Vector(0.0, spd, 0.0));
+                    scale(1.0, scaleVector.y(), 1.0);
+                    break;
+                case 90: // z
+                    var spd = event.ctrlKey ? -speed : speed;
+                    scaleVector = scaleVector.add(new Vector(0.0, 0.0, spd));
+                    scale(1.0, 1.0, scaleVector.z());
                     break;
                 case 13: // enter
                     nextShape();
