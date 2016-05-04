@@ -761,27 +761,23 @@
                     rotate(angleSpeed, 1, 0, 0);
                     break;
                 case 74: // j
-                    currentScale += speed;
-                    scale(currentScale, currentScale, currentScale);
+                    //currentScale += speed;
+                    scale(1.0 + speed, 1.0 + speed, 1.0 + speed);
                     break;
                 case 75: // k
-                    currentScale -= speed;
-                    scale(currentScale, currentScale, currentScale);
+                    scale(1.0 - speed, 1.0 - speed, 1.0 - speed);
                     break;
                 case 88: // x
                     var spd = event.ctrlKey ? -speed : speed;
-                    scaleVector = scaleVector.add(new Vector(spd, 0.0, 0.0));
-                    scale(scaleVector.x(), 1.0, 1.0);
+                    scale(1.0 + spd, 1.0, 1.0);
                     break;
                 case 89: // y
                     var spd = event.ctrlKey ? -speed : speed;
-                    scaleVector = scaleVector.add(new Vector(0.0, spd, 0.0));
-                    scale(1.0, scaleVector.y(), 1.0);
+                    scale(1.0, 1.0 + spd, 1.0);
                     break;
                 case 90: // z
                     var spd = event.ctrlKey ? -speed : speed;
-                    scaleVector = scaleVector.add(new Vector(0.0, 0.0, spd));
-                    scale(1.0, 1.0, scaleVector.z());
+                    scale(1.0, 1.0, 1.0 + spd);
                     break;
                 case 13: // enter
                     nextShape();
