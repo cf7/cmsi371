@@ -104,6 +104,10 @@ var Shape = (function () {
         this.color = { r: data.r, g: data.g, b: data.b };
     };
 
+    Shape.prototype.getColor = function() {
+        return this.color;
+    };
+    
     Shape.prototype.setSpecularColor = function(data) {
         this.specularColor = { r: data.r, g: data.g, b: data.b };
     };

@@ -610,7 +610,6 @@
         restore();
 
         shape.buildObject = isBuildObject;
-        
 
         objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
 
@@ -648,6 +647,8 @@
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
+
+    var originalColor = {};
 
     var findBuildObject = function () {
         var index = 0;
@@ -717,10 +718,8 @@
     /**
     
         Idea:
-            0.) Shape selection - have one index that increments
-            when shape selection on, find the objectsToDraw[i] of that index,
-            highlight or change it's color
-            can them move it around and use enter to place
+        
+            1.) highlight the buildObject
 
         Bugs:
 
