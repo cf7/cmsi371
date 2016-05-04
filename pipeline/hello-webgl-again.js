@@ -41,7 +41,7 @@
     }
 
     var cameraStatus = {
-        location: new Vector(0, 0, 0),
+        location: new Vector(0.5, 1, 1),
         lookAt: new Vector(0, 0, -1),
         up: new Vector(0, 1, 0),
         XZAngle: 0.0,
@@ -568,6 +568,7 @@
         }
     }).mouseup(function (event) {
         $(canvas).unbind("mousemove");
+        focus();
     });
 
     var getMousePos = function (canvas, event) {
@@ -663,9 +664,17 @@
         objectsToDraw[i].buildObject = false;
         addShape(0, 0, true);
         index = findBuildObject();
+        shapeIndex = index;
     }
 
-    $("[name='camera-option']").on('click', drawScene);
+    var focus = function () {
+        $("#navigation").focus();
+    }
+
+    $("[name='camera-option']").on('click', function (event) {
+        drawScene();
+        focus();
+    });
 
     $("[name='shape-option']").on('click', function (event) {
         if ($("#builder-mode-button")[0].checked) {
@@ -676,13 +685,17 @@
             }
             nextShape();
         }
+        focus();
+
     });
 
     var index = 0;
+    var shapeIndex = 0;
     var speed = 0.25;
     var angleSpeed = 10;
     var currentScale = 1.0;
     var scaleVector = new Vector(1.0, 1.0, 1.0);
+
 
     // ** what happens when builder mode is turned off?
     // might not disappear right away, may need to refresh the page
@@ -696,24 +709,30 @@
             if (i !== -1) {
                 data = objectsToDraw.splice(i, 1)[0];
             }
-        } 
+        }
+        focus();
     });
 
 
     /**
+    
+        Idea:
+            0.) Shape selection - have one index that increments
+            when shape selection on, find the objectsToDraw[i] of that index,
+            highlight or change it's color
+            can them move it around and use enter to place
 
         Bugs:
 
-        0.) How do we draw child shapes without flattening the array?
-
-        1.) user controls have lag, will sway between values, will keep moving in one direction 
-        for a bit instead of immediately changing directions
 
         2.) rotating scaled objects distorts them
 
         3.) camara's YZ rotation remains in YZ plane even when camera isn't
 
-        4.) diffuse and spectral lighting don't work in frustum perspective
+        4.) diffuse and spectral lighting normals are slightly off
+
+        5.) Shifting between first and third person during builder mode
+        is changing the orientation of the camera
 
     */
 
@@ -781,6 +800,10 @@
                     break;
                 case 13: // enter
                     nextShape();
+                    break;
+                case 32:
+                    shapeIndex = (shapeIndex + 1 >= objectsToDraw.length) ? 0 : shapeIndex + 1;
+                    index = shapeIndex;
                     break;
                 default:
                     break;
