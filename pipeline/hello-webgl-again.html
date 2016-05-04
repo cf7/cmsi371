@@ -17,32 +17,55 @@
 
     <!-- ** If WebGL context not found error in Chrome, go to Settings -> Advanced Settings ->
           check 'Use hardware acceleration when available' ** -->
-    <p>You’ll need a WebGL-capable web browser to see anything here;
-     instructions can be found in this
-     <a href="http://www.khronos.org/webgl/wiki/Getting_a_WebGL_Implementation">official
-     WebGL wiki page</a>.</p>
+    <p>Build your own scene using shapes!</p>
 
-    <p>This page adds a few more fundamental features, showing how
-      further functionality can be added to the software stack.
-      Click the canvas to see what else is new.</p>
     <div class="container">
       <div class="row">
         <div class="col-sm-12" id="user-options">
           <div class="col-sm-3">
-            <label for="navigation">Click in here to enter commands for navigation</label>
-            <input type="text" cols="12" class="form-control" id="navigation">
-            <p>w = forward, a = left, s = backward, d = right</p>
-            <p>arrow keys = camera movement</p>
-            <p>translate shape: w = forward, a = left, s = backward, d = right, q = up, e = down; scale shape: j = smaller, k = bigger;; caleXUp = x, scaleYUp = y, scaleZUp = z;; scaleXDown = ctrl + x, scaleYDown = ctrl + y, scaleZDown = ctrl + z;; rotate shape: arrow keys;; place shape:  enter</p>
+            <h4><strong>Navigation Controls</strong></h4>
+            <ul>
+              <li>w = forward</li>
+              <li>s = backward</li>
+              <li>a = left</li>
+              <li>d = right</li>
+            </ul>
+            <p>camera movement: arrow keys</p>
+            <label for="navigation">Enter navigation commands here</label>
+            <input type="text" cols="12" class="form-control" id="navigation" autofocus>
           </div>
           <div class="col-sm-3">
-            <label for="cameraX">Set the camera's x position</label>
-            <input type="text" class="form-control" id="cameraX">
+            <!-- <label for="cameraX">Set the camera's x position</label>
+            <input type="text" class="form-control" id="cameraX" size="10">
             <label for="cameraX">Set the camera's y position</label>
-            <input type="text" class="form-control" id="cameraX">
+            <input type="text" class="form-control" id="cameraX" size="10">
             <label for="cameraX">Set the camera's z position</label>
-            <input type="text" class="form-control" id="cameraX">
+            <input type="text" class="form-control" id="cameraX" size="10"> -->
+            <h5><strong>Builder Mode Navigation</strong></h5>
+            <ul>
+              <li>w = forward</li>
+              <li>s = backward</li>
+              <li>a = left</li>
+              <li>d = right</li>
+              <li>j = smaller</li>
+              <li>k = bigger</li>
+              <li>x = scale X up (ctrl + x is down)</li>
+              <li>y = scale Y up (ctrl + y is down)</li>
+              <li>z = scale Z up (ctrl + z is down)</li>
+            </ul>
+            <p>rotate shape: arrow keys</p>
+            <p>place shape:  enter</p>
+  
+          </div>
 
+          <div class="col-sm-3" id="shape-options">
+            <p><strong>Mouse Actions</strong></p>
+            <div class="radio">
+              <label>
+                <input type="radio" name="mouseoption" id="rotation-button" value="option4" checked>
+                rotate scene
+              </label>
+            </div>
             <p><strong>Camera Perspective</strong></p>
             <label>
             <input type="radio" name="camera-option" id="first-person-button" value="option1">
@@ -54,15 +77,16 @@
             </label>
           </div>
 
-          <div class="col-sm-3" id="shape-options">
-            <p><strong>Mouse Actions</strong></p>
-            <div class="radio">
+
+          <div class="col-sm-3" id="builder-options">
+
+            <p><strong>Builder Mode</strong></p>
+            <div class="checkbox">
               <label>
-                <input type="radio" name="mouseoption" id="rotation-button" value="option4" checked>
-                rotate scene
+                <input type="checkbox" id="builder-mode-button" unchecked> Builder mode on
               </label>
             </div>
-          
+
 
             <p><strong>Place Shape</strong></p>
             <div class="radio">
@@ -83,14 +107,10 @@
                 Trapezium
               </label>
             </div>
-          </div>
-
-
-          <div class="col-sm-3" id="builder-options">
-            <p><strong>Builder Mode</strong></p>
-            <div class="checkbox">
+            <div class="radio">
               <label>
-                <input type="checkbox" id="builder-mode-button" unchecked> Builder mode on
+                <input type="radio" name="shape-option" id="cube-button" value="option3">
+                Cube
               </label>
             </div>
 
@@ -169,7 +189,8 @@
 
 
         fragmentLight = lightPosition.xyz;
-        fragmentNormal = vec3(camera * modelView * vec4(normalVector, 1.0));
+        // normals should not be translated
+        fragmentNormal = mat3(camera) * mat3(modelView) * (normalVector);
         // unmodified specular
         // fragmentNormal = normalVector;
         // fragmentEye = vertexPosition;

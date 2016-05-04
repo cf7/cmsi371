@@ -3,6 +3,9 @@
 var Shape = (function () { 
 
     function Shape (gl, data) {
+        // ** maybe have a this.data that holds everything
+        // ** might be easier to assign buffers to in drawing code
+        // ** using getters and setters
         if (data) {
             this.gl = gl || {};
             this.transform = data.transform ? data.transform : new Matrix(4, 4);
@@ -11,7 +14,7 @@ var Shape = (function () {
             this.parent = {};
             this.children = [];
             this.color = data.color ? data.color : { r: 0, g: 0.75, b: 0.75, a: 1.0 };
-            this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 10, 10);
+            this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 20, 20);
             this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
             this.mode = data.mode ? data.mode : this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
@@ -25,7 +28,7 @@ var Shape = (function () {
             this.parent = {};
             this.children = [];
             this.color = { r: 0, g: 0.75, b: 0.75, a: 1.0 };
-            this.indexedVertices = this.sphere(0.5, 10, 10);
+            this.indexedVertices = this.sphere(0.5, 20, 20);
             this.arrayType = this.toRawLineArray(this.indexedVertices);
             this.mode = this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
@@ -105,7 +108,7 @@ var Shape = (function () {
         this.specularColor = { r: data.r, g: data.g, b: data.b };
     };
 
-    // ** Remember: To set transforms, need to merge them by multiplying
+    // ** Remember: when setting transforms, need to merge them by multiplying
     Shape.prototype.setTransform = function(transform) {
         this.transform = this.transform.mult(transform);
         if (this.children.length > 0) {
@@ -118,33 +121,6 @@ var Shape = (function () {
     Shape.prototype.getTransform = function() {
         return this.transform;
     };
-
-    // Shape.prototype.translateShape = function(x, y, z) {
-    //     var translateMatrix = new Matrix(4, 4).getTranslateMatrix(x, y, z);
-    //     if (this.parent && this.parent.transform) {
-    //         this.transform = translateMatrix.mult(this.parent.transform);
-    //     } else {
-    //         this.transform = translateMatrix.mult(this.transform);
-    //     }
-    // };
-
-    // Shape.prototype.scaleShape = function(x, y, z) {
-    //     var scaleMatrix = new Matrix(4, 4).getScaleMatrix(x, y, z);
-    //     if (this.parent && this.parent.transform) {
-    //         this.transform = scaleMatrix.mult(this.parent.transform);
-    //     } else {
-    //         this.transform = scaleMatrix.mult(this.transform);
-    //     }
-    // };
-
-    // Shape.prototype.rotateShape = function(angle, x, y, z) {
-    //    var rotateMatrix = new Matrix(4, 4).getRotationMatrix(angle, x, y, z);
-    //    if (this.parent && this.parent.transform) {
-    //         this.transform = rotateMatrix.mult(this.parent.transform);
-    //    } else {
-    //         this.transform = rotateMatrix.mult(this.transform);
-    //    }
-    // };
 
     Shape.prototype.setParent = function(Shape) {
         this.parent = Shape;

@@ -324,6 +324,7 @@
         }
 
         console.log(objectsToDraw);
+
         return objectsToDraw;
     }
 
@@ -595,7 +596,10 @@
             console.log("inside trapezium button checked");
             shape.setVertices(shape.trapezium(0.5));
         }
-
+        if ($("#cube-button")[0].checked) {
+            console.log("inside cube button checked");
+            shape.setVertices(shape.cube(0.5));
+        }
         shape.setDrawingStyle("triangles");
 
         save();
@@ -700,8 +704,10 @@
 
         Bugs:
 
-        1.) user controls have lag, will sway between values, will keep moving in one direction
-        instead of switching to other
+        0.) How do we draw child shapes without flattening the array?
+
+        1.) user controls have lag, will sway between values, will keep moving in one direction 
+        for a bit instead of immediately changing directions
 
         2.) rotating scaled objects distorts them
 
@@ -735,10 +741,18 @@
                     translate(0, -speed, 0);
                     break;
                 case 37: // left
-                    rotate(angleSpeed, 0, 0, 1);
+                    if (event.shiftKey) {
+                        rotate(-angleSpeed, 0, 1, 0);
+                    } else {
+                        rotate(angleSpeed, 0, 0, 1);
+                    }
                     break;
                 case 39: // right
-                    rotate(-angleSpeed, 0, 0, 1);
+                    if (event.shiftKey) {
+                        rotate(angleSpeed, 0, 1, 0);
+                    } else {
+                        rotate(-angleSpeed, 0, 0, 1);
+                    }
                     break;
                 case 38: // up
                     rotate(-angleSpeed, 1, 0, 0);
