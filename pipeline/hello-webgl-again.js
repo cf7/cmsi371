@@ -383,6 +383,7 @@
     var globalProjectionMatrix = gl.getUniformLocation(shaderProgram, "globalProjectionMatrix");
     var globalMatrix = gl.getUniformLocation(shaderProgram, "globalMatrix");
     var camera = gl.getUniformLocation(shaderProgram, "camera");
+    var cameraLocation = gl.getUniformLocation(shaderProgram, "cameraLocation");
     var modelView = gl.getUniformLocation(shaderProgram, "modelView");
 
     /*
@@ -441,6 +442,9 @@
         rotate(rotationAroundX, 1, 0, 0);
         rotate(rotationAroundY, 0, 1, 0);
         gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+
+        var locationVertex = cameraStatus.location;
+        gl.uniform3fv(cameraLocation, [ locationVertex.x(), locationVertex.y(), locationVertex.z() ]);
 
         restore();
 

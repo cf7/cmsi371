@@ -171,6 +171,7 @@
 
       uniform mat4 globalProjectionMatrix;
       uniform mat4 camera;
+      uniform vec3 cameraLocation;
       uniform mat4 modelView;
       
       /**
@@ -197,7 +198,8 @@
 
         // 4/14 19:00 - keeping light stationary
         vec4 finalVertexPosition = camera * modelView * vec4(vertexPosition, 1.0);
-        fragmentEye = finalVertexPosition.xyz;
+        vec3 worldPosition = vec3(modelView * vec4(vertexPosition, 1.0));
+        fragmentEye = cameraLocation - worldPosition;
         // ** unmodified specular lighting
         // fragmentEye = vertexPosition;
 
@@ -205,7 +207,7 @@
         // do this the other way.
         if (lightPosition.w != 0.0) {
             // Calculate the direction vector.
-            fragmentLight = lightPosition.xyz - vertexPosition;
+            fragmentLight = lightPosition.xyz - worldPosition;
         }
 
         // We now defer all color calculations to the fragment shader.
