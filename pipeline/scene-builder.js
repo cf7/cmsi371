@@ -321,6 +321,7 @@
 
             objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].normals);
+            
         }
 
         console.log(objectsToDraw);
@@ -448,41 +449,32 @@
 
         restore();
 
-        // ** only activate one of the projection matrices at a time
-
-        // Frustum rotates camera but not around cameraFocus
-        // ** (canvas.width / canvas.height) is the aspet ratio
-
-        console.log($("#first-person-button")[0].checked);
-        console.log($("#third-person-button")[0].checked);
         if ($("#first-person-button")[0].checked) {
             gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
-                -0.1 * (canvas.width / canvas.height), // change the 2's to change the projection
+                -0.1 * (canvas.width / canvas.height),
                 0.1 * (canvas.width / canvas.height),
                 -0.1,
                 0.1,              
-                0.1, // viewing volume, near plane
-                100 // viewing volume, far plane, only what's inside viewing volume can be seen
+                0.1,
+                100
             )));
         } else if ($("#third-person-button")[0].checked) {
             // Ortho rotates camera around cameraFocus
             gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
-                -2 * (canvas.width / canvas.height), // change the 2's to change the projection
+                -2 * (canvas.width / canvas.height),
                 2 * (canvas.width / canvas.height),
                 -2,
                 2,              
-                -10, // viewing volume, near plane
-                10 // viewing volume, far plane, only what's inside viewing volume can be seen
+                -10,
+                10
             )));
         }
-        // ** right now setting position relative to the camera
-        // ** but shouldn't be
+
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
         gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
         gl.uniform3fv(lightAmbient, [0.25, 0.25, 0.25]);
         gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
 
-        console.log(objectsToDraw);
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             drawObject(objectsToDraw[i]);
@@ -493,64 +485,11 @@
     };
 
     /*
-     * Animates the scene.
-     */
-    // var animationActive = false;
-    // var currentRotation = 0.0;
-    // var previousTimestamp = null;
-
-    // var advanceScene = function (timestamp) {
-    //     // Check if the user has turned things off.
-    //     if (!animationActive) {
-    //         return;
-    //     }
-
-    //     // Initialize the timestamp.
-    //     if (!previousTimestamp) {
-    //         previousTimestamp = timestamp;
-    //         window.requestAnimationFrame(advanceScene);
-    //         return;
-    //     }
-
-    //     // Check if it's time to advance.
-    //     var progress = timestamp - previousTimestamp;
-    //     if (progress < 30) {
-    //         // Do nothing if it's too soon.
-    //         window.requestAnimationFrame(advanceScene);
-    //         return;
-    //     }
-
-    //     // All clear.
-    //     currentRotation += 0.033 * progress;
-    //     drawScene();
-    //     if (currentRotation >= 360.0) {
-    //         currentRotation -= 360.0;
-    //     }
-
-    //     // Request the next frame.
-    //     previousTimestamp = timestamp;
-    //     window.requestAnimationFrame(advanceScene);
-    // };
-
-    /**
-        valid interaction features for 1st part:
-        -changing the light levels
-        -user triggered events
-        -time-lapse simulations, use advanceScene code from sample code
-        -
-        mandatory interaction feature for 2nd part:
-        -first-person navigation
-
-    */
-
-    /*
      * Performs rotation calculations.
      */
     var rotateScene = function (event) {
         rotationAroundX = xRotationStart - yDragStart + event.clientY;
-        // cameraStatus.lookAt.elements[0] = rotationAroundX;
         rotationAroundY = yRotationStart - xDragStart + event.clientX;
-        // cameraStatus.lookAt.elements[1] = rotationAroundY;
         drawScene();
     };
 
@@ -559,29 +498,17 @@
     var xRotationStart;
     var yRotationStart;
     $(canvas).mousedown(function (event) {
-
         if ($("#rotation-button")[0].checked) {
             xDragStart = event.clientX;
             yDragStart = event.clientY;
             xRotationStart = rotationAroundX;
             yRotationStart = rotationAroundY;
             $(canvas).mousemove(rotateScene);
-        } else if ($("#place-shape-button")[0].checked) {
-            var coords = getMousePos(document.getElementById("hello-webgl"), event)
-            addShape(coords.x, coords.y, false);
         }
     }).mouseup(function (event) {
         $(canvas).unbind("mousemove");
         focus();
     });
-
-    var getMousePos = function (canvas, event) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-            x: event.clientX-rect.left, // )/(rect.right-rect.left)*canvas.width,
-            y: event.clientY-rect.top//)/(rect.bottom-rect.top)*canvas.height
-        };
-    }
 
     var addShape = function (x, y, isBuildObject) {
 
@@ -590,15 +517,12 @@
 
         
         if ($("#sphere-button")[0].checked) {
-            console.log("inside sphere button checked");
             shape.setVertices(shape.sphere(0.75, 20, 20));
         }
         if ($("#cylinder-button")[0].checked) {
-            console.log("inside cylinder button checked");
             shape.setVertices(shape.cylinder(0.25, 0.5, 20));
         }
         if ($("#trapezium-button")[0].checked) {
-            console.log("inside trapezium button checked");
             shape.setVertices(shape.trapezium(0.5));
         }
         if ($("#cube-button")[0].checked) {
@@ -614,7 +538,6 @@
         restore();
 
         shape.buildObject = isBuildObject;
-        
 
         objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
 
@@ -652,6 +575,8 @@
     // ** Note: Translate doesn't work in Ortho Projection
     // because objects will just move relative to the camera
     // need to be in frustum
+
+    var originalColor = {};
 
     var findBuildObject = function () {
         var index = 0;
@@ -721,10 +646,8 @@
     /**
     
         Idea:
-            0.) Shape selection - have one index that increments
-            when shape selection on, find the objectsToDraw[i] of that index,
-            highlight or change it's color
-            can them move it around and use enter to place
+        
+            1.) highlight the buildObject
 
         Bugs:
 
@@ -886,61 +809,6 @@
                     break;
             }
             drawScene();
-            // if (event.keyCode === 87) { // w
-            //     // need to subtract the y from the Q vector because it's everything
-            //     // else's y's that are being moved! not the camera's
-            //     // can't multiply vectors!
-            //     // vector.multiply(s) takes in a scalar
-            //     cameraStatus.location = cameraStatus.location.add(directionalVector.multiply(translateSpeed));
-            //     cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
-            //     drawScene();
-            // }
-            // if (event.keyCode === 83) { // s
-            //     cameraStatus.location = cameraStatus.location.subtract(directionalVector.multiply(translateSpeed));
-            //     cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
-            //     drawScene();
-            // }
-            // if (event.keyCode === 65) { // a
-            //     cameraStatus.location = cameraStatus.location.subtract(lateralDirectional);
-            //     cameraStatus.lookAt = cameraStatus.lookAt.subtract(lateralDirectional);
-            //     drawScene();
-            // }
-            // if (event.keyCode === 68) { // d
-            //     cameraStatus.location = cameraStatus.location.add(lateralDirectional);
-            //     cameraStatus.lookAt = cameraStatus.lookAt.add(lateralDirectional);
-            //     drawScene();
-            // }
-
-            // // when rotating Q, keep it's position radial
-            // // to the camera's location
-            // if (event.keyCode === 37 || event.keyCode === 39) {
-            //     if (event.keyCode === 37) { // left
-            //         cameraStatus.XZAngle -= rotationSpeed;
-            //     }
-            //     if (event.keyCode === 39) { // right
-            //         cameraStatus.XZAngle += rotationSpeed;
-            //     }
-            //     // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            //     // console.log("cameraStatus.XZAngle before: " + cameraStatus.XZAngle * (180/Math.PI));
-            //     rotationVector = rotationVector.add(new Vector(Math.cos(cameraStatus.XZAngle), 0, Math.sin(cameraStatus.XZAngle)));
-            //     cameraStatus.lookAt = cameraStatus.location.add(rotationVector);
-            //     drawScene();
-            // }
-            // // ** YZ rotation vector stays in YZ plane even when
-            // // ** not facing direction that is parallel with it
-            // if (event.keyCode === 38 || event.keyCode === 40) {
-            //     if (event.keyCode === 38) { // up
-            //         cameraStatus.YZAngle -= rotationSpeed;
-            //     }
-            //     if (event.keyCode === 40) { // down
-            //         cameraStatus.YZAngle += rotationSpeed;
-            //     }
-            //     // console.log("YZAngle before: " + cameraStatus.YZAngle * (180/Math.PI));
-            //     // console.log("cameraStatus.YZAngle after: " + cameraStatus.YZAngle * (180/Math.PI));
-            //     var coordVector = new Vector(directionalVector.x(), directionalVector.y() + Math.sin(cameraStatus.YZAngle), directionalVector.z() + Math.cos(cameraStatus.YZAngle));
-            //     cameraStatus.lookAt = cameraStatus.location.add(coordVector);
-            //     drawScene();
-            // }
 
             $("#navigation").val("");
         }
@@ -949,13 +817,5 @@
     // Draw the initial scene.
     drawScene();
 
-    // Set up the rotation toggle: clicking on the canvas does it.
-    // $(canvas).click(function () {
-    //     animationActive = !animationActive;
-    //     if (animationActive) {
-    //         previousTimestamp = null;
-    //         window.requestAnimationFrame(advanceScene);
-    //     }
-    // });
 
 }(document.getElementById("hello-webgl")));

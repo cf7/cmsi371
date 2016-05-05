@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="hello-webgl-again.css" />
+    <link rel="stylesheet" href="scene-builder.css" />
 
   </head>
   <body>
@@ -113,7 +113,7 @@
                 Cube
               </label>
             </div>
-
+            <p><strong>Spacebar = switch between pre-existing shapes (Builder mode only)</strong></p>
           </div>
 
         </div>
@@ -190,13 +190,7 @@
 
 
         fragmentLight = lightPosition.xyz;
-        // normals should not be translated
         fragmentNormal = mat3(camera) * mat3(modelView) * (normalVector);
-        // unmodified specular
-        // fragmentNormal = normalVector;
-        // fragmentEye = vertexPosition;
-
-        // 4/14 19:00 - keeping light stationary
         vec4 finalVertexPosition = camera * modelView * vec4(vertexPosition, 1.0);
         vec3 worldPosition = vec3(modelView * vec4(vertexPosition, 1.0));
         fragmentEye = cameraLocation - worldPosition;
@@ -213,28 +207,7 @@
         // We now defer all color calculations to the fragment shader.
         fragmentDiffuseColor = vertexDiffuseColor;
         fragmentSpecularColor = vertexSpecularColor;
-
-        // stationary specular lighting
         gl_Position = globalProjectionMatrix * finalVertexPosition;
-
-        // unmodifed specular
-        // gl_Position = globalProjectionMatrix * camera * modelView * vec4(vertexPosition, 1.0);
-
-        
-        // diffuse without specular
-        // finalVertexColor = vec4(finalDiffuse.rgb, 1.0);
-
-        // ambient light: 4/12 49:00
-        // finalVertexColor = vec4(finalDiffuse.rgb + lightAmbient.rgb, 1.0);
-
-        // specular light: 4/12 1:10:00 or 4/14
-        // reflection vector, Math of Space pdf
-
-        // multiple light sources: 4/12 52:00
-
-        // unmodified color
-        // finalVertexColor = vec4(vertexColor, 1.0);
-
       }
     </script>
 
@@ -289,6 +262,6 @@
     </script>
 
     <!-- This script sets up the specific scene for this page. -->
-    <script src="./hello-webgl-again.js"></script>
+    <script src="./scene-builder.js"></script>
   </body>
 </html>
