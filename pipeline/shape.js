@@ -9,31 +9,29 @@ var Shape = (function () {
         if (data) {
             this.gl = gl || {};
             this.transform = data.transform ? data.transform : new Matrix(4, 4);
-            this.vertices = data.vertices ? data.vertices : [];
-            this.indices = data.indices ? data.indices : [];
             this.parent = {};
             this.children = [];
-            this.color = data.color ? data.color : { r: 0, g: 0.75, b: 0.75, a: 1.0 };
+            this.color = data.color ? data.color : { r: 0, g: 0.75, b: 0.75 };
             this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 20, 20);
-            this.arrayType = data.arrayType ? data.arrayType : this.toRawLineArray(this.indexedVertices);
+            this.vertices = data.vertices ? data.vertices : this.toRawLineArray(this.indexedVertices);
             this.mode = data.mode ? data.mode : this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
             this.buildObject = data.buildObject ? data.buildObject : false;
-            this.specularColor = data.specularColor ? data.specularColor : { r: 1.0, g: 1.0, b: 1.0 }
+            this.specularColor = data.specularColor ? data.specularColor : { r: 1.0, g: 1.0, b: 1.0 };
+            this.shininess = 10;
         } else {
             this.gl = gl || {};
             this.transform = new Matrix(4, 4);
-            this.vertices = data ? data.vertices : [];
-            this.indices = data ? data.indices : [];
             this.parent = {};
             this.children = [];
-            this.color = { r: 0, g: 0.75, b: 0.75, a: 1.0 };
+            this.color = { r: 0, g: 0.75, b: 0.75  };
             this.indexedVertices = this.sphere(0.5, 20, 20);
-            this.arrayType = this.toRawLineArray(this.indexedVertices);
+            this.vertices = this.toRawLineArray(this.indexedVertices);
             this.mode = this.gl.LINES;
             this.normals = this.toNormalArray(this.indexedVertices);
             this.buildObject = false;
             this.specularColor = { r: 1.0, g: 1.0, b: 1.0 };
+            this.shininess = 10;
         }
     }
 
@@ -44,14 +42,14 @@ var Shape = (function () {
 
     Shape.prototype.setDrawingStyle = function(name) {
         if (name === "lines") {
-            this.arrayType = this.toRawLineArray(this.indexedVertices);
+            this.vertices = this.toRawLineArray(this.indexedVertices);
             this.mode = this.gl.LINES;
         } else if (name === "triangles") {
-            this.arrayType = this.toRawTriangleArray(this.indexedVertices);
+            this.vertices = this.toRawTriangleArray(this.indexedVertices);
             this.mode = this.gl.TRIANGLES;
         } else {
-           this.arrayType = this.toRawLineArray(this.indexedVertices);
-           this.mode = this.gl.LINES;
+            this.vertices = this.toRawLineArray(this.indexedVertices);
+            this.mode = this.gl.LINES;
         }
     };
 

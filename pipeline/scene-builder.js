@@ -257,33 +257,51 @@
     // Build the objects to display.
     var shapes = [];
         
-    shapes.push(shape);
-    shapes.push(shape2);
-    shapes.push(shape3);
-    shapes.push(shape4);
-    shapes.push(shape5);
-    shapes.push(shape6);
+    // shapes.push(shape);
+    // shapes.push(shape2);
+    // shapes.push(shape3);
+    // shapes.push(shape4);
+    // shapes.push(shape5);
+    // shapes.push(shape6);
 
     var objectsToDraw = [];
 
-    var draw = function (shapes) {
-        for (var i = 0; i < shapes.length; i++) {
-            console.log("draw function");
-            console.log(shapes[i].getData());
-            objectsToDraw.push(shapes[i].getData());
-            if (shapes[i].getChildren().length > 0) {
-                draw(shapes[i].getChildren());
-            }
-        }
-    }
+    objectsToDraw.push(shape);
+    objectsToDraw.push(shape2);
+    objectsToDraw.push(shape3);
+    objectsToDraw.push(shape4);
+    objectsToDraw.push(shape5);
+    objectsToDraw.push(shape6);
 
-    draw(shapes);
+    // var draw = function (shapes) {
+    //     for (var i = 0; i < shapes.length; i++) {
+    //         console.log("draw function");
+    //         console.log(shapes[i].getData());
+    //         objectsToDraw.push(shapes[i].getData());
+    //         if (shapes[i].getChildren().length > 0) {
+    //             draw(shapes[i].getChildren());
+    //         }
+    //     }
+    // }
+
+    // draw(shapes);
+
+
+
+    // ** found the bug for recursive propogation!
+    // ** vertices is actually empty in shape's constructor, so buffers never get assigned
+    // ** need to fill with .indexedVertices.vertices
+
+    // ** need to fix constructor and setVertices functions and this.arrayType
 
     var prepObjects = function (objectsToDraw) {
         console.log("inside prepObjects");
         console.log(objectsToDraw.length);
         // Pass the vertices to WebGL.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
+
+            objectsToDraw[i].vertices = objectsToDraw[i].toRawTriangleArray(objectsToDraw[i].indexedVertices);
+
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
 
@@ -395,7 +413,6 @@
         // diffuse without specular
         // gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         // gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
-
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexDiffuseColor, 3, gl.FLOAT, false, 0, 0);
 
