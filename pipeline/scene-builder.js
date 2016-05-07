@@ -43,8 +43,6 @@
     }   
 
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
-        // console.log("frustum");
-        // console.log(glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements));
         return new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).glFormat();
     }
 
