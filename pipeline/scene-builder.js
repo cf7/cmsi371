@@ -52,28 +52,6 @@
         return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).glFormat();
     }
 
-    var getTranslationMatrix = function (x, y, z) {
-        var data = { tx: x, ty: y, tz: z };
-        return new Matrix(4, 4).getTranslateMatrix(4, 4, data);
-    }
-
-    var getScaleMatrix = function (x, y, z) {
-        var data = { sx: x, sy: y, sz: z };
-        // console.log(glFormat(new Matrix(4, 4).getScaleMatrix(4, 4, data).elements));
-        return new Matrix(4, 4).getScaleMatrix(4, 4, data);
-    }
-
-    var getRotationMatrix = function (angle, x, y, z) {
-        var data = { angle: angle, rx: x, ry: y, rz: z };
-        // console.log("data: " + data.rz);
-        // console.log(glFormat(new Matrix(4, 4).getRotationMatrix(4, 4, data).elements));
-        if (!x && !y && !z) {
-            return new Matrix(4, 4);
-        } else {
-            return new Matrix(4, 4).getRotationMatrix(4, 4, data);
-        }
-    }
-
     var getCameraMatrix = function () {
         console.log(cameraStatus);
         return new Matrix(4, 4).getCameraMatrix(cameraStatus.location, cameraStatus.lookAt, cameraStatus.up);
@@ -84,16 +62,23 @@
     }
 
     var translate = function (x, y, z) {
-        context.currentTransform = getTranslationMatrix(x, y, z).mult(context.currentTransform);
+        var data = { tx: x, ty: y, tz: z };
+        context.currentTransform = new Matrix(4, 4).getTranslateMatrix(4, 4, data).mult(context.currentTransform);
     }
 
     var scale = function (x, y, z) {
-        context.currentTransform = getScaleMatrix(x, y, z).mult(context.currentTransform);
+        var data = { sx: x, sy: y, sz: z };
+        context.currentTransform = new Matrix(4, 4).getScaleMatrix(4, 4, data).mult(context.currentTransform);
     }
 
     // ** angle converted to radians in matrix.js
     var rotate = function (angle, x, y, z) {
-        context.currentTransform = getRotationMatrix(angle, x, y, z).mult(context.currentTransform);
+        var data = { angle: angle, rx: x, ry: y, rz: z };
+        if (!x && !y && !z) {
+            context.currentTransform = new Matrix(4, 4).mult(context.currentTransform);
+        } else {
+            context.currentTransform = new Matrix(4, 4).getRotationMatrix(4, 4, data).mult(context.currentTransform);
+        }
     }
 
 
