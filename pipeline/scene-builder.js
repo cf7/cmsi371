@@ -208,7 +208,7 @@
     setAllTriangles(shape4.getChildren());
 
     save();
-    translate(1, 0, -1);
+    translate(2, 0, -2);
     scale(1.5, 1.5, 1.5);
     shape4.setTransform(context.currentTransform);
     restore();
@@ -239,7 +239,7 @@
 
     save();
     scale(1.5, 1.5, 1.5);
-    translate(-1, 0, 0);
+    translate(-2, 0, 0);
     shape5.setTransform(context.currentTransform);
     restore();
 
@@ -249,7 +249,7 @@
     shape6.setDrawingStyle("triangles");
 
     save();
-    translate(-1, 0, 1);
+    translate(-2, 0, 2);
     shape6.setTransform(context.currentTransform);
     restore();
     // shape6.translateShape(-1, 0, 1);
