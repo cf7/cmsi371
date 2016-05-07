@@ -9,7 +9,7 @@
     // interactivity: 4/21
 
     var glFormat = function (matrix) {
-        return [
+        return new Float32Array([
             matrix[0][0],
             matrix[1][0],
             matrix[2][0],
@@ -29,7 +29,7 @@
             matrix[1][3],
             matrix[2][3],
             matrix[3][3]
-        ];
+        ]);
     }
 
     var transformationMatrix = new Matrix(4, 4);
@@ -158,16 +158,16 @@
     // ** such that the shape's transforms are changed by the currentTransform
     // ** (and their child shapes' transforms as well)
 
-    var shape = new Shape(gl);
-    shape.setColor({ r: 0.0, g: 0.5, b: 0.0 });
-    shape.setVertices(shape.cone(20));
-    shape.setDrawingStyle("triangles");
+    // var shape = new Shape(gl);
+    // shape.setColor({ r: 0.0, g: 0.5, b: 0.0 });
+    // shape.setVertices(shape.cone(20));
+    // shape.setDrawingStyle("triangles");
     // shape.translateShape(1, 1.5, 1);
 
-    save();
-    translate(1, 1.5, 1);
-    shape.setTransform(context.currentTransform);
-    restore();
+    // save();
+    // translate(1, 1.5, 1);
+    // shape.setTransform(context.currentTransform);
+    // restore();
 
     var shape2 = new Shape(gl);
     shape2.setVertices({ vertices: vertices, indices: indices });
@@ -266,7 +266,7 @@
 
     var objectsToDraw = [];
 
-    objectsToDraw.push(shape);
+    // objectsToDraw.push(shape);
     objectsToDraw.push(shape2);
     objectsToDraw.push(shape3);
     objectsToDraw.push(shape4);
@@ -427,7 +427,7 @@
             context.currentTransform = object.transform.mult(context.currentTransform);
         }
 
-        gl.uniformMatrix4fv(modelView, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+        gl.uniformMatrix4fv(modelView, gl.FALSE, glFormat(context.currentTransform.elements));
 
         restore();
 
@@ -465,7 +465,7 @@
         cameraTransform();
         rotate(rotationAroundX, 1, 0, 0);
         rotate(rotationAroundY, 0, 1, 0);
-        gl.uniformMatrix4fv(camera, gl.FALSE, new Float32Array(glFormat(context.currentTransform.elements)));
+        gl.uniformMatrix4fv(camera, gl.FALSE, glFormat(context.currentTransform.elements));
 
         var locationVertex = cameraStatus.location;
         gl.uniform3fv(cameraLocation, [ locationVertex.x(), locationVertex.y(), locationVertex.z() ]);
@@ -562,7 +562,7 @@
 
         shape.buildObject = isBuildObject;
 
-        // objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
+        objectsToDraw = objectsToDraw.concat(prepObjects(shape));
 
         drawScene();
 
