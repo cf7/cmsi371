@@ -339,7 +339,9 @@
 
             objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].normals);
-            
+            if (objectsToDraw[i].children.length > 0) {
+                prepObjects(objectsToDraw[i].children);
+            }
         }
 
         console.log(objectsToDraw);
@@ -440,6 +442,12 @@
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
+
+        if (object.children.length > 0) {
+            for (var i = 0; i < object.children.length; i++) {
+                drawObject(object.children[i]);
+            }
+        }
     };
 
     /*
@@ -556,7 +564,7 @@
 
         shape.buildObject = isBuildObject;
 
-        objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
+        // objectsToDraw = objectsToDraw.concat(prepObjects([shape.getData()]));
 
         drawScene();
 

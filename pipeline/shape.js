@@ -13,8 +13,8 @@ var Shape = (function () {
             this.children = [];
             this.color = data.color ? data.color : { r: 0, g: 0.75, b: 0.75 };
             this.indexedVertices = data.indexedVertices ? data.indexedVertices : this.sphere(0.5, 20, 20);
-            this.vertices = data.vertices ? data.vertices : this.toRawLineArray(this.indexedVertices);
-            this.mode = data.mode ? data.mode : this.gl.LINES;
+            this.vertices = data.vertices ? data.vertices : this.toRawTriangleArray(this.indexedVertices);
+            this.mode = data.mode ? data.mode : this.gl.TRIANGLES;
             this.normals = this.toNormalArray(this.indexedVertices);
             this.buildObject = data.buildObject ? data.buildObject : false;
             this.specularColor = data.specularColor ? data.specularColor : { r: 1.0, g: 1.0, b: 1.0 };
@@ -26,8 +26,8 @@ var Shape = (function () {
             this.children = [];
             this.color = { r: 0, g: 0.75, b: 0.75  };
             this.indexedVertices = this.sphere(0.5, 20, 20);
-            this.vertices = this.toRawLineArray(this.indexedVertices);
-            this.mode = this.gl.LINES;
+            this.vertices = this.toRawTriangleArray(this.indexedVertices);
+            this.mode = this.gl.TRIANGLES;
             this.normals = this.toNormalArray(this.indexedVertices);
             this.buildObject = false;
             this.specularColor = { r: 1.0, g: 1.0, b: 1.0 };
@@ -57,38 +57,38 @@ var Shape = (function () {
         return { arrayType: this.arrayType, mode: this.mode };
     };
 
-    Shape.prototype.getData = function() {
-        // when drawing lines, lines array comes out twice as long as normals
-        // array, need to make normals array same size as lines array
+    // Shape.prototype.getData = function() {
+    //     // when drawing lines, lines array comes out twice as long as normals
+    //     // array, need to make normals array same size as lines array
 
-        if (this.mode === this.gl.LINES) {
-            return {
-                shape: this,
-                color: this.color,
-                specularColor: this.specularColor,
-                shininess: 10,
-                vertices: this.arrayType,
-                mode: this.mode,
-                transform: this.transform,
-                normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices)),
-                chilren: this.children,
-                buildObject: this.buildObject
-            }
-        } else {
-            return {
-                shape: this,
-                color: this.color,
-                specularColor: this.specularColor,
-                shininess: 10,
-                vertices: this.arrayType,
-                mode: this.mode,
-                transform: this.transform,
-                normals: this.toNormalArray(this.indexedVertices),
-                children: this.children,
-                buildObject: this.buildObject
-            }
-        }
-    };
+    //     if (this.mode === this.gl.LINES) {
+    //         return {
+    //             shape: this,
+    //             color: this.color,
+    //             specularColor: this.specularColor,
+    //             shininess: 10,
+    //             vertices: this.arrayType,
+    //             mode: this.mode,
+    //             transform: this.transform,
+    //             normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices)),
+    //             chilren: this.children,
+    //             buildObject: this.buildObject
+    //         }
+    //     } else {
+    //         return {
+    //             shape: this,
+    //             color: this.color,
+    //             specularColor: this.specularColor,
+    //             shininess: 10,
+    //             vertices: this.arrayType,
+    //             mode: this.mode,
+    //             transform: this.transform,
+    //             normals: this.toNormalArray(this.indexedVertices),
+    //             children: this.children,
+    //             buildObject: this.buildObject
+    //         }
+    //     }
+    // };
 
     Shape.prototype.setNormals = function(type) {
         if (this.mode === this.gl.LINES) {
