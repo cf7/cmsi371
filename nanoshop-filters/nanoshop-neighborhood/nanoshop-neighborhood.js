@@ -144,15 +144,13 @@ var NanoshopNeighborhood = {
             rgbaNeighborhood[4].a
         ];
         
-        for (var index = 0; index < 9; index++) {
-            red = rgbaNeighborhood[index].r;
-            green = rgbaNeighborhood[index].g;
-            blue = rgbaNeighborhood[index].b;
-            alpha = rgbaNeighborhood[index].a;
-            if (index === 0) {
-                color = [ red*2, green*2, blue, alpha ];
-            }
-        }
+        red = rgbaNeighborhood[0].r;
+        green = rgbaNeighborhood[0].g;
+        blue = rgbaNeighborhood[0].b;
+        alpha = rgbaNeighborhood[0].a;
+
+        color = [ red*2, green*2, blue, alpha ];
+
         return color;
     },
 

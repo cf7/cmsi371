@@ -196,10 +196,10 @@ $(function () {
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
                 // NanoshopNeighborhood.darkener
                 // NanoshopNeighborhood.averager // Convenience comment for easy switching.
-                NanoshopNeighborhood.outline
+                //NanoshopNeighborhood.outline
                 // NanoshopNeighborhood.crystal
                 // NanoshopNeighborhood.illuminated
-                // NanoshopNeighborhood.sunlight
+                NanoshopNeighborhood.sunlight
             ),
             0, 0
         );
