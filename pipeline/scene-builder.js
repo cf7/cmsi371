@@ -300,8 +300,6 @@
         // Pass the vertices to WebGL.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
 
-            objectsToDraw[i].vertices = objectsToDraw[i].toRawTriangleArray(objectsToDraw[i].indexedVertices);
-
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].vertices);
 
