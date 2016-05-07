@@ -53,43 +53,6 @@ var Shape = (function () {
         }
     };
 
-    Shape.prototype.getDrawingStyle = function() {
-        return { arrayType: this.arrayType, mode: this.mode };
-    };
-
-    // Shape.prototype.getData = function() {
-    //     // when drawing lines, lines array comes out twice as long as normals
-    //     // array, need to make normals array same size as lines array
-
-    //     if (this.mode === this.gl.LINES) {
-    //         return {
-    //             shape: this,
-    //             color: this.color,
-    //             specularColor: this.specularColor,
-    //             shininess: 10,
-    //             vertices: this.arrayType,
-    //             mode: this.mode,
-    //             transform: this.transform,
-    //             normals: this.toVertexNormalArray(this.indexedVertices).concat(this.toVertexNormalArray(this.indexedVertices)),
-    //             chilren: this.children,
-    //             buildObject: this.buildObject
-    //         }
-    //     } else {
-    //         return {
-    //             shape: this,
-    //             color: this.color,
-    //             specularColor: this.specularColor,
-    //             shininess: 10,
-    //             vertices: this.arrayType,
-    //             mode: this.mode,
-    //             transform: this.transform,
-    //             normals: this.toNormalArray(this.indexedVertices),
-    //             children: this.children,
-    //             buildObject: this.buildObject
-    //         }
-    //     }
-    // };
-
     Shape.prototype.setNormals = function(type) {
         if (this.mode === this.gl.LINES) {
             
