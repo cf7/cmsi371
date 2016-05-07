@@ -355,6 +355,29 @@ var Matrix = (function () {
         return this;     
     };
 
+    Matrix.prototype.glFormat = function() {
+        return new Float32Array([
+            this.elements[0][0],
+            this.elements[1][0],
+            this.elements[2][0],
+            this.elements[3][0],
+
+            this.elements[0][1],
+            this.elements[1][1],
+            this.elements[2][1],
+            this.elements[3][1],
+
+            this.elements[0][2],
+            this.elements[1][2],
+            this.elements[2][2],
+            this.elements[3][2],
+
+            this.elements[0][3],
+            this.elements[1][3],
+            this.elements[2][3],
+            this.elements[3][3]
+        ]);
+    };
     return Matrix;
 
 })();

@@ -8,30 +8,6 @@
 
     // interactivity: 4/21
 
-    var glFormat = function (matrix) {
-        return new Float32Array([
-            matrix[0][0],
-            matrix[1][0],
-            matrix[2][0],
-            matrix[3][0],
-
-            matrix[0][1],
-            matrix[1][1],
-            matrix[2][1],
-            matrix[3][1],
-
-            matrix[0][2],
-            matrix[1][2],
-            matrix[2][2],
-            matrix[3][2],
-
-            matrix[0][3],
-            matrix[1][3],
-            matrix[2][3],
-            matrix[3][3]
-        ]);
-    }
-
     var transformationMatrix = new Matrix(4, 4);
     var savedMatrices = [];
 
@@ -69,11 +45,11 @@
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
         // console.log("frustum");
         // console.log(glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements));
-        return glFormat(new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).elements);
+        return new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).glFormat();
     }
 
     var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
-        return glFormat(new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).elements);
+        return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).glFormat();
     }
 
     var getTranslationMatrix = function (x, y, z) {
@@ -427,7 +403,7 @@
             context.currentTransform = object.transform.mult(context.currentTransform);
         }
 
-        gl.uniformMatrix4fv(modelView, gl.FALSE, glFormat(context.currentTransform.elements));
+        gl.uniformMatrix4fv(modelView, gl.FALSE, context.currentTransform.glFormat());
 
         restore();
 
@@ -465,7 +441,7 @@
         cameraTransform();
         rotate(rotationAroundX, 1, 0, 0);
         rotate(rotationAroundY, 0, 1, 0);
-        gl.uniformMatrix4fv(camera, gl.FALSE, glFormat(context.currentTransform.elements));
+        gl.uniformMatrix4fv(camera, gl.FALSE, context.currentTransform.glFormat());
 
         var locationVertex = cameraStatus.location;
         gl.uniform3fv(cameraLocation, [ locationVertex.x(), locationVertex.y(), locationVertex.z() ]);
@@ -473,24 +449,24 @@
         restore();
 
         if ($("#first-person-button")[0].checked) {
-            gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getFrustumMatrix(
+            gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, getFrustumMatrix(
                 -0.1 * (canvas.width / canvas.height),
                 0.1 * (canvas.width / canvas.height),
                 -0.1,
                 0.1,              
                 0.1,
                 100
-            )));
+            ));
         } else if ($("#third-person-button")[0].checked) {
             // Ortho rotates camera around cameraFocus
-            gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, new Float32Array(getOrthoMatrix(
+            gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, getOrthoMatrix(
                 -2 * (canvas.width / canvas.height),
                 2 * (canvas.width / canvas.height),
                 -2,
                 2,              
                 -10,
                 10
-            )));
+            ));
         }
 
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);
