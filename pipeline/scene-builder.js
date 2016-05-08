@@ -156,6 +156,7 @@
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
+
     var setAllTriangles = function (shapes) {
         for (child of shapes) {
         child.setDrawingStyle("triangles");
@@ -521,7 +522,7 @@
 
         shape.buildObject = isBuildObject;
 
-        objectsToDraw = objectsToDraw.concat(prepObjects(shape));
+        objectsToDraw = objectsToDraw.concat(prepObjects([shape]));
 
         drawScene();
 
@@ -559,6 +560,8 @@
     // need to be in frustum
 
     var originalColor = {};
+    var index = 0;
+    var shapeIndex = 0;
 
     var findBuildObject = function () {
         var index = 0;
@@ -600,8 +603,6 @@
 
     });
 
-    var index = 0;
-    var shapeIndex = 0;
     var speed = 0.25;
     var angleSpeed = 10;
     var currentScale = 1.0;
@@ -696,15 +697,15 @@
                     scale(1.0 - speed, 1.0 - speed, 1.0 - speed);
                     break;
                 case 88: // x
-                    var spd = event.ctrlKey ? -speed : speed;
+                    var spd = event.shiftKey ? -speed : speed;
                     scale(1.0 + spd, 1.0, 1.0);
                     break;
                 case 89: // y
-                    var spd = event.ctrlKey ? -speed : speed;
+                    var spd = event.shiftKey ? -speed : speed;
                     scale(1.0, 1.0 + spd, 1.0);
                     break;
                 case 90: // z
-                    var spd = event.ctrlKey ? -speed : speed;
+                    var spd = event.shiftKey ? -speed : speed;
                     scale(1.0, 1.0, 1.0 + spd);
                     break;
                 case 13: // enter
@@ -717,7 +718,7 @@
                 default:
                     break;
             }
-            objectsToDraw[index].transform = objectsToDraw[index].transform.mult(context.currentTransform);
+            objectsToDraw[index].setTransform(context.currentTransform);
             restore();
             drawScene();
             $("#navigation").val("");
@@ -729,7 +730,6 @@
             var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
             var lateralDirectional = directionalVector.cross(cameraStatus.up);
             var rotationVector = new Vector (directionalVector.x(), directionalVector.y(), directionalVector.z());
-
 
             // ** hardcoding adjustment for rotation when camera starts
             // ** out facing (0, 0, -1), otherwise, camera rotation will
@@ -743,15 +743,8 @@
                 cameraStatus.beginRotatingVertical = true;
             }
 
-           
-            // if it is a keydown event, then the actual keyCode is used
-            // if it is a keypress event, then 32 is added to each key
             switch (event.keyCode) {
                 case 87:
-                    // need to subtract the y from the Q vector because it's everything
-                    // else's y's that are being moved! not the camera's
-                    // can't multiply vectors!
-                    // vector.multiply(s) takes in a scalar
                     cameraStatus.location = cameraStatus.location.add(directionalVector.multiply(translateSpeed));
                     cameraStatus.lookAt = cameraStatus.lookAt.add(directionalVector);
                     break;
