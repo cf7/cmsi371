@@ -43,11 +43,11 @@
     }   
 
     var getFrustumMatrix = function (left, right, bottom, top, zNear, zFar) {
-        return new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar).glFormat();
+        return new Matrix(4, 4).getFrustumMatrix(left, right, bottom, top, zNear, zFar);
     }
 
     var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
-        return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar).glFormat();
+        return new Matrix(4, 4).getOrthoMatrix(left, right, bottom, top, zNear, zFar);
     }
 
     var getCameraMatrix = function () {
@@ -157,15 +157,9 @@
     shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
 
-    var setAllTriangles = function (shapes) {
-        for (child of shapes) {
-        child.setDrawingStyle("triangles");
-            if (child.getChildren().length > 0) {
-                setAllTriangles(child.getChildren());
-            }
-        }
-    }
-    setAllTriangles(shape4.getChildren());
+    shape4.getChildren()[0].setDrawingStyle("triangles");
+    shape4.getChildren()[1].setDrawingStyle("triangles");
+    shape4.getChildren()[0].getChildren()[0].setVertices(shape4.cube(0.25));
 
     save();
     translate(2, 0, -2);
@@ -181,14 +175,9 @@
     shape4.getChildren()[0].setTransform(context.currentTransform);
     restore();
     save();
-    translate(0, 0, 1.5);
+    translate(0, 0, 0.5);
     shape4.getChildren()[0].getChildren()[0].setTransform(context.currentTransform);
     restore();
-    // shape4.getChildren()[0].translateShape(0.15, 0.15, 0);
-    // shape4.getChildren()[1].translateShape(0.25, 0.25, 0);
-    // shape4.getChildren()[0].getChildren()[0].translateShape(0, 1, 0);
-    // shape4.getChildren()[0].getChildren()[0].rotateShape(30, 1, 1, 0);
-    // shape4.getChildren()[0].getChildren()[0].scaleShape(0.5, 0.5, 0.5);
 
 
     var shape5 = new Shape(gl);
@@ -212,47 +201,16 @@
     translate(-2, 0, 2);
     shape6.setTransform(context.currentTransform);
     restore();
-    // shape6.translateShape(-1, 0, 1);
 
     // Build the objects to display.
-    var shapes = [];
-        
-    // shapes.push(shape);
-    // shapes.push(shape2);
-    // shapes.push(shape3);
-    // shapes.push(shape4);
-    // shapes.push(shape5);
-    // shapes.push(shape6);
-
     var objectsToDraw = [];
 
-    // objectsToDraw.push(shape);
     objectsToDraw.push(shape2);
     objectsToDraw.push(shape3);
     objectsToDraw.push(shape4);
     objectsToDraw.push(shape5);
     objectsToDraw.push(shape6);
 
-    // var draw = function (shapes) {
-    //     for (var i = 0; i < shapes.length; i++) {
-    //         console.log("draw function");
-    //         console.log(shapes[i].getData());
-    //         objectsToDraw.push(shapes[i].getData());
-    //         if (shapes[i].getChildren().length > 0) {
-    //             draw(shapes[i].getChildren());
-    //         }
-    //     }
-    // }
-
-    // draw(shapes);
-
-
-
-    // ** found the bug for recursive propogation!
-    // ** vertices is actually empty in shape's constructor, so buffers never get assigned
-    // ** need to fill with .indexedVertices.vertices
-
-    // ** need to fix constructor and setVertices functions and this.arrayType
 
     var prepObjects = function (objectsToDraw) {
         console.log("inside prepObjects");
@@ -440,7 +398,7 @@
                 0.1,              
                 0.1,
                 100
-            ));
+            ).glFormat());
         } else if ($("#third-person-button")[0].checked) {
             // Ortho rotates camera around cameraFocus
             gl.uniformMatrix4fv(globalProjectionMatrix, gl.FALSE, getOrthoMatrix(
@@ -450,7 +408,7 @@
                 2,              
                 -10,
                 10
-            ));
+            ).glFormat());
         }
 
         gl.uniform4fv(lightPosition, [0.0, 0.0, 2.0, 0.5]);

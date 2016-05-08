@@ -317,4 +317,27 @@ $(function () {
 
     });
 
+    test("conversion to GLFormat", function () {
+        var matrix = new Matrix(4, 4);
+
+        equal(matrix.elements[0][0], 1, "Row 0 col 0");
+        equal(matrix.elements[1][0], 0, "Row 1 col 0");
+        equal(matrix.elements[2][0], 0, "Row 2 col 0");
+        equal(matrix.elements[3][0], 0, "Row 3 col 0");
+
+        equal(matrix.elements[0][1], 0, "Row 0 col 1");
+        equal(matrix.elements[1][1], 1, "Row 1 col 1");
+        equal(matrix.elements[2][1], 0, "Row 2 col 1");
+        equal(matrix.elements[3][1], 0, "Row 3 col 1");
+
+        equal(matrix.elements[0][2], 0, "Row 0 col 2");
+        equal(matrix.elements[1][2], 0, "Row 1 col 2");
+        equal(matrix.elements[2][2], 1, "Row 2 col 2");
+        equal(matrix.elements[3][2], 0, "Row 3 col 2");
+
+        equal(matrix.elements[0][3], 0, "Row 0 col 3");
+        equal(matrix.elements[1][3], 0, "Row 1 col 3");
+        equal(matrix.elements[2][3], 0, "Row 2 col 3");
+        equal(matrix.elements[3][3], 1, "Row 3 col 3");    
+    });
 });

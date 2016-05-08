@@ -16,6 +16,7 @@ var Shape = (function () {
             this.vertices = data.vertices ? data.vertices : this.toRawTriangleArray(this.indexedVertices);
             this.mode = data.mode ? data.mode : this.gl.TRIANGLES;
             this.normals = this.toNormalArray(this.indexedVertices);
+            this.vertexNormals = false;
             this.buildObject = data.buildObject ? data.buildObject : false;
             this.specularColor = data.specularColor ? data.specularColor : { r: 1.0, g: 1.0, b: 1.0 };
             this.shininess = 10;
@@ -29,6 +30,7 @@ var Shape = (function () {
             this.vertices = this.toRawTriangleArray(this.indexedVertices);
             this.mode = this.gl.TRIANGLES;
             this.normals = this.toNormalArray(this.indexedVertices);
+            this.vertexNormals = false;
             this.buildObject = false;
             this.specularColor = { r: 1.0, g: 1.0, b: 1.0 };
             this.shininess = 10;
@@ -37,13 +39,18 @@ var Shape = (function () {
 
     Shape.prototype.setVertices = function(data) {
         this.indexedVertices = { vertices: data.vertices, indices: data.indices };
-        this.setDrawingStyle("lines");
+        this.setDrawingStyle("triangles");
     };
 
     Shape.prototype.setDrawingStyle = function(name) {
         if (name === "lines") {
             this.vertices = this.toRawLineArray(this.indexedVertices);
             this.mode = this.gl.LINES;
+            if (this.vertexNormals) {
+                this.normals = this.normals.concat(this.toVertexNormalArray(this.indexedVertices));
+            } else {
+                this.normals = this.normals.concat(this.toNormalArray(this.indexedVertices));
+            }
         } else if (name === "triangles") {
             this.vertices = this.toRawTriangleArray(this.indexedVertices);
             this.mode = this.gl.TRIANGLES;
@@ -53,14 +60,6 @@ var Shape = (function () {
         }
     };
 
-    Shape.prototype.setNormals = function(type) {
-        if (this.mode === this.gl.LINES) {
-            
-        } else {
-
-        }
-    };
-    
     Shape.prototype.setColor = function(data) {
         this.color = { r: data.r, g: data.g, b: data.b };
     };
@@ -93,6 +92,8 @@ var Shape = (function () {
 
     Shape.prototype.addChild = function (Shape) {
         Shape.setParent(this);
+        Shape.setTransform(this.transform);
+        Shape.mode = this.mode;
         this.children.push(Shape);
     }
 
