@@ -51,7 +51,6 @@
     }
 
     var getCameraMatrix = function () {
-        console.log(cameraStatus);
         return new Matrix(4, 4).getCameraMatrix(cameraStatus.location, cameraStatus.lookAt, cameraStatus.up);
     }
 
@@ -152,13 +151,14 @@
     shape4.setTransform(context.currentTransform);
     restore();
 
-    // ** 4/19 21:00 child shapes
-
     save();
     translate(0.5, 0.5, 0.5);
     scale(0.75, 0.75, 0.75);
     shape4.getChildren()[0].setTransform(context.currentTransform);
     restore();
+    // ** bug: this also scales down any translations that follow
+    // ** this child will only be translated at 0.75 times that of the parent's speed
+    // ** (didn't have time to fix)
 
     save();
     translate(0, 0, 1.5);
@@ -189,6 +189,15 @@
     shape6.setTransform(context.currentTransform);
     restore();
 
+    var shape7 = new Shape(gl);
+    shape7.setColor({ r: 0.0, g: 0.75, b: 0.75 });
+    shape7.setVertices(shape7.circle(1, 0, 20));
+
+    save();
+    translate(0, -0.5, 1);
+    shape7.setTransform(context.currentTransform);
+    restore();
+
     // Build the objects to display.
     var objectsToDraw = [];
 
@@ -197,11 +206,9 @@
     objectsToDraw.push(shape4);
     objectsToDraw.push(shape5);
     objectsToDraw.push(shape6);
-
+    objectsToDraw.push(shape7);
 
     var prepObjects = function (objectsToDraw) {
-        console.log("inside prepObjects");
-        console.log(objectsToDraw.length);
         // Pass the vertices to WebGL.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
 
@@ -242,12 +249,12 @@
 
             objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].normals);
+
             if (objectsToDraw[i].children.length > 0) {
                 prepObjects(objectsToDraw[i].children);
             }
-        }
 
-        console.log(objectsToDraw);
+        }
 
         return objectsToDraw;
     }
@@ -287,9 +294,6 @@
     // Hold on to the important variables within the shaders.
     var vertexPosition = gl.getAttribLocation(shaderProgram, "vertexPosition");
     gl.enableVertexAttribArray(vertexPosition);
-    // diffuse without specular
-    // var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
-    // gl.enableVertexAttribArray(vertexColor);
     var vertexDiffuseColor = gl.getAttribLocation(shaderProgram, "vertexDiffuseColor");
     gl.enableVertexAttribArray(vertexDiffuseColor);
     var vertexSpecularColor = gl.getAttribLocation(shaderProgram, "vertexSpecularColor");
@@ -315,9 +319,7 @@
      */
     var drawObject = function (object) {
         // Set the varying colors.
-        // diffuse without specular
-        // gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
-        // gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexDiffuseColor, 3, gl.FLOAT, false, 0, 0);
 
@@ -453,7 +455,6 @@
             shape.setVertices(shape.trapezium(0.5));
         }
         if ($("#cube-button")[0].checked) {
-            console.log("inside cube button checked");
             shape.setVertices(shape.cube(0.5));
         }
         shape.setDrawingStyle("triangles");
@@ -471,53 +472,9 @@
         return shape;
     }
 
-    // up: 38
-    // down: 40
-    // left: 37
-    // right: 39
-    // W: 87
-    // A: 65
-    // S: 83
-    // D: 68
-    // Q: 81
-    // E: 69
-    // j: 74
-    // k: 75
-    // x: 88
-    // y: 89
-    // z: 90
-    // enter: 13
-
-    // ** for some reason, XZAngle jumps to 1,1 on first rotation clockwise
-    // ** also, rotations stay on YZ plane relative to canvas and not camera's axes
-
-    // ** right now, angles are not reset because events are passed discretely
-    // ** need to start where angles left off to maintain radial movement
-    // ** however, this also means that if YZAngle rotates differently than XZAngle
-    // ** then when going back XZAngle will bounce all the way back to it,
-    // ** might be huge difference between angles, causing camera to snap to different point
-   
-    // ** Note: Translate doesn't work in Ortho Projection
-    // because objects will just move relative to the camera
-    // need to be in frustum
-
     var index = 0;
     var shapeIndex = 0;
-    // var originalColor = {};
-
-    // var highlight = function () {
-    //     for (var i = 0; i < objectsToDraw.length; i++) {
-    //         if (objectsToDraw[i].buildObject) {
-    //             delete objectsToDraw[i].colors;
-    //             originalColor.r = objectsToDraw[i].getColor().r;
-    //             originalColor.g = objectsToDraw[i].getColor().g;
-    //             originalColor.b = objectsToDraw[i].getColor().b;
-    //             objectsToDraw[i].setColor({ r: 0.5, g: 1.0, b: 1.0 });
-    //         }
-    //     }
-    //     prepObjects(objectsToDraw);
-    // }
-
+    
     var findBuildObject = function () {
         var index = 0;
         for (var i = 0; i < objectsToDraw.length; i++) {
@@ -541,7 +498,6 @@
         objectsToDraw[i].buildObject = false;
         addShape(0, 0, true);
         index = findBuildObject();
-        // highlight();
         drawScene();
     }
 
@@ -590,16 +546,23 @@
     
         Idea:
         
-            1.) highlight the buildObject
+            1.) highlight the buildObject for user feedback
 
         Bugs:
-
+        
+        1.) scaling a shape also scales down its consecutive translations
 
         2.) rotating scaled objects distorts them
 
         3.) camara's YZ rotation remains in YZ plane even when camera isn't
 
-        4.) diffuse and spectral lighting normals are slightly off
+        4.) diffuse and spectral lighting normals are slightly off for
+        shapes that aren't spheres
+        (I think my code is doing something to the normals. Shouldn't be 
+        the order of indices cuz I had fixed those for the cylinder and circle
+        - (see commits from 4/26). Didn't touch cube indices)
+        Changing order of indices doesn't seem to affect anything
+        (tried changing order of cube indices, no effect)
 
         5.) Shifting between first and third person during builder mode
         is changing the orientation of the camera
@@ -608,7 +571,6 @@
 
     $("#navigation").keydown(function (event) {
         if ($("#builder-mode-button")[0].checked) {
-            console.log(event);
             save();
             switch (event.keyCode) {
                 case 87: // w
@@ -650,11 +612,10 @@
                     rotate(angleSpeed, 1, 0, 0);
                     break;
                 case 74: // j
-                    //currentScale += speed;
-                    scale(1.0 + speed, 1.0 + speed, 1.0 + speed);
+                    scale(1.0 - speed, 1.0 - speed, 1.0 - speed);
                     break;
                 case 75: // k
-                    scale(1.0 - speed, 1.0 - speed, 1.0 - speed);
+                    scale(1.0 + speed, 1.0 + speed, 1.0 + speed);
                     break;
                 case 88: // x
                     var spd = event.shiftKey ? -speed : speed;
@@ -682,8 +643,6 @@
             drawScene();
             $("#navigation").val("");
         } else {
-            console.log("inside");
-            console.log(event);
             var translateSpeed = 0.3;
             var rotationSpeed = Math.PI/10;
             var directionalVector = cameraStatus.lookAt.subtract(cameraStatus.location).unit();
@@ -693,6 +652,7 @@
             // ** hardcoding adjustment for rotation when camera starts
             // ** out facing (0, 0, -1), otherwise, camera rotation will
             // ** start at 0 or Math.PI angle every time and cause camera to snap
+            // ** to the wrong place
             if (cameraStatus.XZAngle === 0 && !cameraStatus.beginRotating) {
                 cameraStatus.XZAngle = 3 * Math.PI / 2;
                 cameraStatus.beginRotatingHorizontal = true;

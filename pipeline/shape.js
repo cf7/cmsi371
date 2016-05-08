@@ -3,9 +3,6 @@
 var Shape = (function () { 
 
     function Shape (gl, data) {
-        // ** maybe have a this.data that holds everything
-        // ** might be easier to assign buffers to in drawing code
-        // ** using getters and setters
         if (data) {
             this.gl = gl || {};
             this.transform = data.transform ? data.transform : new Matrix(4, 4);
@@ -217,13 +214,6 @@ var Shape = (function () {
             currentPhi += phiDelta;
         }
 
-        // spherical coordinates cause vertices to wrap back up through
-        // the interior of the sphere multiple times, so the black triangles
-        // are actually the backs of triangles being drawn facing the interior
-        // the coordinates also pass over the sphere multiple times, so there
-        // are multiple layers
-        // need to find where coordinates begin to wrap back inside and reverse
-        // the order that they are drawn
         for (var i = 0; i < vertices.length/2; i += longit) {
             for (var j = i; j < i + longit/2; j++) {
                 indices.push([ j,  (j + longit) % vertices.length, (j + 1) % vertices.length ]);
