@@ -4,10 +4,6 @@
  */
 (function (canvas) {
 
-    // lighting: 4/7, 4/12, 4/14
-
-    // interactivity: 4/21
-
     var transformationMatrix = new Matrix(4, 4);
     var savedMatrices = [];
 
@@ -137,12 +133,10 @@
     shape4.setDrawingStyle("lines");
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
-    shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
 
     shape4.getChildren()[0].setDrawingStyle("triangles");
     shape4.getChildren()[1].setDrawingStyle("triangles");
-    shape4.getChildren()[2].setDrawingStyle("triangles");
     shape4.getChildren()[0].getChildren()[0].setVertices(shape4.cube(0.25));
 
     save();
@@ -189,15 +183,6 @@
     shape6.setTransform(context.currentTransform);
     restore();
 
-    var shape7 = new Shape(gl);
-    shape7.setColor({ r: 0.0, g: 0.75, b: 0.75 });
-    shape7.setVertices(shape7.circle(1, 0, 20));
-
-    save();
-    translate(0, -0.5, 1);
-    shape7.setTransform(context.currentTransform);
-    restore();
-
     // Build the objects to display.
     var objectsToDraw = [];
 
@@ -206,7 +191,6 @@
     objectsToDraw.push(shape4);
     objectsToDraw.push(shape5);
     objectsToDraw.push(shape6);
-    objectsToDraw.push(shape7);
 
     var prepObjects = function (objectsToDraw) {
         // Pass the vertices to WebGL.
