@@ -12,92 +12,12 @@
  * more compact, while sacrificing generality.
  */
 
- 
-
-// ** screencasts 3/15, 3/17, 3/22
-
-/**
-    translate(x, y) -> (x + tx, y + ty)
-    scale(x, y) -> (x * sx, y * sy)
-    rotate(x, y) -> ( x * cos theta - y * sin theta,
-                      x * sin theta + y * cos theta )
-"translate by (5, 2) then scale by -2 then rotate by 10 degrees"
-(x + 5, y + 2)
--2 * (x + 5, y + 2) = (-2x - 10, -2y - 4)
-( (-2x - 10) * cos 10 - (-2y - 4) * sin 10,
-  (-2x - 10) * sin 10 + (-2y - 4) * cos 10 )
-
-matrices:
-
-x + tx -> (1 * x) + (0 * y) + tx --> 1 0 tx
-y + ty -> (0 * x) + (1 * y) + ty --> 0 1 ty
-
-x * sx -> (sx * x) + (0 * y) + 0 --> sx 0 0
-y * sy -> (0 * x) + (sy * y) + 0 --> 0 sy 0
-
-x * cos theta - y * sin theta -> ((cos theta) * x) + ((-sin theta) * y) + 0
-x * sin theta + y * cos theta -> ((sine theta) * x) + ((cos theta) * y) + 0
-
-                --> (cos theta) (-sin theta) 0
-                --> (sin theta) (cos theta)  0
-
-All of these transformations are represented as sums, with each component mult.
-by a coefficient plus a constant. They all have the same format!
-Can take away x's and y's and have matrix. Each of these transforms are matrices.
-
-To perform operations:
--represent coordinate arrays as vertical arrays
--matrix mult. vertical array with transform matrix
--in order to keep tx, ty in computation, add extra 1 to end of vertical array
-when doing matrix mult. and add it as last row of transform matrix
-(3/22 at 17:00 onward)
-matrix mult. is associative   (A op B) op C = A op (B op C)
-important because depending on the operation, can save time on computation
-ex: mult. scale and translate matrices first, then mult. by coordinate array 1000 times
-as oposed to mult. scale, translate, and coordinate matrices 1000 times
-save 1000 computations
-(3/22 at 30:00)
-Translation:
-
-                scale by -2            translate by (5, 2)    coordinates
-                -2  0 0                  1 0 5                  x
-                 0 -2 0                  0 1 2                  y
-                 0  0 1                  0 0 1                  1
-                    \                      /
-                     \                    /
-                          -2   0   -10             (-2x - 10)
-                           0  -2    -4             (-2y - 4)
-                           0   0     1
-
-Now have one matrix that you can run multiple vertices across.
-
-matrix mult. is most important function to implement,
-Matrix Objects that are 2D arrays
-write code that produces matrices
-3D just means 4x4 matrix (last column is the transform constant)
-
-matrices for different transforms are on pdfs on website
-for orthogonal project matrix, need to take in six arguments (r, l, t, b, f, n)
-
-(3/22 at 41:00)
-eventually, when returning matrices to WebGL
--WebGL wants 16 element arrays
--column first, need a convenience function that will turn array into linear array with col first
--float32array
-
-
-translation followed by a scale followed by a rotation is multiplied out as RST. 
-i.e., R(S(T(vertex)))
-
-*/
-
 
 var Matrix = (function () {
     
     // Define the constructor.
     function Matrix (rows, cols, array) {
         this.elements = [];
-        // this.elements = [].slice.call(arguments);
         if (!array && rows === cols) {
             var array = newArray(cols);
             var colIndex = 0;
@@ -146,11 +66,6 @@ var Matrix = (function () {
     };
 
     Matrix.prototype.mult = function (matrix2) {
-        // cols in matrix1 must be equal to rows in matrix2
-        // checkDimensions to make sure they are NxM MxN format,
-        // M's must match
-        // otherwise return error
-        // result is NxN (e.g. 4x5 mult. 5x4 result is 4x4)
         this.checkDimensions(matrix2);
         var result = [];
         for (var i = 0; i < this.elements.length; i++) {

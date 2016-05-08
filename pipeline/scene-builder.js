@@ -111,23 +111,6 @@
         [ 0, 1, 2 ]
     ];
 
-
-    // ** find a way to include shape's transforms
-    // ** in the translate, scale, and rotate functions 
-    // ** such that the shape's transforms are changed by the currentTransform
-    // ** (and their child shapes' transforms as well)
-
-    // var shape = new Shape(gl);
-    // shape.setColor({ r: 0.0, g: 0.5, b: 0.0 });
-    // shape.setVertices(shape.cone(20));
-    // shape.setDrawingStyle("triangles");
-    // shape.translateShape(1, 1.5, 1);
-
-    // save();
-    // translate(1, 1.5, 1);
-    // shape.setTransform(context.currentTransform);
-    // restore();
-
     var shape2 = new Shape(gl);
     shape2.setVertices({ vertices: vertices, indices: indices });
     shape2.setDrawingStyle("triangles");
@@ -155,10 +138,12 @@
     shape4.setDrawingStyle("lines");
     shape4.addChild(new Shape(gl));
     shape4.addChild(new Shape(gl));
+    shape4.addChild(new Shape(gl));
     shape4.getChildren()[0].addChild(new Shape(gl));
 
     shape4.getChildren()[0].setDrawingStyle("triangles");
     shape4.getChildren()[1].setDrawingStyle("triangles");
+    shape4.getChildren()[2].setDrawingStyle("triangles");
     shape4.getChildren()[0].getChildren()[0].setVertices(shape4.cube(0.25));
 
     save();
@@ -174,8 +159,10 @@
     scale(0.75, 0.75, 0.75);
     shape4.getChildren()[0].setTransform(context.currentTransform);
     restore();
+
     save();
-    translate(0, 0, 0.5);
+    translate(0, 0, 1.5);
+    scale(0.5, 0.5, 0.5);
     shape4.getChildren()[0].getChildren()[0].setTransform(context.currentTransform);
     restore();
 
@@ -407,7 +394,7 @@
                 -2,
                 2,              
                 -10,
-                10
+                100
             ).glFormat());
         }
 
@@ -451,12 +438,11 @@
         focus();
     });
 
-    var addShape = function (x, y, isBuildObject) {
 
+    var addShape = function (x, y, isBuildObject) {
         var shape = new Shape(gl);
         shape.setColor({ r: 0.0, g: 0.75, b: 0.75 });
 
-        
         if ($("#sphere-button")[0].checked) {
             shape.setVertices(shape.sphere(0.75, 20, 20));
         }
@@ -481,8 +467,6 @@
         shape.buildObject = isBuildObject;
 
         objectsToDraw = objectsToDraw.concat(prepObjects([shape]));
-
-        drawScene();
 
         return shape;
     }
@@ -517,9 +501,22 @@
     // because objects will just move relative to the camera
     // need to be in frustum
 
-    var originalColor = {};
     var index = 0;
     var shapeIndex = 0;
+    // var originalColor = {};
+
+    // var highlight = function () {
+    //     for (var i = 0; i < objectsToDraw.length; i++) {
+    //         if (objectsToDraw[i].buildObject) {
+    //             delete objectsToDraw[i].colors;
+    //             originalColor.r = objectsToDraw[i].getColor().r;
+    //             originalColor.g = objectsToDraw[i].getColor().g;
+    //             originalColor.b = objectsToDraw[i].getColor().b;
+    //             objectsToDraw[i].setColor({ r: 0.5, g: 1.0, b: 1.0 });
+    //         }
+    //     }
+    //     prepObjects(objectsToDraw);
+    // }
 
     var findBuildObject = function () {
         var index = 0;
@@ -531,12 +528,21 @@
         return index;
     }
 
+    var previousShape = function () {
+        index = (index - 1 < 0) ? objectsToDraw.length - 1 : index - 1;
+    }
+
     var nextShape = function () {
+        index = (index + 1 >= objectsToDraw.length) ? 0 : index + 1;
+    }
+
+    var anotherShape = function () {
         var i = findBuildObject();
         objectsToDraw[i].buildObject = false;
         addShape(0, 0, true);
         index = findBuildObject();
-        shapeIndex = index;
+        // highlight();
+        drawScene();
     }
 
     var focus = function () {
@@ -555,7 +561,7 @@
             if (i !== -1) {
                 data = objectsToDraw.splice(i, 1)[0];
             }
-            nextShape();
+            anotherShape();
         }
         focus();
 
@@ -566,13 +572,9 @@
     var currentScale = 1.0;
     var scaleVector = new Vector(1.0, 1.0, 1.0);
 
-
-    // ** what happens when builder mode is turned off?
-    // might not disappear right away, may need to refresh the page
-    // after unchecking builder-mode-button
     $("#builder-mode-button").on('click', function (event) {
         if ($("#builder-mode-button")[0].checked) {
-            nextShape();
+            anotherShape();
         } else {
             var data = {};
             var i = findBuildObject();
@@ -667,11 +669,10 @@
                     scale(1.0, 1.0, 1.0 + spd);
                     break;
                 case 13: // enter
-                    nextShape();
+                    anotherShape();
                     break;
                 case 32:
-                    shapeIndex = (shapeIndex + 1 >= objectsToDraw.length) ? 0 : shapeIndex + 1;
-                    index = shapeIndex;
+                    event.shiftKey ? previousShape() : nextShape();
                     break;
                 default:
                     break;

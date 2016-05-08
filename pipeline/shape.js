@@ -61,7 +61,9 @@ var Shape = (function () {
     };
 
     Shape.prototype.setColor = function(data) {
-        this.color = { r: data.r, g: data.g, b: data.b };
+        this.color.r = data.r;
+        this.color.g = data.g;
+        this.color.b = data.b;
     };
 
     Shape.prototype.getColor = function() {
@@ -72,7 +74,6 @@ var Shape = (function () {
         this.specularColor = { r: data.r, g: data.g, b: data.b };
     };
 
-    // ** Remember: when setting transforms, need to merge them by multiplying
     Shape.prototype.setTransform = function(transform) {
         this.transform = this.transform.mult(transform);
         if (this.children.length > 0) {
@@ -277,7 +278,7 @@ var Shape = (function () {
             ],
 
             indices: [
-                [ 0, 1, 3 ],
+                [ 0, 3, 1 ],
                 [ 2, 3, 1 ],
                 [ 0, 3, 4 ],
                 [ 7, 4, 3 ],
