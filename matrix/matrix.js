@@ -212,27 +212,11 @@ var Matrix = (function () {
 
 
     Matrix.prototype.getCameraMatrix = function(location, lookAt, upward) {
-        // P and Q will be objects with coordinates
-
-        // fix this, don't turn them into vectors yet
-        // data for vectors should be difference between two points
-        
         var p = location;
         var q = lookAt;
 
-        // fix this after finishing lighting
-        // vector is difference between two points
-        // so vector for P - Q should be Pcoords - Qcoords
-        // should not be turning them into Vectors beforehand
-
-        console.log("P");
-        console.log(p);
-        console.log("Q");
-        console.log(q);
-
         var z = p.subtract(q).unit();
-        console.log("z");
-        console.log(z);
+
         var up = upward;
         var projUp = up.projection(z);
         var y = up.subtract(projUp).unit();
@@ -241,12 +225,7 @@ var Matrix = (function () {
         var Px = p.dot(x);
         var Py = p.dot(y);
         var Pz = p.dot(z);
-        console.log("Px");
-        console.log(Px);
-        console.log("Py");
-        console.log(Py);
-        console.log("Pz");
-        console.log(Pz);
+  
         this.elements[0][0] = x.x();
         this.elements[1][0] = y.x();
         this.elements[2][0] = z.x();
